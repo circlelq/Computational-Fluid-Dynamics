@@ -1,0 +1,231 @@
+\documentclass[12pt]{article}
+\input{/Users/circle/Documents/博一下/homework/setting.tex}
+\setcounter{secnumdepth}{2}
+\usepackage{autobreak}
+\usepackage{amsmath}
+\setlength{\parindent}{2em}
+\graphicspath{{../}}
+\ziju{0.1pt}
+
+
+%pdf文件设置
+\hypersetup{
+	pdfauthor={袁磊祺},
+	pdftitle={计算流体力学作业2}
+}
+
+\title{
+		\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
+		\horrule{0.5pt} \\[0.2cm]
+		\huge \bfseries{计算流体力学作业2} \\[-0.2cm]
+		\horrule{2pt} \\[0.2cm]
+}
+\author{
+		\normalfont 								\normalsize
+		College of Engineering \quad 2001111690  \quad 袁磊祺\\	\normalsize
+        \today
+}
+\date{}
+
+\begin{document}
+
+\input{setc.tex}
+
+\maketitle
+
+\section{动量方程和能量方程推导}
+
+\subsection{动量方程推导}
+
+$\tau_{z y}, \tau_{z y}, \tau_{z z}$ 是作用在与$xoy$坐标平面平行的表面上的三个粘性应力分量. 
+
+下面考虑应力的 $y$ 分量: 压力 $p$, 应力 $\tau_{x y}, \tau_{y y}, \tau_{z y} .$  单位面积上压力:
+\begin{equation}
+	p\left(x , y\pm \frac{1}{2} \delta y, z, t\right)=p(\bm{x}, t) \pm \frac{1}{2} \delta y \frac{\partial p}{\partial y}(\bm{x}, t)
+\end{equation}
+单位面积上粘性应力:
+\begin{equation}
+	\tau_{x y} \pm \frac{\partial \tau_{x y}}{\partial x} \frac{1}{2} \delta x, \quad \tau_{y y} \pm \frac{\partial \tau_{y y}}{\partial y} \frac{1}{2} \delta y, \quad \tau_{z y} \pm \frac{\partial \tau_{z y}}{\partial z} \frac{1}{2} \delta z.
+\end{equation}
+作用在前表面和后表面上的$y$方向净应力为
+\begin{align}
+&{\left[\left(p-\frac{\partial p}{\partial y} \frac{1}{2} \delta y\right)-\left(\tau_{yy}-\frac{\partial \tau_{yy}}{\partial y} \frac{1}{2} \delta y\right)\right] \delta x \delta z} \\
+&+\left[-\left(p+\frac{\partial p}{\partial y} \frac{1}{2} \delta y\right)+\left(\tau_{y y}+\frac{\partial \tau_{y y}}{\partial y} \frac{1}{2} \delta y\right)\right] \delta x \delta z \\
+&=\left(-\frac{\partial p}{\partial y}+\frac{\partial \tau_{y y}}{\partial y}\right) \delta x \delta y \delta z.
+\end{align}
+作用在左表面和右表面上的$y$方向净应力为
+\begin{equation}
+	-\left(\tau_{xy}-\frac{\partial \tau_{xy}}{\partial x} \frac{1}{2} \delta x\right) \delta y \delta z+\left(\tau_{xy}+\frac{\partial \tau_{xy}}{\partial x} \frac{1}{2} \delta x\right) \delta y \delta z=\frac{\partial \tau_{xy}}{\partial x} \delta x \delta y \delta z.
+\end{equation}
+最后在上表面和下表面上的$y$方向净应力为
+\begin{equation}
+	-\left(\tau_{z y}-\frac{\partial \tau_{z y}}{\partial z} \frac{1}{2} \delta z\right) \delta x \delta y+\left(\tau_{z y}+\frac{\partial \tau_{z y}}{\partial z} \frac{1}{2} \delta z\right) \delta x \delta y=\frac{\partial \tau_{z y}}{\partial z} \delta x \delta y \delta z.
+\end{equation}
+因此由于这些表面应力在流体上的单位体积的总应力是
+\begin{equation}
+	\frac{\partial\tau_{x y}}{\partial x}+\frac{\partial \left(-p+\tau_{y y}\right)}{\partial y}+\frac{\partial \tau_{z y}}{\partial z}.
+\end{equation}
+
+不考虑体积力的细节, 将它们的整体结果(或影响)用单位时间内单位体积 的$y$−方向的动量源$S_x$来体现. 因此, $y$方向的动量方程:
+\begin{equation}
+	\rho \frac{\Dif v}{\Dif t}=-\frac{\partial p}{\partial y}+\frac{\partial \tau_{x y}}{\partial x}+\frac{\partial \tau_{y y}}{\partial y}+\frac{\partial \tau_{z y}}{\partial z}+S_{y}
+\end{equation}
+
+
+
+
+下面考虑应力的 $z$ 分量: 压力 $p$, 应力 $\tau_{x z}, \tau_{z z}, \tau_{y z} .$  单位面积上压力:
+\begin{equation}
+	p\left(x , z\pm \frac{1}{2} \delta z, y, t\right)=p(\bm{x}, t) \pm \frac{1}{2} \delta z \frac{\partial p}{\partial z}(\bm{x}, t)
+\end{equation}
+单位面积上粘性应力:
+\begin{equation}
+	\tau_{x z} \pm \frac{\partial \tau_{x z}}{\partial x} \frac{1}{2} \delta x, \quad \tau_{z z} \pm \frac{\partial \tau_{z z}}{\partial z} \frac{1}{2} \delta z, \quad \tau_{y z} \pm \frac{\partial \tau_{y z}}{\partial y} \frac{1}{2} \delta y.
+\end{equation}
+作用在上表面和下表面上的$z$方向净应力为
+\begin{align}
+&{\left[\left(p-\frac{\partial p}{\partial z} \frac{1}{2} \delta z\right)-\left(\tau_{zz}-\frac{\partial \tau_{zz}}{\partial z} \frac{1}{2} \delta z\right)\right] \delta x \delta y} \\
+&+\left[-\left(p+\frac{\partial p}{\partial z} \frac{1}{2} \delta z\right)+\left(\tau_{z z}+\frac{\partial \tau_{z z}}{\partial z} \frac{1}{2} \delta z\right)\right] \delta x \delta y \\
+&=\left(-\frac{\partial p}{\partial z}+\frac{\partial \tau_{z z}}{\partial z}\right) \delta x \delta z \delta y.
+\end{align}
+作用在左表面和右表面上的$z$方向净应力为
+\begin{equation}
+	-\left(\tau_{xz}-\frac{\partial \tau_{xz}}{\partial x} \frac{1}{2} \delta x\right) \delta z \delta y+\left(\tau_{xz}+\frac{\partial \tau_{xz}}{\partial x} \frac{1}{2} \delta x\right) \delta z \delta y=\frac{\partial \tau_{xz}}{\partial x} \delta x \delta z \delta y.
+\end{equation}
+最后在前表面和后表面上的$z$方向净应力为
+\begin{equation}
+	-\left(\tau_{y z}-\frac{\partial \tau_{y z}}{\partial y} \frac{1}{2} \delta y\right) \delta x \delta z+\left(\tau_{y z}+\frac{\partial \tau_{y z}}{\partial y} \frac{1}{2} \delta y\right) \delta x \delta z=\frac{\partial \tau_{y z}}{\partial y} \delta x \delta z \delta y.
+\end{equation}
+因此由于这些表面应力在流体上的单位体积的总应力是
+\begin{equation}
+	\frac{\partial\tau_{x z}}{\partial x}+\frac{\partial \left(-p+\tau_{z z}\right)}{\partial z}+\frac{\partial \tau_{y z}}{\partial y}.
+\end{equation}
+
+不考虑体积力的细节, 将它们的整体结果(或影响)用单位时间内单位体积 的$z$−方向的动量源$S_x$来体现. 因此, $z$方向的动量方程:
+\begin{equation}
+	\rho \frac{\Dif w}{\Dif t}=-\frac{\partial p}{\partial z}+\frac{\partial \tau_{x z}}{\partial x}+\frac{\partial \tau_{z z}}{\partial z}+\frac{\partial \tau_{y z}}{\partial y}+S_{z}
+\end{equation}
+
+\subsection{能量方程推导}
+
+由ppt上的动量方程(2.15)-(2.17)
+\begin{equation}
+	\rho \frac{\Dif \bm{u}}{\Dif t} = - \nabla p + \nabla \cdot \bm{\tau} + \bm{S_M},
+\end{equation}
+其中$\bm{\tau}$是张量,两边左点乘$\bm{u}$得
+\begin{equation}
+	\rho \frac{\Dif \frac{1}{2} \abs{\bm{u}}^2}{\Dif t} = - \bm{u} \cdot \nabla p + \bm{u} \cdot (\nabla \cdot \bm{\tau})^T + \bm{u} \cdot \bm{S_M}.
+\end{equation}
+
+将上式加上ppt上的(2.31)可得
+\begin{equation}
+	\begin{aligned}
+	\rho \frac{\Dif \varepsilon}{\Dif t} &=-\operatorname{div}(p \bm{u})+\left[\frac{\partial\left(u \tau_{x x}\right)}{\partial x}+\frac{\partial\left(u \tau_{y x}\right)}{\partial y}+\frac{\partial\left(u \tau_{z x}\right)}{\partial z}\right.\\
+	&+\frac{\partial\left(v \tau_{x y}\right)}{\partial x}+\frac{\partial\left(v \tau_{y y}\right)}{\partial y}+\frac{\partial\left(v \tau_{z y}\right)}{\partial z}+\frac{\partial\left(w \tau_{x z}\right)}{\partial x} \\
+	&\left.+\frac{\partial\left(w \tau_{y z}\right)}{\partial y}+\frac{\partial\left(w \tau_{z z}\right)}{\partial z}\right]+\operatorname{div}(k \operatorname{grad} T)+S_{E},
+	\end{aligned}
+	\label{eq:1}
+\end{equation}
+为了证明
+\begin{equation}
+	\begin{aligned}
+	\frac{\partial\left(\rho h_{0}\right)}{\partial t}+\operatorname{div}\left(\rho h_{0} \bm{u}\right) &=\operatorname{div}(k \operatorname{grad} T)+\frac{\partial p}{\partial t}+\left[\frac{\partial\left(u \tau_{x x}\right)}{\partial x}+\frac{\partial\left(u \tau_{y x}\right)}{\partial y}\right.\\
+	&+\frac{\partial\left(u \tau_{z x}\right)}{\partial z}+\frac{\partial\left(v \tau_{x y}\right)}{\partial x}+\frac{\partial\left(v \tau_{y y}\right)}{\partial y}+\frac{\partial\left(v \tau_{z y}\right)}{\partial z} \\
+	&\left.+\frac{\partial\left(w \tau_{x z}\right)}{\partial x}+\frac{\partial\left(w \tau_{y z}\right)}{\partial y}+\frac{\partial\left(w \tau_{z z}\right)}{\partial z}\right]+S_{h},
+	\end{aligned}
+	\label{eq:2}
+\end{equation}
+把$h_0 = \varepsilon + p/\rho$代入\cref{eq:1}并减去\cref{eq:2}，即证
+\begin{equation}
+	\rho \frac{\Dif }{\Dif t}(h_0-p/\rho) + \nabla \cdot (p\bm{u}) - \frac{\partial\left(\rho h_{0}\right)}{\partial t} - \operatorname{div}\left(\rho h_{0} \bm{u}\right) + \pd{p}{t} = 0.
+\end{equation}
+
+\begin{align}
+	& \rho \frac{\Dif }{\Dif t}(h_0-p/\rho) + \nabla \cdot (p\bm{u}) - \frac{\partial\left(\rho h_{0}\right)}{\partial t} - \operatorname{div}\left(\rho h_{0} \bm{u}\right) + \frac{\partial p}{\partial t}\\
+	= \ & \rho \frac{\partial}{\partial t}h_0 + \frac{p}{\rho} \frac{\partial \rho}{\partial t} + \rho \bm{u} \cdot \nabla h_0 - \rho \bm{u} \cdot \nabla \frac{p}{\rho}+ \nabla \cdot (p\bm{u}) - \frac{\partial\left(\rho h_{0}\right)}{\partial t} - \nabla \cdot \left(\rho h_{0} \bm{u}\right) \\
+	= \ & -h_0 \frac{\partial \rho}{\partial t} + \frac{p}{\rho} \frac{\partial \rho}{\partial t}  + \frac{p}{\rho} \bm{u} \cdot \nabla \rho - \bm{u} \cdot \nabla p+ \nabla \cdot (p\bm{u}) - h_0 \nabla \cdot \left(\rho \bm{u}\right) \\
+	= \ & \frac{p}{\rho} \frac{\partial \rho}{\partial t}  + \frac{p}{\rho} \bm{u} \cdot \nabla \rho + p \nabla \cdot \bm{u} \\
+	= \ & 0.
+\end{align}
+推导过程用到了质量守恒
+\begin{equation}
+	\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \bm{u})=0.
+\end{equation}
+
+\section{拟一维喷管(nozzle)流动的控制方程组}
+
+\subsection{连续性方程}
+
+对于控制体内的气体，质量的变化率等于质量的流走率
+\begin{equation}
+	\frac{\partial \rho A \dif x}{\partial t} = \rho A V - (\rho + \dif \rho)(A+\dif A)(V+\dif V),
+\end{equation}
+忽略高阶小量，两边除以$\dif x$得
+\begin{equation}
+	\frac{\partial(\rho A)}{\partial t}+\rho A \frac{\partial V}{\partial x}+\rho V \frac{\partial A}{\partial x}+V A \frac{\partial \rho}{\partial x}=0.
+	\label{eq:3}
+\end{equation}
+
+\subsection{动量方程}
+
+对于控制体内的气体，动量的变化率等于两边的压力差加上动量的流走率
+\begin{equation}
+	\frac{\partial \rho VA \dif x}{\partial t} = \rho A  - (\rho + \dif \rho)(A+\dif A) + \rho A V^2 - (\rho + \dif \rho)(A+\dif A)(V+\dif V)^2 + p\dif A,
+\end{equation}
+注意要考虑壁面的压力，忽略高阶小量，两边除以$\dif x$,代入\cref{eq:3}得
+\begin{equation}
+	\rho \frac{\partial V}{\partial t}+\rho V \frac{\partial V}{\partial x}=- \frac{\partial p}{\partial x}.
+\end{equation}
+又根据
+\begin{equation}
+	p = \rho R T,
+\end{equation}
+得
+\begin{equation}
+	\rho \frac{\partial V}{\partial t}+\rho V \frac{\partial V}{\partial x}=-R\left(\rho \frac{\partial T}{\partial x}+T \frac{\partial \rho}{\partial x}\right).
+	\label{eq:4}
+\end{equation}
+
+\subsection{能量方程}
+
+对于控制体内的气体，动量的变化率等于两边的压力差加上动量的流走率
+\begin{align}
+	&\frac{\partial (\frac{1}{2} \rho V^2 A \dif x + c_v T \rho A \dif x)}{\partial t} \\
+	= \ & p V A  - (V + \dif V)(A+\dif A)(p+\dif p) + \frac{1}{2} \rho A V^3 - \frac{1}{2} (\rho + \dif \rho)(A+\dif A)(V+\dif V)^3 \\
+	&+ c_v T\rho AV - c_v (T+\dif T)(\rho+\dif \rho)(A+\dif A)(V+\dif V),
+\end{align}
+代入\cref{eq:3}和\cref{eq:4}，忽略高阶小量得
+\begin{align}
+	&  A\rho c_v \frac{\partial T}{\partial t} + c_v A\rho V \frac{\partial T}{\partial x} + \frac{1}{2}V^2 \frac{\partial \rho A}{\partial t} + \rho A V \frac{\partial V}{\partial t} \\
+	= \ & p V A  - (V + \dif V)(A+\dif A)(p+\dif p) + \frac{1}{2} \rho A V^3 - \frac{1}{2} (\rho + \dif \rho)(A+\dif A)(V+\dif V)^3 ,
+\end{align}
+\begin{equation}
+	A\rho c_v \frac{\partial T}{\partial t} + c_v A\rho V \frac{\partial T}{\partial x} + V^2 \rho A \frac{\partial V}{\partial x} + \rho A V \frac{\partial V}{\partial t} = p V A  - (V + \dif V)(A+\dif A)(p+\dif p),	
+\end{equation}
+\begin{equation}
+	A\rho c_v \frac{\partial T}{\partial t} + c_v A\rho V \frac{\partial T}{\partial x}= - p \left(A\frac{\partial V}{\partial x} + V \frac{\partial A}{\partial x} \right) ,	
+\end{equation}
+\begin{equation}
+	\rho c_{\mathrm{v}} \frac{\partial T}{\partial t}+\rho V c_{\mathrm{v}} \frac{\partial T}{\partial x}=-\rho R T\left[\frac{\partial V}{\partial x}+V \frac{\partial(\ln A)}{\partial x}\right].
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \nocite{*}
+
+\input{bib.tex}
+
+\end{document}

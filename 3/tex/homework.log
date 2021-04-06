@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.6.10)  29 MAR 2021 09:43
+This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020) (preloaded format=xelatex 2020.6.10)  30 MAR 2021 09:43
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/Users/circle/Documents/博一下/计算流体力学/作业/3/tex/homework
-(/Users/circle/Documents/博一下/计算流体力学/作业/3/tex/homework.tex
+**/Users/circle/Documents/博一下/计算流体力学/Computational-Fluid-Dynamics/3/tex/homework
+(/Users/circle/Documents/博一下/计算流体力学/Computational-Fluid-Dynamics/3/tex/homework.tex
 LaTeX2e <2020-02-02> patch level 5
 L3 programming layer <2020-03-06> (/usr/local/texlive/2020/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
@@ -1303,58 +1303,58 @@ LaTeX Font Info:    Trying to load font information for OT1+bch on input line 37
 File: ot1bch.fd 2004/10/18 font definitions for OT1/bch.
 ) [1
 
-] [2]
+]
+File: ../0.eps Graphic file (type eps)
+ <../0.eps>
+File: ../1.eps Graphic file (type eps)
+ <../1.eps> [2] [3]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 165.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 165.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 165.
+(hyperref)                removing `math shift' on input line 180.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 165.
+(hyperref)                removing `subscript' on input line 180.
 
-[3]
-Overfull \hbox (23.95418pt too wide) detected at line 211
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 180.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 180.
+
+[4]
+Overfull \hbox (23.95418pt too wide) detected at line 225
 []
  []
 
-[4] (./bib.tex [5]
+[5] [6] [7] (./bib.tex [8]
 No file homework.bbl.
 )
-
-Package caption Warning: Unused \captionsetup[figure] on input line 2.
-See the caption package documentation for explanation.
-
 
 Package caption Warning: Unused \captionsetup[table] on input line 3.
 See the caption package documentation for explanation.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 222.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 222.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 368.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 368.
 (./homework.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 222.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 222.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 368.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 368.
 Package rerunfilecheck Info: File `homework.out' has not changed.
-(rerunfilecheck)             Checksum: 4E13B011C3646A897199FDC2C57598F7;748.
+(rerunfilecheck)             Checksum: F28C25A90977BA7400E1F490DF18F086;1108.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 37860 strings out of 479418
- 759153 string characters out of 5884585
- 1337913 words of memory out of 5000000
- 54608 multiletter control sequences out of 15000+600000
- 550665 words of font info for 147 fonts, out of 8000000 for 9000
+ 37897 strings out of 479418
+ 760440 string characters out of 5884585
+ 1339913 words of memory out of 5000000
+ 54637 multiletter control sequences out of 15000+600000
+ 550689 words of font info for 150 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 63i,11n,83p,1237b,746s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 63i,12n,83p,1263b,746s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on homework.pdf (5 pages).
+Output written on homework.pdf (8 pages).

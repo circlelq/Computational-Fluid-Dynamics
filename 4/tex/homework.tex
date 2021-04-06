@@ -1,0 +1,385 @@
+\documentclass[12pt]{article}
+\input{/Users/circle/Documents/博一下/homework/setting.tex}
+\setcounter{secnumdepth}{2}
+\usepackage{autobreak}
+\usepackage{amsmath}
+\setlength{\parindent}{2em}
+\graphicspath{{../}}
+\ziju{0.1pt}
+
+
+%pdf文件设置
+\hypersetup{
+	pdfauthor={袁磊祺},
+	pdftitle={计算流体力学作业4}
+}
+
+\title{
+		\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
+		\horrule{0.5pt} \\[0.2cm]
+		\huge \bfseries{计算流体力学作业4} \\[-0.2cm]
+		\horrule{2pt} \\[0.2cm]
+}
+\author{
+		\normalfont 								\normalsize
+		College of Engineering \quad 2001111690  \quad 袁磊祺\\	\normalsize
+        \today
+}
+\date{}
+
+\begin{document}
+
+\input{setc.tex}
+
+\maketitle
+
+\section{1}
+
+\subsection{1a}
+
+
+
+完全气体一维守恒形式的Euler方程组为
+\begin{equation}
+	\frac{\partial}{\partial t}\left(\begin{array}{c}
+	\rho \\
+	\rho u \\
+	E
+	\end{array}\right)+\frac{\partial}{\partial x}\left(\begin{array}{c}
+	\rho u \\
+	\rho u^{2}+p \\
+	u(E+p)
+	\end{array}\right)=0
+	\label{eq:11}
+\end{equation}
+和 $p=(\gamma-1)\left(E-\frac{1}{2} \rho u^{2}\right), \gamma=C_{p} / C_{v}$ 为常数， $E=\rho e+\frac{1}{2} \rho u^{2}, p=(\gamma-1) \rho e . $ 声速 $a=\sqrt{\gamma p / \rho} .$
+
+假设
+\begin{equation}
+	x=\rho,\quad y=\rho u, \quad z=E.
+	\label{eq:10}
+\end{equation}
+
+Jacobi矩阵
+\begin{equation}
+	\frac{\partial \bm{F}}{\partial \bm{U}}=\boldsymbol{A}(\boldsymbol{U})=\left(\begin{array}{ccc}
+	0 & 1 & 0 \\
+	-\frac{3y^2}{2x^2} + \gamma \frac{y^2}{2x^2} & \frac{3y}{x} - \frac{\gamma y}{x} & \gamma-1 \\
+	(\gamma-1)\frac{y^3}{x^3} -\frac{y}{x^2}\gamma z & \frac{\gamma z}{x} - \frac{(\gamma -1)3y^2}{2x^2} & \gamma \frac{y}{x}
+	\end{array}\right),
+\end{equation}
+再代入\cref{eq:10}得
+\begin{equation}
+	\boldsymbol{A}(\boldsymbol{U})=\left(\begin{array}{ccc}
+	0 & 1 & 0 \\
+	\frac{\gamma-3}{2} u^{2} & (3-\gamma) u & \gamma-1 \\
+	\frac{\gamma-2}{2} u^{3}-\frac{a^{2} u}{\gamma-1} & \frac{3-2 \gamma}{2} u^{2}+\frac{a^{2}}{\gamma-1} & \gamma u
+	\end{array}\right),
+\end{equation}
+根据
+\begin{equation}
+	\det{\abs{A-\lambda \bm{I}}} = 0,
+\end{equation}
+可求出特征值
+\begin{equation}
+	\lambda_{1} = {u}-a, \quad \lambda_{2}=u, \quad \lambda_{3}=u+a,
+\end{equation}
+设总焓$H=(E+p) / \rho,$
+\begin{equation}
+	\begin{array}{c}
+	\boldsymbol{R}=\left(\boldsymbol{R}^{(1)}, \boldsymbol{R}^{(2)}, \boldsymbol{R}^{(3)}\right)=\left(\begin{array}{ccc}
+	1 & 1 & 1 \\
+	u-a & u & u+a \\
+	H-u a & \frac{1}{2} u^{2} & H+u a
+	\end{array}\right).
+	\end{array}
+\end{equation}
+
+\begin{align}
+	&\nabla_{\boldsymbol{U}} \lambda_{1}(\boldsymbol{U}) \cdot \boldsymbol{R}^{(1)}(\boldsymbol{U}) \\
+	=& \left(-\frac{u}{\rho}-\frac{\gamma}{2a} \frac{(\gamma-1)u^2\rho/2-p}{\rho^2},\frac{1}{\rho}+\frac{\gamma}{2a}\frac{(\gamma-1)u}{\rho},-\frac{\gamma}{2a}\frac{(\gamma-1)}{\rho}\right)\cdot \begin{pmatrix}
+		1\\u-a\\H-ua
+	\end{pmatrix}\\
+	=&-\frac{\gamma-1}{\rho^2}p-\frac{a}{\rho}<0,
+\end{align}
+所以第一个特征场是真正非线性的。
+
+\begin{align}
+	&\nabla_{\boldsymbol{U}} \lambda_{2}(\boldsymbol{U}) \cdot \boldsymbol{R}^{(2)}(\boldsymbol{U}) \\
+	=& \left(-\frac{u}{\rho},\frac{1}{\rho},0\right)\cdot \begin{pmatrix}
+		1\\u\\\frac{1}{2}u^2
+	\end{pmatrix}\\
+	=&0,
+\end{align}
+所以第二个特征场是非线性退化的。
+
+\begin{align}
+	&\nabla_{\boldsymbol{U}} \lambda_{3}(\boldsymbol{U}) \cdot \boldsymbol{R}^{(3)}(\boldsymbol{U}) \\
+	=& \left(-\frac{u}{\rho}+\frac{\gamma}{2a} \frac{(\gamma-1)u^2\rho/2-p}{\rho^2},\frac{1}{\rho}-\frac{\gamma}{2a}\frac{(\gamma-1)u}{\rho},\frac{\gamma}{2a}\frac{(\gamma-1)}{\rho}\right)\cdot \begin{pmatrix}
+		1\\u+a\\H+ua
+	\end{pmatrix}\\
+	=&\frac{\gamma-1}{\rho^2}p+\frac{a}{\rho}>0,
+\end{align}
+所以第三个特征场是真正非线性的。
+
+\subsection{1b}
+
+一维原始变量形式的Euler方程组为
+\begin{equation}
+	\begin{cases}
+		\rho_{t}+u \rho_{x}+\rho u_{x}=0,\\
+		u_{t}+u u_{x}+\frac{1}{\rho} p_{x}=0,\\
+		p_{t}+\rho a^{2} u_{x}+u p_{x}=0.	
+	\end{cases}
+\end{equation}
+它属于非守恒形式, 又可以写成矩阵向量形式
+\begin{equation}
+	\boldsymbol{W}_{t}+\widetilde{\boldsymbol{A}}(\boldsymbol{W}) \boldsymbol{W}_{x}=0, \quad \boldsymbol{W}=\left(\begin{array}{l}
+	\rho \\
+	u \\
+	p
+	\end{array}\right), \quad \widetilde{\boldsymbol{A}}=\left(\begin{array}{ccc}
+	u & \rho & 0 \\
+	0 & u & \frac{1}{\rho} \\
+	0 & \rho a^{2} & u
+	\end{array}\right)
+\end{equation}
+其中$\bm{W}$和$\bm{U}$的关系为
+\begin{equation}
+	\bm{U}_x = \frac{\partial \bm{U}}{\partial \bm{W}} \bm{W}_x,\quad  \bm{U}_t = \frac{\partial \bm{U}}{\partial \bm{W}} \bm{W}_t.
+\end{equation}
+所以\cref{eq:11}变为
+\begin{equation}
+	\frac{\partial \bm{U}}{\partial \bm{W}} \bm{W}_x + \boldsymbol{A}(\boldsymbol{U}) \frac{\partial \bm{U}}{\partial \bm{W}} \bm{W}_t =0.
+\end{equation}
+即
+\begin{equation}
+	\bm{W}_x + \left(\frac{\partial \boldsymbol{U}}{\partial \boldsymbol{W}}\right)^{-1} \boldsymbol{A}(\boldsymbol{U}) \frac{\partial \bm{U}}{\partial \bm{W}} \bm{W}_t =0.
+\end{equation}
+所以矩阵 $\widetilde{\boldsymbol{A}}(\boldsymbol{W})$ 与 $\boldsymbol{A}(\boldsymbol{U})$ 相似, $\widetilde{\boldsymbol{A}}(\boldsymbol{W})=\left(\frac{\partial \boldsymbol{U}}{\partial \boldsymbol{W}}\right)^{-1} \boldsymbol{A}(\boldsymbol{U}) \frac{\partial \boldsymbol{U}}{\partial \boldsymbol{W}}.$
+由相似性，两矩阵的特征值相等，特征向量有一个乘矩阵的变化，即
+\begin{equation}
+	\bm{R} = \left(\frac{\partial \boldsymbol{U}}{\partial \boldsymbol{W}}\right) \widetilde{\bm{R}},
+\end{equation}
+矩阵 $\widetilde{A}$ 的特征值和(左右)特征向量矩阵分别为
+\begin{equation}
+	\lambda_{1}= u-a, \quad \lambda_{2}=u, \quad \lambda_{3}=u+a,
+\end{equation}
+\begin{equation}
+	\widetilde{\boldsymbol{L}}=	
+	\begin{pmatrix}
+		0 & 1 & -\frac{1}{\rho a} \\
+	1 & 0 & -\frac{1}{a^{2}} \\
+	0 & 1 & \frac{1}{\rho a}
+	\end{pmatrix},\quad
+	\widetilde{\boldsymbol{R}}=
+	\begin{pmatrix}
+		-\frac{\rho}{2 a} & 1 & -\frac{\rho}{2 a} \\
+		\frac{1}{2} & 0 & \frac{1}{2} \\
+		-\frac{1}{2} \rho a & 0 & \frac{1}{2} \rho a
+	\end{pmatrix}.
+\end{equation}
+同时，三个特征场的真正非线性和非线性退化的性质保持不变。
+
+\begin{itemize}
+	\item 第一个特征场是真正非线性的。
+	\item 第二个特征场是非线性退化的。
+	\item 第三个特征场是真正非线性的。
+\end{itemize}
+
+\subsection{1c}
+
+
+\begin{equation}
+	\bm{U} = \begin{pmatrix}
+		\rho \\
+	\rho u \\
+	E
+	\end{pmatrix},\quad
+	\begin{array}{c}
+	\boldsymbol{R}=\left(\boldsymbol{R}^{(1)}, \boldsymbol{R}^{(2)}, \boldsymbol{R}^{(3)}\right)=\left(\begin{array}{ccc}
+	1 & 1 & 1 \\
+	u-a & u & u+a \\
+	H-u a & \frac{1}{2} u^{2} & H+u a
+	\end{array}\right).
+	\end{array}
+\end{equation}
+
+\begin{equation}
+	\frac{\dif u_{1}}{r_{1 j}(\boldsymbol{U})}=\frac{\dif u_{2}}{r_{2 j}(\boldsymbol{U})}=\frac{\dif u_{3}}{r_{3 j}(\boldsymbol{U})}
+	\label{eq:12}
+\end{equation}
+
+当$j=1$时，
+\begin{equation}
+	\frac{\dif \rho}{1}=\frac{\dif \rho u}{u-a}=\frac{\dif E}{H-ua}
+\end{equation}
+化简可得
+\begin{equation}
+	\begin{cases}
+		\rho \dif u+ a\dif \rho=0,\\
+		\gamma p\dif \rho=\rho \dif p.
+	\end{cases}
+\end{equation}
+解得
+\begin{equation}
+	\begin{cases}
+		u=-\frac{2\sqrt{\gamma c_1}}{\gamma-1}\rho^{\frac{\gamma-1}{2}}+c_2,\\
+		p=c_1\rho^\gamma.
+	\end{cases}
+\end{equation}
+
+当$j=2$时，
+\begin{equation}
+	\frac{\dif \rho}{1}=\frac{\dif \rho u}{u}=\frac{\dif E}{\frac{1}{2}u^2}
+\end{equation}
+化简可得
+\begin{equation}
+	\begin{cases}
+		\rho \dif u=0,\\
+		\gamma p\dif \rho=\rho \dif p.
+	\end{cases}
+\end{equation}
+解得
+\begin{equation}
+	\begin{cases}
+		u=c_2,\\
+		p=c_1\rho^\gamma.
+	\end{cases}
+\end{equation}
+
+当$j=3$时，
+\begin{equation}
+	\frac{\dif \rho}{1}=\frac{\dif \rho u}{u+a}=\frac{\dif E}{H+ua}
+\end{equation}
+化简可得
+\begin{equation}
+	\begin{cases}
+		\rho \dif u+ a\dif \rho=0,\\
+		\gamma p\dif \rho=\rho \dif p.
+	\end{cases}
+\end{equation}
+解得
+\begin{equation}
+	\begin{cases}
+		u=\frac{2\sqrt{\gamma c_1}}{\gamma-1}\rho^{\frac{\gamma-1}{2}}+c_2,\\
+		p=c_1\rho^\gamma.
+	\end{cases}
+\end{equation}
+其中$c_1,c_2$为常数。
+
+
+\begin{equation}
+	r_{1 j}(\boldsymbol{U}) \frac{\partial W}{\partial u_{1}}+r_{2 j}(\boldsymbol{U}) \frac{\partial W}{\partial u_{2}}+r_{3 j}(\boldsymbol{U}) \frac{\partial W}{\partial u_{3}}=0,
+\end{equation}
+其中$W=W\left(u_{1}, u_{2}, u_{3}\right) \in \mathbb{R}$.
+
+当$j=1$时，
+\begin{equation}
+	\frac{\partial W}{\partial u_{1}}+(u-a)\frac{\partial W}{\partial u_{2}}+(H-ua)\frac{\partial W}{\partial u_{3}}=0,
+\end{equation}
+当$j=2$时，
+\begin{equation}
+	 \frac{\partial W}{\partial u_{1}}+u \frac{\partial W}{\partial u_{2}}+\frac{1}{2}u^2 \frac{\partial W}{\partial u_{3}}=0,
+\end{equation}
+当$j=3$时，
+\begin{equation}
+	 \frac{\partial W}{\partial u_{1}}+(u+a) \frac{\partial W}{\partial u_{2}}+(H+ua) \frac{\partial W}{\partial u_{3}}=0,
+\end{equation}
+当方程的变量满足\cref{eq:12}时，假设\cref{eq:12}是一函数的微分，即$\dif t$, 那么$W$是关于$t$的不变量
+\begin{equation}
+	\frac{\Dif W}{\Dif t} = \sum^3_{i=1} \pd{u_i}{t} \frac{\partial W}{\partial u_{i}} = \sum^3_{i=1} r_{i j} \frac{\partial W}{\partial u_{i}}=0.
+\end{equation}
+
+\section{2}
+
+考虑二维Euler方程组
+\begin{equation}
+	\frac{\partial}{\partial t} \boldsymbol{U}+\frac{\partial}{\partial x} \boldsymbol{F}(\boldsymbol{U})+\frac{\partial}{\partial y} \boldsymbol{G}(\boldsymbol{U})=0
+\end{equation}
+其中
+\begin{equation}
+	\boldsymbol{U}=\left(\begin{array}{c}
+		\rho \\
+		\rho u \\
+		\rho v \\
+		E
+		\end{array}\right), \quad \boldsymbol{F}(\boldsymbol{U})=\left(\begin{array}{c}
+		\rho u \\
+		\rho u^{2}+p \\
+		\rho u v \\
+		u(E+p)
+		\end{array}\right), \quad \boldsymbol{G}(\boldsymbol{U})=\left(\begin{array}{c}
+		\rho v \\
+		\rho u v \\
+		\rho v^{2}+p \\
+		v(E+p)
+		\end{array}\right),
+\end{equation}
+$p=(\gamma-1) \rho e,\ E=\rho e+\frac{1}{2} \rho\left(u^{2}+v^{2}\right)$.声速 $a=\sqrt{\gamma p / \rho} .$
+
+\subsection{2a}
+
+\begin{equation}
+	\frac{\partial \bm{F}}{\partial \bm{U}}=\boldsymbol{A}(\boldsymbol{U})=
+	\begin{pmatrix}
+	0 & 1 & 0 &0 \\
+	-\frac{3y^2}{2x^2} + \gamma \frac{y^2}{2x^2} & \frac{3y}{x} - \frac{\gamma y}{x} & -\frac{(\gamma-1)m}{x}&\gamma-1 \\
+	-\frac{ym}{x^2}&\frac{m}{x}&\frac{y}{x}&0\\
+	(\gamma-1)\frac{(y^3+ym^2)}{x^3} -\frac{y}{x^2}\gamma z & \frac{\gamma z}{x} - \frac{(\gamma -1)(3y^2+m^2)}{2x^2} &-\frac{y(\gamma-1)m}{x^2}& \gamma \frac{y}{x}
+	\end{pmatrix},
+\end{equation}
+
+假设
+\begin{equation}
+	x=\rho,\quad y=\rho u, \quad z=E,\quad m=v.
+	\label{eq:20}
+\end{equation}
+再代入\cref{eq:20}得
+\begin{equation}
+	\boldsymbol{A}(\boldsymbol{U})=\begin{pmatrix}
+		0 & 1 & 0 &0\\
+		\frac{\gamma-3}{2} u^{2} + \frac{\gamma-1}{2}v^2 & (3-\gamma) u & - {(\gamma-1)v}&\gamma-1 \\
+		-uv&v&u&0\\
+		\frac{\gamma-2}{2}u (u^{2}+v^2)-\frac{a^{2} u}{\gamma-1} & \frac{1}{2} (u^{2}+v^2)-(\gamma-1)u^2+\frac{a^{2}}{\gamma-1} &-(\gamma-1)uv &\gamma u
+	\end{pmatrix}
+\end{equation}
+求得特征值为
+\begin{equation}
+	\lambda_1 = u,\quad\lambda_2 = u,\quad\lambda_3 = u+a,\quad\lambda_4 = u-a.
+\end{equation}
+特征向量矩阵为
+\begin{equation}
+	\begin{pmatrix}
+		-\frac{2\,v}{\sigma_3 } & \frac{2}{\sigma_3 } & \frac{2\,{\left(\gamma-1\right)}}{\sigma_1 } & \frac{2\,{\left(\gamma-1\right)}}{\sigma_2 }\\
+		-\frac{2\,u\,v}{\sigma_3 } & \frac{2\,u}{\sigma_3 } & \frac{2\,{\left(a+u\right)}\,{\left(\gamma-1\right)}}{\sigma_1 } & -\frac{2\,{\left(a-u\right)}\,{\left(\gamma-1\right)}}{\sigma_2 }\\
+		1 & 0 & \frac{\sigma_4 }{\sigma_1 } & \frac{\sigma_4 }{\sigma_2 }\\
+		0 & 1 & 1 & 1
+	\end{pmatrix},
+\end{equation}
+其中
+\begin{align}
+	\sigma_1 &=\gamma u^2 -2au+\gamma v^2 +2a^2 -u^2 -v^2 +2a\gamma u,\\
+	\sigma_2 &=2au+\gamma u^2 +\gamma v^2 +2a^2 -u^2 -v^2 -2a\gamma u,\\
+	\sigma_3 &=u^2 -v^2, \\
+	\sigma_4 &=2v{\left(\gamma-1\right)}.
+\end{align}
+经验证可得$\lambda_1,\lambda_2$对应的特征场是非线性退化的。$\lambda_3,\lambda_4$对应的特征场是真正非线性的。
+
+\subsection{2b}
+
+可以。由对称性，交换$u,v$符号即可，可得特征值为
+\begin{equation}
+	\lambda_1 = u,\quad\lambda_2 = u,\quad\lambda_3 = u+a,\quad\lambda_4 = u-a.
+\end{equation}
+同样的， $\lambda_1,\lambda_2$对应的特征场是非线性退化的。$\lambda_3,\lambda_4$对应的特征场是真正非线性的。
+
+
+
+% \nocite{*}
+
+\input{bib.tex}
+
+\end{document}

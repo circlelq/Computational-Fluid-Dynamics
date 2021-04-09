@@ -239,14 +239,14 @@ Jacobi矩阵
 \begin{equation}
 	\begin{cases}
 		\rho \dif u=0,\\
-		\gamma p\dif \rho=\rho \dif p.
+		- (\gamma-1) \rho u \dif u= \dif p.
 	\end{cases}
 \end{equation}
 解得
 \begin{equation}
 	\begin{cases}
 		u=c_2,\\
-		p=c_1\rho^\gamma.
+		p=c_1.
 	\end{cases}
 \end{equation}
 
@@ -273,6 +273,7 @@ Jacobi矩阵
 
 \begin{equation}
 	r_{1 j}(\boldsymbol{U}) \frac{\partial W}{\partial u_{1}}+r_{2 j}(\boldsymbol{U}) \frac{\partial W}{\partial u_{2}}+r_{3 j}(\boldsymbol{U}) \frac{\partial W}{\partial u_{3}}=0,
+	\label{eq:13}
 \end{equation}
 其中$W=W\left(u_{1}, u_{2}, u_{3}\right) \in \mathbb{R}$.
 
@@ -288,10 +289,10 @@ Jacobi矩阵
 \begin{equation}
 	 \frac{\partial W}{\partial u_{1}}+(u+a) \frac{\partial W}{\partial u_{2}}+(H+ua) \frac{\partial W}{\partial u_{3}}=0,
 \end{equation}
-当方程的变量满足\cref{eq:12}时，假设\cref{eq:12}是一函数的微分，即$\dif t$, 那么$W$是关于$t$的不变量
-\begin{equation}
-	\frac{\Dif W}{\Dif t} = \sum^3_{i=1} \pd{u_i}{t} \frac{\partial W}{\partial u_{i}} = \sum^3_{i=1} r_{i j} \frac{\partial W}{\partial u_{i}}=0.
-\end{equation}
+
+如果连续可微函数$W(u_1,u_2,··· ,u_m)$不恒等于常数, 且在$U$空间中沿 着\cref{eq:12}的任一积分曲线(即特征线), $W$恒为常数, 则称$W$为\cref{eq:12}的一个第一积分.方程组\cref{eq:12}的任一个第一积分是\cref{eq:13}的解.
+
+方程\cref{eq:12}解得出的不变量及其线性组合即为\cref{eq:13}的解。
 
 \section{2}
 
@@ -348,16 +349,17 @@ $p=(\gamma-1) \rho e,\ E=\rho e+\frac{1}{2} \rho\left(u^{2}+v^{2}\right)$.声速
 \end{equation}
 求得特征值为
 \begin{equation}
-	\lambda_1 = u,\quad\lambda_2 = u,\quad\lambda_3 = u+a,\quad\lambda_4 = u-a.
+	\lambda_1 = u-a,\quad\lambda_2 = u,\quad\lambda_3 = u,\quad\lambda_4 = u+a.
 \end{equation}
 特征向量矩阵为
 \begin{equation}
 	\begin{pmatrix}
-		-\frac{2\,v}{\sigma_3 } & \frac{2}{\sigma_3 } & \frac{2\,{\left(\gamma-1\right)}}{\sigma_1 } & \frac{2\,{\left(\gamma-1\right)}}{\sigma_2 }\\
-		-\frac{2\,u\,v}{\sigma_3 } & \frac{2\,u}{\sigma_3 } & \frac{2\,{\left(a+u\right)}\,{\left(\gamma-1\right)}}{\sigma_1 } & -\frac{2\,{\left(a-u\right)}\,{\left(\gamma-1\right)}}{\sigma_2 }\\
-		1 & 0 & \frac{\sigma_4 }{\sigma_1 } & \frac{\sigma_4 }{\sigma_2 }\\
-		0 & 1 & 1 & 1
+		 \frac{2\,{\left(\gamma-1\right)}}{\sigma_2 }&-\frac{2\,v}{\sigma_3 } & \frac{2}{\sigma_3 } & \frac{2\,{\left(\gamma-1\right)}}{\sigma_1 } \\
+		-\frac{2\,{\left(a-u\right)}\,{\left(\gamma-1\right)}}{\sigma_2 }& -\frac{2\,u\,v}{\sigma_3 } & \frac{2\,u}{\sigma_3 } & \frac{2\,{\left(a+u\right)}\,{\left(\gamma-1\right)}}{\sigma_1 } \\
+		\frac{\sigma_4 }{\sigma_2 } &1 & 0 & \frac{\sigma_4 }{\sigma_1 } \\
+		1&0 & 1 & 1 
 	\end{pmatrix},
+	\label{eq:21}
 \end{equation}
 其中
 \begin{align}
@@ -366,15 +368,17 @@ $p=(\gamma-1) \rho e,\ E=\rho e+\frac{1}{2} \rho\left(u^{2}+v^{2}\right)$.声速
 	\sigma_3 &=u^2 -v^2, \\
 	\sigma_4 &=2v{\left(\gamma-1\right)}.
 \end{align}
-经验证可得$\lambda_1,\lambda_2$对应的特征场是非线性退化的。$\lambda_3,\lambda_4$对应的特征场是真正非线性的。
+经验证可得$\lambda_2,\lambda_3$对应的特征场是非线性退化的。$\lambda_1,\lambda_4$对应的特征场是真正非线性的。
 
 \subsection{2b}
 
-可以。由对称性，交换$u,v$符号即可，可得特征值为
+可以。由对称性，交换$u,v$符号，并交换$\bm{U},\ \bm{F}$的二三元素即可，所以交换$\bm{A}(\bm{U})$的二三列和二三行（交换顺序并不影响结果）并交换$u,\ v$即得$\bm{B}(\bm{U})$，交换二三列和二三行相当于做了一个相似变换，特征值不变，而交换$u,\ v$后，其特征值为
 \begin{equation}
-	\lambda_1 = u,\quad\lambda_2 = u,\quad\lambda_3 = u+a,\quad\lambda_4 = u-a.
+	\lambda_1 = v-a,\quad\lambda_2 = v,\quad\lambda_3 = v,\quad\lambda_4 = v+a.
 \end{equation}
-同样的， $\lambda_1,\lambda_2$对应的特征场是非线性退化的。$\lambda_3,\lambda_4$对应的特征场是真正非线性的。
+交换特征向量矩阵的\cref{eq:21}的二三行并交换$u,\ v$即得$\bm{B}(\bm{U})$的特征向量矩阵。
+
+同样的， $\lambda_2,\lambda_3$对应的特征场是非线性退化的。$\lambda_1,\lambda_4$对应的特征场是真正非线性的。
 
 
 

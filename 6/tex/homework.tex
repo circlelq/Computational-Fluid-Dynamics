@@ -1,0 +1,389 @@
+\documentclass[12pt]{article}
+\input{/Users/circle/Documents/博一下/homework/setting.tex}
+\setcounter{secnumdepth}{2}
+\usepackage{autobreak}
+\usepackage{amsmath}
+\setlength{\parindent}{2em}
+\graphicspath{{../}}
+\ziju{0.1pt}
+
+%pdf文件设置
+\hypersetup{
+	pdfauthor={袁磊祺},
+	pdftitle={计算流体力学作业6}
+}
+
+\title{
+		\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
+		\horrule{0.5pt} \\[0.2cm]
+		\huge \bfseries{计算流体力学作业6} \\[-0.2cm]
+		\horrule{2pt} \\[0.2cm]
+}
+\author{
+		\normalfont 								\normalsize
+		College of Engineering \quad 2001111690  \quad 袁磊祺\\	\normalsize
+        \today
+}
+\date{}
+
+\begin{document}
+
+\input{setc.tex}
+
+\maketitle
+
+\section{1}
+
+
+证明: 显式的线性保单调格式是单调的.
+
+
+\begin{proof}
+
+设$U^n$是任意的网格函数，令
+\begin{equation}
+	\begin{cases}
+		V_j^n=U^n_J, &j\not= J,\\
+		V^n_J>U^n_J, &j=J.
+	\end{cases}
+\end{equation}
+接下来我们证明对所有的$j,\ V^{n+1}_j\geq U_j^{n+1}$, 这意味这格式是单调的。
+
+设$W^n$是单调的黎曼数据，即
+\begin{equation}
+	W^n_j=\begin{cases}
+		U^n_J, &j<J,\\
+		V_J^n,&j\geq J.
+	\end{cases}
+\end{equation}
+所以$W^n_j$是不减的。注意到对所有的$j$
+\begin{equation}
+	W^n_J = W^n_{j-1}+\left(V_j^n-U_j^n\right),
+	\label{eq:11}
+\end{equation}
+因为当$j\not= J$时，最后一项是0。又因为这个格式是线性的，所以我们可以把\cref{eq:11}变为
+\begin{equation}
+	W^{n+1}_j=W^{n+1}_{j-1}+\left(V^{n+1}_j-U^{n+1}_j\right).
+\end{equation}
+所以
+\begin{equation}
+	V^{n+1}_j=U^{n+1}_j+\left(W^{n+1}_j-W^{n+1}_{j-1}\right).
+	\label{eq:12}
+\end{equation}
+因为格式是保单调的，并且$W^n$是单调的，即$W^n_{j-1}\leqslant W^n_j$,我们有$W^{n+1}_{j} - W^{n+1}_j \geq 0 $,由\cref{eq:12}可得$V_j^{n+1}\geq U_j^{n+1}$.这表明这个格式是单调的。
+	
+\end{proof}
+
+
+\section{2}
+
+
+证明: 线性保单调方法最多一阶精度.
+
+
+\begin{proof}
+
+	为简单起见，仅对一个空间变量的情形证明. 这时单调差 分格式可写为
+	\begin{equation}
+		\begin{aligned}
+			u_{j}^{n+1}=&H\left(u_{i-l}^{n}, u_{i-l+1}^{n}, \cdots, u_{i+l}^{n}\right)\\
+			=&u_{j}^{n}-\frac{\Delta t}{\Delta x}\left[\bar{f}\left(u_{i-l+1}^{n}, \cdots, u_{i+l}^{n}\right)-\bar{f}\left(u_{i-l}^{n}, \cdots, u_{j+l-1}\right)\right].
+		\end{aligned}
+		\label{eq:21}
+	\end{equation}
+其中$H$是每个参变量的非减函数，且 
+\begin{equation}
+	\bar{f}(u, \cdots, u)=f(u).
+	\label{eq:22}
+\end{equation}
+
+首先证明几个恒等式. 令
+\begin{align}
+	\bar{u}&=\left(u_{-l}, \cdots, u_{l-1}\right), \\
+T \bar{u}&=\left(u_{-l+1}, \cdots, u_{l}\right).
+\end{align}
+其中 $u_{j}=u(x+j \Delta x, t)$ . 由\cref{eq:21,eq:22}则有
+\begin{equation}
+	H(u, \cdots, u)=u.
+	\label{eq:23}
+\end{equation}
+\cref{eq:22} 两端对 ${u}$ 求导得
+\begin{equation}
+	\sum_{j=-l}^{l} \bar{f}_{j}(u, \cdots, u)=a(u),
+\end{equation}
+其中 $a(u)=f^{\prime}(u)$, 下标 $j$ 表示对第 $j$ 个参变量的偏导数，当 $j \geqslant l$ 或 $j \leqslant -l-1$ 时 $\bar{f}_{j} \equiv 0$. 对\cref{eq:21} 的第二个等式两端 求导则有
+\begin{align}
+H_{k}&=\delta_{0, k}-\frac{\Delta t}{\Delta x}\left[\bar{f}_{k-1}(T \bar{u})-\bar{f}_{k}(\bar{u})\right],\quad -l \leqslant k \leqslant l, \\
+H_{k, m}&=-\frac{\Delta{t}}{\Delta x}\left[\bar{f}_{k-1, m-1}(T \bar{u})-\bar{f}_{k, m}(\bar{u})\right],\quad -l \leqslant m \leqslant l.
+\end{align}
+从上述等式可得
+\begin{equation}
+	\sum_{k=-1}^{l} H_{k}(u, \cdots, u)=\sum_{k} \delta_{0, k}=1,
+\end{equation}
+\begin{equation}
+	\begin{aligned}
+	\sum_{k=-l}^{l} k H_{k}(u, \cdots, u)&=-\frac{\Delta t}{\Delta x} \sum_{k}\left(\bar{f}_{k-1}-\bar{f}_{k}\right) k =-\frac{\Delta t}{\Delta x} \sum_{k}[(k+1)-k] \bar{f}_{k}\\
+	&=-\frac{\Delta t}{\Delta x} a(u), 
+\end{aligned}
+\label{eq:24}
+\end{equation}
+\begin{equation}
+	\begin{aligned}
+		\sum_{k, m=-l}^{l}(k-m)^{2} H_{k, m}(u, \cdots, u)&=-\frac{\Delta t}{\Delta x} \sum_{k, \infty}(k-m)^{2}\left[\bar{f}_{k, m}-\bar{f}_{k-1, m-1}\right]\\
+		&=\sum_{k,m}(k-m)^2\bar{f}_{k,m}-\sum_{k,m}[k-1-(m-1)]^2\bar{f}_{k-1,m-1}\\
+		&=0.
+	\end{aligned}
+	\label{eq:25}
+\end{equation}
+由 Taylor 展开及\cref{eq:23}则有
+\begin{equation}
+	\begin{aligned}
+		H\left(u_{-l}, u_{-l+1}, \cdots, u_{l}\right)=&\ H\left(u_0, u_0, \cdots, u_0\right)+\sum_{i=-1}^{l} H_{j}\left(u_{0}, \cdots, u_{0}\right)\left(u_{j}-u_{0}\right) \\
+		&+\frac{1}{2} \sum_{k, m} H_{k, m}\left(u_{0}, \cdots, u_{0}\right)\left(u_{k}-u_{0}\right)\left(u_{m}-u_{0}\right)+\mathcal{O}\left(\Delta x^{3}\right) \\
+		=&\ u_{0}+\Delta x u_{x} \sum_{j} j H_{j}+\frac{1}{2} \Delta x^{2} u_{x x} \sum_{j} j^{2} H_{j} \\
+		&+\frac{1}{2} \Delta x^{2} u_{x}^{2} \sum_{k, m} k m H_{k, m}+\mathcal{O}\left(\Delta x^{3}\right) \\
+		=&\ u_{0} +\Delta x u_{x} \sum_{j} j H_{j}+\frac{1}{2} \Delta x^{2}\left[\sum_{j} j^{2} H_{j} u_{x}\right]_{x} \\
+		&+\frac{1}{2} \Delta x^{2} u_{x}^{2} \sum_{k, m} H_{k, m}(k m-k^{2})+\mathcal{O}\left(\Delta x^{3}\right).
+		\end{aligned}
+\end{equation}
+由\cref{eq:24}有
+\begin{equation}
+	\Delta x u_{x} \sum j H_{j}=\Delta x u_{x}\left[-\frac{\Delta t}{\Delta x} a(u)\right]=-\Delta tf(u),
+\end{equation}
+
+利用对称性 $H_{k, m}=H_{m, k}$ 及\cref{eq:25}, 则有
+\begin{equation}
+	\sum_{k, m} H_{k, m}(k m-k^{2})=-\frac{1}{2} \sum {H}_{k, m}(k-m)^{2}=0.
+\end{equation}
+因此差分格式的 Taylor 展式为
+\begin{equation}
+	\begin{aligned}
+		&\ H(u(x-l \Delta x, t), \cdots, u(x+l \Delta x, t)) \\
+		=&\ u(x, t)-\Delta t f(u)_{x}+\left(\frac{1}{2} \Delta x^{2}\right)\cdot\left\{\sum_{j=-l}^{l} j^{2} H_{j}(u(x, t), \cdots, u(x, t)) u_{x}(x, t)\right\}_{x}+\mathcal{O}\left(\Delta x^{3}\right)
+	\end{aligned}
+\end{equation}
+如果$u$ 是一维守恒律方程式的光滑解,则有
+\begin{equation}
+	u(x, t+\Delta t)=u(x, t)-\Delta tf(u)_{x}+\left(\frac{1}{2} \Delta t^{2}\right)\left[a^{2}(u) u_{x}\right]_{x}+\mathcal{O}\left(\Delta t^{3}\right),
+\end{equation}
+因此截断误差为
+\begin{equation}
+	u(x, t+\Delta t)-H(u(x-l \Delta x, t), \cdots, u(x+l \Delta x, t))=-(\Delta t)^{2}\left[\beta\left(u, \frac{\Delta t}{\Delta x}\right) u_{*}\right]_{x}+\mathcal{O}\left(\Delta t^{3}\right),
+	\label{eq:26}
+\end{equation}
+其中
+\begin{equation}
+	\beta(u, \lambda)=\frac{1}{2 \lambda^{2}} \sum_{j=-l}^{l} j^{2} H_{j}(u, \cdots, u)-\frac{1}{2} a^{2}(u)
+\end{equation}
+由于格式是单调的,所以 $H_{j} \geqslant 0$, 再利用 \cref{eq:24} 及 $\mathrm{Schwarz}$ 不
+等式就得到
+\begin{equation}
+	\begin{aligned}
+	\lambda^{2} a^{2}(u) &=\left(\sum_{j} j H_{j}\right)^{2}=\left(\sum j \sqrt{H_{j}} \sqrt{H_{j}}\right)^{2} \\
+	& \leqslant \sum j^{2} H_{j} \cdot \sum H_{j}=\sum j^{2} H_{j}.
+	\end{aligned}
+	\end{equation}
+由此可知 $\beta(u, \lambda) \geqslant 0$, 而等号只有当 $j \sqrt{H}_{j}=\sqrt{H_{j}}(j=-l, \cdots,
+l)$ 满足时才成立. 这意味着除 $j=1$ 外，所有的 $H_{j}=0,$ 也即 $H$ 仅与 $u_{j+1}^{n}$ 有关。这样的格式是没有意义的。所以\cref{eq:26} 右端第一项的系数不为0，定理得证。
+
+
+\end{proof}
+
+\section{3}
+
+证明讲义 (CFDLect05-com02\_cn.pdf) 的第11页的引理.
+
+引理: 令Q是具有如下形式的差分算子
+\begin{equation}
+	(\mathcal{Q} \cdot u)_{j}=u_{j}+C_{j+\frac{1}{2}} \Delta u_{j}-D_{j-\frac{1}{2}} \Delta u_{j-1},
+	\label{eq:31}
+\end{equation}
+则
+\begin{enumerate}
+	\item 如果对所有$j$
+	\begin{equation}
+		C_{j+\frac{1}{2}} \geq 0, \quad D_{j+\frac{1}{2}} \geq 0, \quad C_{j+\frac{1}{2}}+D_{j+\frac{1}{2}} \leqslant 1,
+	\end{equation}
+	则$\mathcal{Q}$为TVD; 
+	\item 如果对所有 $j$
+	\begin{equation}
+		-\infty<C \leqslant C_{j+\frac{1}{2}},  D_{j+\frac{1}{2}} \leqslant 0,
+	\end{equation}	
+	则 $\mathcal{Q}$ 为TVI.
+\end{enumerate}
+
+\begin{proof}
+~
+	\subsection{1}
+
+由\cref{eq:31}得	
+	\begin{equation}
+		(\mathcal{Q} \cdot u)_{j+1}=\ u_{j+1}+C_{j+\frac{3}{2}} \Delta u_{j+1}-D_{j+\frac{1}{2}} \Delta u_{j}
+		\label{eq:32}
+	\end{equation}
+	\cref{eq:32}减\cref{eq:31}得
+	\begin{equation}
+		\begin{aligned}
+			\abs{\Delta (\mathcal{Q} \cdot u)_{j}}=&\ \abs{\Delta u_{j} + C_{j+\frac{3}{2}} \Delta u_{j+1} - C_{j+\frac{1}{2}} \Delta u_{j}-D_{j+\frac{1}{2}} \Delta u_{j}+D_{j-\frac{1}{2}} \Delta u_{j-1}}\\
+			=&\ \abs{D_{j-\frac{1}{2}} \Delta u_{j-1}+\left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\Delta u_{j} + C_{j+\frac{3}{2}} \Delta u_{j+1}}\\
+			\leqslant&\ D_{j-\frac{1}{2}} \abs{\Delta u_{j-1}}+\left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\abs{\Delta u_{j}} + C_{j+\frac{3}{2}} \abs{\Delta u_{j+1}}.
+		\end{aligned}
+	\end{equation}
+因为对所有$j$
+\begin{equation}
+	C_{j+\frac{1}{2}} \geq 0, \quad D_{j+\frac{1}{2}} \geq 0, \quad C_{j+\frac{1}{2}}+D_{j+\frac{1}{2}} \leqslant 1,
+\end{equation}
+所以有上面的不等式，然后对$j$求和
+\begin{equation}
+	\begin{aligned}
+		\mathrm{TV}(\mathcal{Q}\cdot u)=&\ \sum_j \abs{\Delta (\mathcal{Q} \cdot u)_{j}}\\
+		\leqslant&\ \sum_j D_{j-\frac{1}{2}} \abs{\Delta u_{j-1}}+\sum_j \left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\abs{\Delta u_{j}} + \sum_j  C_{j+\frac{3}{2}} \abs{\Delta u_{j+1}}\\
+		=&\ \sum_j \abs{\Delta u_{j}}=\mathrm{TV}(u),
+	\end{aligned}
+\end{equation}
+所以差分算子是TVD。
+
+
+\subsection{2}
+
+同样的，\cref{eq:32}减\cref{eq:31}并移项得
+\begin{equation}
+	{\Delta (\mathcal{Q} \cdot u)_{j}}-{D_{j-\frac{1}{2}} \Delta u_{j-1} - C_{j+\frac{3}{2}} \Delta u_{j+1}} = \left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\Delta u_{j} .
+\end{equation}
+两边取绝对值，并利用三角不等式得
+\begin{equation}
+	\abs{\Delta (\mathcal{Q} \cdot u)_{j}}-{D_{j-\frac{1}{2}} \abs{\Delta u_{j-1}} - C_{j+\frac{3}{2}} \abs{\Delta u_{j+1}}} \geqslant \left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\Delta u_{j} .
+\end{equation}
+然后对式子两边求和得
+\begin{equation}
+	\sum_j \abs{\Delta (\mathcal{Q} \cdot u)_{j}}-\sum_j {D_{j-\frac{1}{2}} \abs{\Delta u_{j-1}} - \sum_j C_{j+\frac{3}{2}} \abs{\Delta u_{j+1}}} \geqslant \sum_j \left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\Delta u_{j}.
+\end{equation}
+移项得
+\begin{equation}
+	\mathrm{TV}(\mathcal{Q}\cdot u)\geqslant \mathrm{TV}(u).
+\end{equation}
+
+\end{proof}
+
+
+\section{4}
+
+
+设讲义 ( CFDLect05-com02\_cn.pdf) 的第39页中对流方程的系数$a <0$, 类似 (4.5)的做法, 给出和讨论相关TVD格式及限制器.
+
+
+
+\begin{equation}
+u_{t}+a u_{x}=0,
+\end{equation}
+取  $\hat{f}^{H}=\hat{f}^{L W}, \quad \hat{f}^{L}=\hat{f}^{U}(\text { 一阶迎风 })$.
+
+如果 $a<0$, 则可将LW格式改写为
+\begin{equation}
+u_{j}^{n+1}=u_{j}^{n}-\nu\left(u_{j+1}^{n}-u_{j}^{n}\right)+\frac{1}{2} \nu(1+\nu)\left(u_{j+1}^{n}-2 u_{j}^{n}+u_{j-1}^{n}\right),
+\label{eq:41}
+\end{equation}
+其中$\nu=a\tau/h$.
+
+可以将LW格式看作是在迎风格式上加了一校正项得到的, 此时数值 通量又可写为
+\begin{equation}
+\hat{f}^{L W}=a u_{j+1}-\frac{1}{2} a(1+\nu)\left(u_{j+1}-u_{j}\right),
+\end{equation}
+由于LW格式不是TVD的, 所以我们需要修正它, 以便得到一个具有TVD性质的 高分辨通量限制器方法. 思想是加一个有限制的反扩散通量于一阶格式, 具体 是将\cref{eq:41}修改为
+\begin{equation}
+u_{j}^{n+1}=u_{j}^{n}-\nu \Delta_{x}^{+} u_{j}^{n}+\Delta_{x}^{-}\left(\varphi_{j+1}^{n} \frac{1}{2} \nu(1+\nu) \Delta_{x}^{+} u_{j}^{n}\right),
+\label{eq:42}
+\end{equation}
+这里 $\varphi_{j}$ 是某种形式的limiter, 取值为非正, 以便保持反扩散项的符号. 下面的任务是定义 $\varphi_{j} .$
+
+将\cref{eq:42}改写为另一种增量形式:
+\begin{equation}
+\begin{aligned}
+u_{j}^{n+1} &=u_{j}^{n}-\left[\nu-\frac{1}{2} \nu(1+\nu) \frac{\varphi_{j+1} \Delta_{x}^{+} u_{j}^{n}-\varphi_{j} \Delta_{x}^{-} u_{j}^{n}}{\Delta_{x}^{+} u_{j}^{n}}\right] \Delta_{x}^{+} u_{j}^{n} \\
+&=: u_{j}^{n}-D_{j-\frac{1}{2}}^{n} \Delta_{x}^{+} u_{j}^{n},
+\end{aligned}
+\label{eq:421}
+\end{equation}
+其中
+\begin{equation}
+D_{j-\frac{1}{2}}^{n}=\nu\left\{1-\frac{1}{2}(1+\nu)\left[\varphi\left(r_{j+1}\right)-r_j \varphi\left(r_{j}\right)\right]\right\},
+\end{equation}
+设$\Phi$为 $\left|\varphi\left(r_{j+1}\right)- r_j\varphi\left(r_{j}\right)\right|$ 的上界, 即
+\begin{equation}
+\left|\varphi\left(r_{j+1}\right) - r_j\varphi\left(r_{j}\right)\right| \leqslant \Phi,
+\label{eq:43}
+\end{equation}
+其中
+\begin{equation}
+	r_j = \frac{\Delta^-_x u_j}{\Delta^+_x u_j},
+\end{equation}
+则有
+\begin{equation}
+\nu\left(1+\frac{1}{2}(1+\nu) \Phi\right) \leqslant D_{j-\frac{1}{2}} \leqslant \nu\left(1-\frac{1}{2}(1+\nu) \Phi\right).
+\end{equation}
+如果格式\cref{eq:421}中增量系数满足
+\begin{equation}
+-1 \leqslant D_{j-\frac{1}{2}} \leqslant 0,
+\end{equation}
+则格式\cref{eq:42}为TVD的. 由此得:
+\begin{equation}
+\Phi \leqslant -\frac{2}{\nu}, \quad \Phi \leqslant \frac{2}{1+\nu},
+\end{equation}
+即需要$\Phi \leqslant \min \left\{ -\frac{2}{\nu}, \frac{2}{1+\nu}\right\} \leqslant 2 .$
+如果除了需要 $\varphi(r)$ 非正, 也假设, 当 $r \leqslant 0$ 时, $\varphi(r)=0$, 则由\cref{eq:43}及 $\Phi \leqslant 2$ 得
+\begin{equation}
+-2 \leqslant \varphi(r), r\varphi(r) \leqslant 0
+\end{equation}
+这是格式\cref{eq:42}为TVD的充分条件.
+
+
+
+\section{5}
+
+
+证明标量方程$u_{t} +f(u)_{x}=0$ 的LF格式在CFL条件下满足离散的商不 等式. ( 提示: 格式两边乘以 $v_{j}^{n+1}:=\eta^{\prime}\left(u_{j}^{n+1}\right) $)
+
+\begin{proof}
+
+	对于LF格式，
+	\begin{equation}
+		u_{j}^{n+1}=\frac{u_{j+1}^{n}+u_{j-1}^{n}}{2}-\frac{\lambda}{2}\left(f\left(u_{j+1}^{n}\right)-f\left(u_{j-1}^{n}\right)\right),
+	\end{equation}
+是相容的守恒型差分格式，因为
+\begin{equation}
+	\hat{f}^n_{1+\frac{1}{2}} = \hat{f}\left(u^n_j,u^n_{j+1}\right)=\frac{1}{2}\left[f\left(u^n_j\right)+f\left(u^n_{j+1}\right)\right]-\frac{1}{2}\left(u^n_{j+1}-u^n_j\right)\frac{h}{\tau},
+\end{equation}
+所以$\hat{f}(u,u)=f(u)$.
+
+下面证LF格式在CFL条件
+\begin{equation}
+	\frac{\tau}{h} \max \left\{\left|f^{\prime}(u)\right|\right\} \leqslant 1
+	\label{eq:51}
+\end{equation}
+下是单调的.
+
+因为$H$可以表示成
+\begin{equation}
+	H\left(u_{j+1}^{n}, u_{j}^{n}, u_{j-1}^{n}\right)=\frac{u_{j+1}^{n}+u_{j-1}^{n}}{2}-\frac{\tau}{2 h}\left(f\left(u_{j+1}^{n}\right)-f\left(u_{j-1}^{n}\right)\right),
+\end{equation}
+当\cref{eq:51}满足时，有
+\begin{equation}
+	\frac{\partial H}{\partial u_{j \pm 1}^{n}}=\frac{1}{2}\left(1 \mp \frac{\Delta t}{\Delta x} f^{\prime}\left(u_{j \pm 1}^{n}\right)\right) \geqslant 0,\quad \frac{\partial H}{\partial u_{j}^{n}}=0.
+\end{equation}
+所以LF格式是单调的。
+
+根据CFDLect04-com01_cn.pdf中P92的定理：如果守恒型单调差分格式相容, 则它满足离散的熵条件，由此得证。
+
+
+
+\end{proof}
+
+
+
+% \nocite{*}
+
+\input{bib.tex}
+
+\end{document}

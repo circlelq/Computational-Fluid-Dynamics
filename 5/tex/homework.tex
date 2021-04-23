@@ -1,0 +1,325 @@
+\documentclass[12pt]{article}
+\input{/Users/circle/Documents/博一下/homework/setting.tex}
+\setcounter{secnumdepth}{2}
+\usepackage{autobreak}
+\usepackage{amsmath}
+\setlength{\parindent}{2em}
+\graphicspath{{../}}
+\ziju{0.1pt}
+
+
+%pdf文件设置
+\hypersetup{
+	pdfauthor={袁磊祺},
+	pdftitle={计算流体力学作业5}
+}
+
+\title{
+		\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
+		\horrule{0.5pt} \\[0.2cm]
+		\huge \bfseries{计算流体力学作业5} \\[-0.2cm]
+		\horrule{2pt} \\[0.2cm]
+}
+\author{
+		\normalfont 								\normalsize
+		College of Engineering \quad 2001111690  \quad 袁磊祺\\	\normalsize
+        \today
+}
+\date{}
+
+\begin{document}
+
+\input{setc.tex}
+
+\maketitle
+
+\section{1}
+
+
+
+参见讲义 (CFDLect04-com01\_cn.pdf) 的第43页. 证明: 一维完全气
+体动力学方程组(Euler方程组) 的第3个波 $\left(\lambda_{3}=u+a\right)$ 的左右状态满
+足:
+$p_{L}>p_{R}, u_{L}>u_{R}$, 激波; $p_{L}<p_{R}, u_{L}<u_{R}$, 稀疏波.
+
+第2个波 $\left(\lambda_{2}=u\right)$ 的左右状态满足:$p_{L}=p_{R}, u_{L}=u_{R}$, 接触间断.
+
+设3波是激波, 则有熵条件(Lax激波条件)
+\begin{align}
+	\lambda_{i-1}(\boldsymbol{U}(x-0, t)) \leq s<\lambda_{i}(\boldsymbol{U}(x-0, t)), \\
+	\lambda_{i}(\boldsymbol{U}(x+0, t))<s \leq \lambda_{i+1}(\boldsymbol{U}(x+0, t)).
+\end{align}
+即
+\begin{equation}
+	u_{L}+a_{L}>s>u_{R}+a_{R}, \quad s>u_{L},
+\end{equation}
+由此得 $(v:=s-u)$
+\begin{equation}
+	a_{L}>v_{L}>0, \quad 0<a_{R}<v_{R}.
+\end{equation}
+由第三个间断跳跃条件知
+\begin{equation}
+	\frac{\gamma+1}{\gamma-1} v_{L}^{2}<\frac{2 a_{L}^{2}}{\gamma-1}+v_{L}^{2}=\frac{2 a_{R}^{2}}{\gamma-1}+v_{R}^{2}<\frac{\gamma+1}{\gamma-1} v_{R}^{2},
+\end{equation}
+因此, $a_{L}<a_{R} .$
+再次利用第三个间断跳跃条件, 得
+\begin{equation}
+	0>\frac{2 a_{R}^{2}}{\gamma-1}-\frac{2 a_{L}^{2}}{\gamma-1}=v_{L}^{2}-v_{R}^{2}.
+\end{equation}
+注意 $v_{L}>0, v_{R}>0$, 所以有
+\begin{equation}
+	v_{L}<v_{R} \Longleftrightarrow u_{L}>u_{R}.
+\end{equation}
+由第一和第二个间断跳跃条件知
+\begin{equation}
+	p_{L}-p_{R}=\rho_{R} v_{R}^{2}-\rho_{L} v_{L}^{2}=\rho_{L} v_{L}\left(v_{R}-v_{L}\right)>0,
+\end{equation}
+所以
+\begin{equation}
+	p_L>p_R.
+\end{equation}
+
+设3波是稀疏波.“熵"条件
+\begin{equation}
+	\lambda_{3}\left(\boldsymbol{U}_{L}\right)=u_{L}+a_{L}<u_{R}+a_{R},
+\end{equation}
+表示波头比波尾快.
+由3-Riemann不变量给出
+\begin{align}
+u_{L}+a_{L} -\frac{\gamma+1}{\gamma-1} a_{L}=u_{L}-\frac{2 a_{L}}{\gamma-1}&=u_{R}-\frac{2 a_{R}}{\gamma-1}=u_{R}+a_{R}-\frac{\gamma+1}{\gamma-1} a_{R} \\
+&>u_{L}+a_{L}-\frac{\gamma+1}{\gamma-1} a_{R},
+\end{align}
+因此, $a_{L}<a_{R}$,并且$u_L<u_R$.
+再由另一个3-Riemann不变量给出
+\begin{equation}
+	p_{L} \rho_{L}^{-\gamma}=p_{R} \rho_{R}^{-\gamma},
+\end{equation}
+则
+\begin{equation}
+	\frac{p_{R}}{p_{L}}=\left(\frac{\rho_{R}}{\rho_{L}}\right)^{\gamma}=\left(\frac{a_{R}}{a_{L}}\right)^{2 \gamma /(\gamma-1)}.
+\end{equation}
+由此得 $p_{L}<p_{R} .$
+
+而对接触间断, $p,\ u$ 是Riemann 不变量, 故结论 成立.
+\begin{equation}
+	p_L=p_R,\quad u_L=u_R.
+\end{equation}\qed
+
+\section{2}
+
+已知一维标量守恒律方程 $u_{t}+f(u)_{x}=0$ 的差分格式
+\begin{equation}
+	u_{j}^{n+1}=u_{j}^{n}-\frac{\tau}{h}\left(\hat{f}\left(u_{j}^{n}, u_{j+1}^{n}\right)-\hat{f}\left(u_{j-1}^{n}, u_{j}^{n}\right)\right),
+\end{equation}
+其中数值通量 $\hat{f}(u, v)$ 是一个连续可微的二元函数, 且
+\begin{equation}
+	\frac{\partial \hat{f}(u, v)}{\partial u} \geq 0, \quad \frac{\partial \hat{f}(u, v)}{\partial v} \leq 0.
+\end{equation}
+试分析和给出该格式满足TVD(总变差不增)性质和局部极值原理 的(最优)条件.
+
+对于满足局部极值原理，这里给出一个充分条件，即
+\begin{equation}
+	1+r\left(\frac{\partial \hat{f}(u, v)}{\partial v}-\frac{\partial \hat{f}(u, v)}{\partial u}\right)\geq 0,
+	\label{eq:21}
+\end{equation}
+其中
+\begin{equation}
+	r = \tau/h.
+\end{equation}
+
+由拉格朗日中值定理，
+\begin{equation}
+	\hat{f}\left(u_{j}^{n}, u_{j+1}^{n}\right) = \hat{f}\left(u_{j}^{n}, u_{j}^{n}\right)+\hat{f}_v\left(u_{j}^{n}, \xi \right) \left(u_{j+1}^{n} - u_{j}^{n}\right),
+\end{equation}
+\begin{equation}
+	\hat{f}\left(u_{j-1}^{n}, u_{j}^{n}\right) = \hat{f}\left(u_{j}^{n}, u_{j}^{n}\right)+\hat{f}_u \left(\eta, u_{j}^{n} \right) \left(u_{j-1}^{n} - u_{j}^{n}\right),
+\end{equation}
+其中
+\begin{equation}
+	\xi \in \left[u_{j}^{n}, u_{j+1}^{n}\right],\quad \eta \in \left[u_{j-1}^{n}, u_{j}^{n}\right].
+\end{equation}
+
+记
+\begin{equation}
+	p = \hat{f}_v\left(u_{j}^{n}, \xi \right) \leq 0,\quad q = \hat{f}_u \left(\eta, u_{j}^{n} \right)\geq 0.
+\end{equation}
+所以
+\begin{equation}
+	u_j^{n+1}=(1+rp-rq)u^n_j-rpu_{j+1}^n+rqu_{j-1}^n.
+	\label{eq:22}
+\end{equation}
+上式又可以写成
+\begin{equation}
+	u_{j}^{n+1}=A u_{j-1}^{n}+B u_{j}^{n}+C u_{j+1}^{n}
+\end{equation}
+其中
+\begin{equation}
+	A=rq, B=(1+rp-rq), C=-rp,
+\end{equation}
+由于在条件\cref{eq:21}下, $A, B, C \geq 0$, 且 $A+B+C=1$, 所以有
+\begin{equation}
+	\min \left\{u_{j-1}^{n}, u_{j}^{n}, u_{j+1}^{n}\right\} \leq u_{j}^{n+1} \leq \max \left\{u_{j-1}^{n}, u_{j}^{n}, u_{j+1}^{n}\right\}.
+\end{equation}
+
+而对于TVD性质，由于$A, B, C \geq 0$，可得格式是守恒型单调格式，根据\texttt{Lec 5 P7},守恒型单调格式是$l_1$压缩的，又根据$l_1$压缩是TVD的，即得证。
+
+
+
+
+% 为了满足TVD性质，这加出一个较强的条件，即$f$的偏导为常数。那么
+% \begin{equation}
+% 	p = \mathrm{const},\quad q = \mathrm{const}.
+% \end{equation}
+% 将\cref{eq:22}改写为
+% \begin{equation}
+% 	u_{j}^{n+1}=u_{j}^{n}+C\left(u_{j+1}^{n}-u_{j}^{n}\right)-D\left(u_{j}^{n}-u_{j-1}^{n}\right),
+% \end{equation}
+% 其中 $C=-rp,\ D=rq.$ 不难知道, 在已知条件(2.13)下, 上式中 的增量系数 $C$ 和 $D$ 满足
+% \begin{equation}
+% 	C \geq 0, \quad D \geq 0, \quad 1-C-D \geq 0,
+% 	\label{eq:23}
+% \end{equation}
+% 如果将\cref{eq:23}中的下标 $j$ 向右平移一个网格, 则可以得到一个关于 $u_{j+1}^{n+1}$ 的差分方 程. 将 $u_{j+1}^{n+1}$ 的差分方程与\cref{eq:23}相减, 得
+% \begin{equation}
+% 	\Delta_{x} u_{j}^{n+1}=C \Delta_{x} u_{j+1}^{n}+(1-C-D) \Delta_{x} u_{j}^{n}+D \Delta_{x} u_{j-1}^{n},
+% \end{equation}
+% 其中 $\Delta_{x} u_{j}^{n}=u_{j+1}^{n}-u_{j}^{n} .$ 上式方程两端取绝对值, 则有
+% \begin{align}
+% \left|\Delta_{x} u_{j}^{n+1}\right| &=\left|C \Delta_{x} u_{j+1}^{n}+(1-C-D) \Delta_{x} u_{j}^{n}+D \Delta_{x} u_{j-1}^{n}\right| \\
+% & \leq(1-C-D)\left|\Delta_{x} u_{j}^{n}\right|+C\left|\Delta_{x} u_{j+1}^{n}\right|+D\left|\Delta_{x} u_{j-1}^{n}\right|.
+% \end{align}
+% 再对上述不等式的两端关于下标$j$在整数域几内求和, 则有
+% \begin{align}
+% \sum_{j \in \mathbb{Z}}\left|\Delta_{x} u_{j}^{n+1}\right| \leq & \sum_{j \in \mathbb{Z}} C\left|\Delta_{x} u_{j+1}^{n}\right|+\sum_{j \in \mathbb{Z}}(1-C-D)\left|\Delta_{x} u_{j}^{n}\right| \\
+% &+\sum_{j \in \mathbb{Z}} D\left|\Delta_{x} u_{j-1}^{n}\right|=\sum_{j \in \mathbb{Z}}\left|\Delta_{x} u_{j}^{n}\right|.
+% \end{align}
+
+\section{3}
+
+考虑二维双曲型守恒律方程组
+$$
+\frac{\partial}{\partial t} \boldsymbol{U}+\frac{\partial}{\partial x} \boldsymbol{F}(\boldsymbol{U})+\frac{\partial}{\partial y} \boldsymbol{G}(\boldsymbol{U})=0
+$$
+其中 $\boldsymbol{U} \in \mathbb{R}^{m}$, 和笛卡尔网格 $\left\{\left(x_{j}, y_{k}\right): x_{j}=j h_{x}, y_{k}=k h_{y}, j, k \in \mathbb{Z}\right\} .$
+试着写出它的LF格式, LW格式, MacCormack格式, 和一阶精度的显式迎风格式(Roe格式) (参见讲义(CFDLect04-com01\_cn.pdf) 的 第74-76, 81 页 ), 并说明时间步长的选取准则.
+
+\subsection{Lax-Friedrichs格式}
+
+\begin{equation}
+	\bm{U}_{j}^{n+1}=\frac{\bm{U}_{j+1}^{n}+\bm{U}_{j-1}^{n}}{2}-\frac{\lambda_x}{2}\left(\bm{F}\left(\bm{U}_{j+1}^{n}\right)-\bm{F}\left(\bm{U}_{j-1}^{n}\right)\right)-\frac{\lambda_y}{2}\left(\bm{G}\left(\bm{U}_{j+1}^{n}\right)-\bm{G}\left(\bm{U}_{j-1}^{n}\right)\right).
+\end{equation}
+
+其中$\lambda_x = \tau/h_x,\ \lambda_y = \tau/h_y$.
+
+
+% \subsection{ 一阶(显式)迎风(upwind)格式}
+
+
+
+% \begin{align}
+% u_{j}^{n+1}=& u_{j}^{n}-\frac{\lambda}{2}\left(f\left(u_{j+1}^{n}\right)-f\left(u_{j-1}^{n}\right)\right)+\frac{\lambda\left|a\left(u_{j+\frac{1}{2}}^{n}\right)\right|}{2}\left(u_{j+1}^{n}-u_{j}^{n}\right) \\
+% &-\frac{\lambda\left|a\left(u_{j-\frac{1}{2}}^{n}\right)\right|}{2}\left(u_{j}^{n}-u_{j-1}^{n}\right) 
+% \end{align}
+% 其中 $u_{j+\frac{1}{2}}^{n}=\frac{1}{2}\left(u_{j}^{n}+u_{j+1}^{n}\right), a(u)=f^{\prime}(u)$
+
+
+
+\subsection{MacCormack}
+
+\begin{equation}
+	\left\{\begin{array}{l}
+	\bar{\bm{U}}_{j}^{*}=\bm{U}_{j}^{n}-\frac{\tau}{h_x}\left(\bm{F}\left(\bm{U}_{j+1}^{n}\right)-\bm{F}\left(\bm{U}_{j}^{n}\right)\right)-\frac{\tau}{h_y}\left(\bm{G}\left(\bm{U}_{j+1}^{n}\right)-\bm{G}\left(\bm{U}_{j}^{n}\right)\right) \\
+	\bm{U}_{j}^{n+1}=\frac{1}{2}\left(\bm{U}_{j}^{n}+\bar{\bm{U}}_{j}^{*}\right)-\frac{\tau}{2 h_y}\left(\bm{F}\left(\bar{\bm{U}}_{j}^{*}\right)-\bm{F}\left(\bar{\bm{U}}_{j-1}^{*}\right)\right)-\frac{\tau}{2 h_y}\left(\bm{G}\left(\bar{\bm{U}}_{j}^{*}\right)-\bm{G}\left(\bar{\bm{U}}_{j-1}^{*}\right)\right)
+	\end{array}\right.
+\end{equation}
+
+
+\subsection{Roe}
+
+\begin{equation}
+	\hat{\boldsymbol{F}}\left(\boldsymbol{U}_{j}, \boldsymbol{U}_{j+1}\right)=\frac{\boldsymbol{F}\left(\boldsymbol{U}_{j}\right)+\boldsymbol{F}\left(\boldsymbol{U}_{j+1}\right)}{2}-\frac{1}{2}\left|\hat{\boldsymbol{A}}_{j+1 / 2}\right|\left(\boldsymbol{U}_{j+1}-\boldsymbol{U}_{j}\right),
+\end{equation}
+其中 $|\hat{\boldsymbol{A}}|$ 定义为: $|\hat{\boldsymbol{A}}|=\boldsymbol{R}|\hat{\boldsymbol{\Lambda}}| \boldsymbol{R}^{-1}|,\ | \hat{\boldsymbol{\Lambda}} \mid=\operatorname{diag}\left\{\left|\hat{\lambda}_{1}\right|, \cdots,\left|\hat{\lambda}_{m}\right|\right\}, \boldsymbol{R}$为 $\hat{\boldsymbol{A}}$ 的右特征向量矩阵, $\hat{\boldsymbol{\Lambda}}=\operatorname{diag}\left\{\hat{\lambda}_{1}, \cdots, \hat{\lambda}_{m}\right\}$, 即 $\boldsymbol{R}^{-1} \hat{\boldsymbol{A}} \boldsymbol{R}=\hat{\boldsymbol{\Lambda}}$.
+
+\begin{equation}
+	\hat{\boldsymbol{G}}\left(\boldsymbol{U}_{j}, \boldsymbol{U}_{j+1}\right)=\frac{\boldsymbol{G}\left(\boldsymbol{U}_{j}\right)+\boldsymbol{G}\left(\boldsymbol{U}_{j+1}\right)}{2}-\frac{1}{2}\left|\hat{\boldsymbol{B}}_{j+1 / 2}\right|\left(\boldsymbol{U}_{j+1}-\boldsymbol{U}_{j}\right),
+\end{equation}
+其中 $|\hat{\boldsymbol{B}}|$ 定义为: $|\hat{\boldsymbol{B}}|=\boldsymbol{R}|\hat{\boldsymbol{\Lambda}}| \boldsymbol{R}^{-1}|,\ | \hat{\boldsymbol{\Lambda}} \mid=\operatorname{diag}\left\{\left|\hat{\lambda}_{1}\right|, \cdots,\left|\hat{\lambda}_{m}\right|\right\}, \boldsymbol{R}$为 $\hat{\boldsymbol{B}}$ 的右特征向量矩阵, $\hat{\boldsymbol{\Lambda}}=\operatorname{diag}\left\{\hat{\lambda}_{1}, \cdots, \hat{\lambda}_{m}\right\}$, 即 $\boldsymbol{R}^{-1} \hat{\boldsymbol{B}} \boldsymbol{R}=\hat{\boldsymbol{\Lambda}}$.
+\begin{equation}
+	\bm{U}_{j+1} = \bm{U}_j - \frac{\tau}{h_x}\left(\hat{\bm{F}}\left(\bm{U}_j,\bm{U}_{j+1}\right)-\hat{\bm{F}}\left(\bm{U}_{j-1},\bm{U}_{j}\right)\right)-\frac{\tau}{h_y}\left(\hat{\bm{G}}\left(\bm{U}_j,\bm{U}_{j+1}\right)-\hat{\bm{G}}\left(\bm{U}_{j-1},\bm{U}_{j}\right)\right).
+\end{equation}
+
+
+\subsection{Lax-Wendroff}
+
+
+\begin{align}
+\bm{U}\left(x_{j}, t_{n+1}\right) =&\bm{U}\left(x_{j}, t_{n}\right)+\tau\left(\bm{U}_{t}\right)_{j}^{n}+\frac{1}{2} \tau^{2}\left(\bm{U}_{t t}\right)_{j}^{n}+\mathcal{O}\left(\tau^{3}\right) \\
+=&\bm{U}\left(x_{j}, t_{n}\right)-\tau\left(\bm{F}_{x}+\bm{G}_y\right)_{j}^{n}\\
+& +\frac{1}{2} \tau^{2} \left[\partial_{x}\left(\bm{A}\left(\bm{F}_{x}+\bm{G}_y\right) \right)+\partial_{y}\left(\bm{B}\left(\bm{F}_{x}+\bm{G}_y\right) \right)\right]+\mathcal{O}\left(\tau^{3}\right) \\
+=&\bm{U}\left(x_{j}, t_{n}\right)-\tau\left(\bm{F}_{x}+\bm{G}_y\right)_{j}^{n}\\
+&+\frac{1}{2} \tau^{2} \left[\partial_{x}\left(\bm{A}\left(\bm{A}\bm{U}_{x}+\bm{B}\bm{U}_{y}\right) \right)+\partial_{y}\left(\bm{B}\left(\bm{A}\bm{U}_{x}+\bm{B}\bm{U}_{y}\right) \right)\right]+\mathcal{O}\left(\tau^{3}\right).
+\end{align}
+
+利用中心差商代替空间微商, 略去高阶项, 并用 $\bm{U}_{j}^{n}$ 代替 $\bm{U}\left(x_{j}, t_{n}\right)$, 得
+
+\begin{align}
+\bm{U}_{j}^{n+1}=& \bm{U}_{j}^{n}-\frac{\lambda_x}{2}\left(\bm{F}\left(\bm{U}_{j+1}^{n}\right)-\bm{F}\left(\bm{U}_{j-1}^{n}\right)\right)-\frac{\lambda_y}{2}\left(\bm{G}\left(\bm{U}_{j+1}^{n}\right)-\bm{G}\left(\bm{U}_{j-1}^{n}\right)\right) \\
+&+\frac{\lambda_x^{2} \bm{A}^{2}\left(\bm{U}_{j+\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j+1}^{n}-\bm{U}_{j}^{n}\right)-\frac{\lambda_x^{2} \bm{A}^{2}\left(\bm{U}_{j-\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j}^{n}-\bm{U}_{j-1}^{n}\right)\\
+&+\frac{\lambda_x\lambda_y \bm{A}\bm{B}\left(\bm{U}_{j+\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j+1}^{n}-\bm{U}_{j}^{n}\right)-\frac{\lambda_x\lambda_y \bm{A}\bm{B}\left(\bm{U}_{j-\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j}^{n}-\bm{U}_{j-1}^{n}\right)\\
+&+\frac{\lambda_x\lambda_y \bm{B}\bm{A}\left(\bm{U}_{j+\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j+1}^{n}-\bm{U}_{j}^{n}\right)-\frac{\lambda_x\lambda_y \bm{B}\bm{A}\left(\bm{U}_{j-\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j}^{n}-\bm{U}_{j-1}^{n}\right)\\
+&+\frac{\lambda_y^{2} \bm{B}^{2}\left(\bm{U}_{j+\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j+1}^{n}-\bm{U}_{j}^{n}\right)-\frac{\lambda_y^{2} \bm{B}^{2}\left(\bm{U}_{j-\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j}^{n}-\bm{U}_{j-1}^{n}\right).
+\end{align}
+
+其中 $\bm{U}_{j+\frac{1}{2}}^{n}=\frac{1}{2}\left(\bm{U}_{j}^{n}+\bm{U}_{j+1}^{n}\right)$.
+
+说明: 其中的 $\bm{A}\left(\bm{U}_{j+1 / 2}\right)$ 可以替代为
+\begin{equation}
+	\bm{A}_{j+1 / 2}=\left\{
+		\begin{array}{ll}
+		\frac{\bm{F}\left(\bm{U}_{j+1}\right)-\bm{F}\left(\bm{U}_{j}\right)}{\bm{U}_{j+1}-\bm{U}_{j}}, & \bm{U}_{j+1} \neq \bm{U}_{j}, \\
+		\bm{A}\left(\bm{U}_{j}\right), & \bm{U}_{j+1}=\bm{U}_{j}.
+		\end{array}\right.
+\end{equation}
+$\bm{B}$同理。
+
+若$\lambda_x=\lambda_y=r$其稳定的必要条件是
+\begin{equation}
+	\lambda \max{\left\{\abs{\lambda(\bm{A})},\abs{\lambda(\bm{B})}\right\}} \leq \frac{1}{2\sqrt{2}}.
+\end{equation}
+
+\subsection{时间步长的选取准则}
+
+
+由于上述格式都是相融的守恒差分格式，所以需要时间步长取得足够小，使得$\delta \to 0$，那么，根据Lax-Wendroff定理，如果满足初始条件
+\begin{equation}
+	u_{j}^{0}=\frac{1}{h} \int_{x_{j-\frac{1}{2}}}^{x_{j+\frac{1}{2}}} u_{0}(x) \dif x.
+\end{equation}
+的解 $u_{\delta}(x, t)$ 几乎处处有界且收敛于函数 $u(x, t)$, 则 $u(x, t)$ 是初值问题 的 一个弱解.由此能获得一个弱解。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \nocite{*}
+
+\input{bib.tex}
+
+\end{document}

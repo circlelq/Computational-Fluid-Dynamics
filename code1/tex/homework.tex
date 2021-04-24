@@ -1,0 +1,110 @@
+\documentclass[12pt]{article}
+\input{/Users/circle/Documents/博一下/homework/setting.tex}
+\setcounter{secnumdepth}{2}
+\usepackage{autobreak}
+\usepackage{amsmath}
+\setlength{\parindent}{2em}
+\graphicspath{{../}}
+\ziju{0.1pt}
+
+%pdf文件设置
+\hypersetup{
+	pdfauthor={袁磊祺},
+	pdftitle={计算流体力学作业6}
+}
+
+\title{
+		\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
+		\horrule{0.5pt} \\[0.2cm]
+		\huge \bfseries{计算流体力学作业6} \\[-0.2cm]
+		\horrule{2pt} \\[0.2cm]
+}
+\author{
+		\normalfont 								\normalsize
+		College of Engineering \quad 2001111690  \quad 袁磊祺\\	\normalsize
+        \today
+}
+\date{}
+
+\begin{document}
+
+\input{setc.tex}
+
+\maketitle
+
+\section{1}
+
+编写一维完全气体Euler方程组的LF格式, MacCormack 格式, 和一阶
+精度的显式迎风格式(Roe格式)的程序, 并计算讲义 (CFDLect04-
+com01_cn.pdf) 的第101-102页的问题2和问题4.
+
+\begin{equation}
+	\left\{\begin{array}{c}
+	\left(\begin{array}{c}
+	\rho \\
+	\rho u \\
+	E
+	\end{array}\right)_{t}+\left(\begin{array}{c}
+	\rho u \\
+	\rho u^{2}+p \\
+	u(E+p)
+	\end{array}\right)_x=0, \\
+	p=(\gamma-1)\left(E-\frac{1}{2} \rho u^{2}\right),\ \gamma=1.4.
+	\end{array}\right.
+\end{equation}
+
+LF 格式
+\begin{equation}
+	\bm{u}^{n+1}_{j} = \frac{1}{2} \left( \bm{u}^{n}_{j+1} + \bm{u}^{n}_{j-1} \right) - \frac{1}{2} r \left( \bm{f}^{n}_{j+1} - \bm{f}^{n}_{j-1} \right).
+\end{equation}
+其中$r=\tau/h$,稳定性条件为
+\begin{equation}
+	\abs{\bm{u}}_{\max} \frac{\tau}{h} \leqslant 1.
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\input{bib.tex}
+
+\end{document}

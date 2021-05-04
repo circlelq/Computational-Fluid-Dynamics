@@ -10,7 +10,7 @@
 %pdf文件设置
 \hypersetup{
 	pdfauthor={袁磊祺},
-	pdftitle={计算流体力学作业6}
+	pdftitle={计算流体力学作业7}
 }
 
 \title{
@@ -18,7 +18,7 @@
 		\usefont{OT1}{bch}{b}{n}
 		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
 		\horrule{0.5pt} \\[0.2cm]
-		\huge \bfseries{计算流体力学作业6} \\[-0.2cm]
+		\huge \bfseries{计算流体力学作业7} \\[-0.2cm]
 		\horrule{2pt} \\[0.2cm]
 }
 \author{
@@ -36,350 +36,268 @@
 
 \section{1}
 
+可以。
 
-证明: 显式的线性保单调格式是单调的.
+例如松弛系统的一阶半离散迎风近似
+\begin{gather}
+	\frac{\partial}{\partial t} \bm{u}_{j}+\frac{1}{2 h_{j}}\left(\bm{v}_{j+1}-\bm{v}_{j-1}\right)-\frac{1}{2 h_{j}} \bm{A}^{1 / 2}\left(\bm{u}_{j+1}-2 \bm{u}_{j}+\bm{u}_{j-1}\right)=0, \\
+	\frac{\partial}{\partial t} \bm{v}_{j}+\frac{1}{2 h_{j}} \bm{A}\left(\bm{u}_{j+1}-\bm{u}_{j-1}\right)-\frac{1}{2 h_{j}} \bm{A}^{1 / 2}\left(\bm{v}_{j+1}-2 \bm{v}_{j}+\bm{v}_{j-1}\right)=-\frac{1}{\varepsilon}\left(\bm{v}_{j}-F\left(\bm{u}_{j}\right)\right).
+\end{gather}
 
 
-\begin{proof}
-
-设$U^n$是任意的网格函数，令
+考虑一维空间变量的守恒系统
 \begin{equation}
-	\begin{cases}
-		V_j^n=U^n_J, &j\not= J,\\
-		V^n_J>U^n_J, &j=J.
-	\end{cases}
-\end{equation}
-接下来我们证明对所有的$j,\ V^{n+1}_j\geq U_j^{n+1}$, 这意味这格式是单调的。
-
-设$W^n$是单调的黎曼数据，即
-\begin{equation}
-	W^n_j=\begin{cases}
-		U^n_J, &j<J,\\
-		V_J^n,&j\geq J.
-	\end{cases}
-\end{equation}
-所以$W^n_j$是不减的。注意到对所有的$j$
-\begin{equation}
-	W^n_J = W^n_{j-1}+\left(V_j^n-U_j^n\right),
+	\frac{\partial}{\partial t} \bm{u}+\frac{\partial}{\partial x} \bm{F}(\bm{u})=0, \quad(x, t) \in \mathbb{R}^{1} \times \mathbb{R}, \quad \bm{u} \in \mathbb{R}^{n},
 	\label{eq:11}
 \end{equation}
-因为当$j\not= J$时，最后一项是0。又因为这个格式是线性的，所以我们可以把\cref{eq:11}变为
+其中 $\bm{F}(\bm{u}) \in \mathbb{R}^{n}$ 是一个光滑的向量值函数， 我们引入一个关于\cref{eq:11}的松弛系统
+\begin{gather}
+\frac{\partial}{\partial t} \bm{u}+\frac{\partial}{\partial x} \bm{v}=0, \quad \bm{v} \in \mathbb{R}^{n}, \\
+\frac{\partial}{\partial t} \bm{v}+\bm{A} \frac{\partial}{\partial x} \bm{u}=-\frac{1}{\varepsilon}(\bm{v}-F(\bm{u})), \quad \varepsilon>0.
+\end{gather}
+其中
 \begin{equation}
-	W^{n+1}_j=W^{n+1}_{j-1}+\left(V^{n+1}_j-U^{n+1}_j\right).
+	\bm{A}=\operatorname{diag}\left\{a_{1}, a_{2}, \ldots, a_{n}\right\},
 \end{equation}
-所以
+是一个需要确定的对角矩阵。对于小的$\varepsilon$, 应用ChapmanEnskog展开得下面的近似
 \begin{equation}
-	V^{n+1}_j=U^{n+1}_j+\left(W^{n+1}_j-W^{n+1}_{j-1}\right).
+	\frac{\partial}{\partial t} \bm{u}+\frac{\partial}{\partial x} \bm{F}(\bm{u})=\varepsilon \frac{\partial}{\partial x}\left(\left(\bm{A}-\bm{F}^{\prime}(\bm{u})^{2}\right) \frac{\partial}{\partial x} \bm{u}\right)
 	\label{eq:12}
 \end{equation}
-因为格式是保单调的，并且$W^n$是单调的，即$W^n_{j-1}\leqslant W^n_j$,我们有$W^{n+1}_{j} - W^{n+1}_j \geq 0 $,由\cref{eq:12}可得$V_j^{n+1}\geq U_j^{n+1}$.这表明这个格式是单调的。
-	
-\end{proof}
+其中 $\bm{F}^{\prime}(\bm{u})$ 是 $\bm{F}$的雅可比矩阵.\cref{eq:12} 控制松弛系统的一阶行为。 为了确保\cref{eq:12}的耗散性，则需要
+\begin{equation}
+	\bm{A}-\bm{F}^{\prime}(\bm{u})^{2} \geqslant 0 \quad \text {对所有的} \quad \bm{u}.
+\end{equation}
+
+我们假设$\bm{A}$具有
+\begin{equation}
+	\bm{A} = a \bm{I},\quad a>0,
+\end{equation}
+的形式，其中$\bm{I}$是单位矩阵。如果
+\begin{equation}
+	\frac{\lambda \mu}{a} \leqslant 1 .
+\end{equation}
+则系统是耗散的，即$\bm{A}$的一个充分条件。
 
 
 \section{2}
 
-
-证明: 线性保单调方法最多一阶精度.
-
-
-\begin{proof}
-
-	为简单起见，仅对一个空间变量的情形证明. 这时单调差 分格式可写为
-	\begin{equation}
-		\begin{aligned}
-			u_{j}^{n+1}=&H\left(u_{i-l}^{n}, u_{i-l+1}^{n}, \cdots, u_{i+l}^{n}\right)\\
-			=&u_{j}^{n}-\frac{\Delta t}{\Delta x}\left[\bar{f}\left(u_{i-l+1}^{n}, \cdots, u_{i+l}^{n}\right)-\bar{f}\left(u_{i-l}^{n}, \cdots, u_{j+l-1}\right)\right].
-		\end{aligned}
-		\label{eq:21}
-	\end{equation}
-其中$H$是每个参变量的非减函数，且 
+对 Hamilton-Jacobi 方程
 \begin{equation}
-	\bar{f}(u, \cdots, u)=f(u).
-	\label{eq:22}
+	\phi_x + H(\phi_x) = 0,
+\end{equation}
+的半离散格式可以写成
+\begin{equation}
+	\frac{\dif }{\dif t} \phi_i = - \hat{H}\left(\frac{\Delta^+ \phi_i}{h},\frac{\Delta^- \phi_i}{h}\right),
+\end{equation}
+其中$\hat{H}$称为数值哈密顿量，它是所有参数的Lipschitz连续函数，并且与PDE中的哈密顿量$H$一致.
+
+相容条件
+\begin{equation}
+	\hat{H}\left(u,u\right) = H(u).
 \end{equation}
 
-首先证明几个恒等式. 令
-\begin{align}
-	\bar{u}&=\left(u_{-l}, \cdots, u_{l-1}\right), \\
-T \bar{u}&=\left(u_{-l+1}, \cdots, u_{l}\right).
-\end{align}
-其中 $u_{j}=u(x+j \Delta x, t)$ . 由\cref{eq:21,eq:22}则有
-\begin{equation}
-	H(u, \cdots, u)=u.
-	\label{eq:23}
-\end{equation}
-\cref{eq:22} 两端对 ${u}$ 求导得
-\begin{equation}
-	\sum_{j=-l}^{l} \bar{f}_{j}(u, \cdots, u)=a(u),
-\end{equation}
-其中 $a(u)=f^{\prime}(u)$, 下标 $j$ 表示对第 $j$ 个参变量的偏导数，当 $j \geqslant l$ 或 $j \leqslant -l-1$ 时 $\bar{f}_{j} \equiv 0$. 对\cref{eq:21} 的第二个等式两端 求导则有
-\begin{align}
-H_{k}&=\delta_{0, k}-\frac{\Delta t}{\Delta x}\left[\bar{f}_{k-1}(T \bar{u})-\bar{f}_{k}(\bar{u})\right],\quad -l \leqslant k \leqslant l, \\
-H_{k, m}&=-\frac{\Delta{t}}{\Delta x}\left[\bar{f}_{k-1, m-1}(T \bar{u})-\bar{f}_{k, m}(\bar{u})\right],\quad -l \leqslant m \leqslant l.
-\end{align}
-从上述等式可得
-\begin{equation}
-	\sum_{k=-1}^{l} H_{k}(u, \cdots, u)=\sum_{k} \delta_{0, k}=1,
-\end{equation}
-\begin{equation}
-	\begin{aligned}
-	\sum_{k=-l}^{l} k H_{k}(u, \cdots, u)&=-\frac{\Delta t}{\Delta x} \sum_{k}\left(\bar{f}_{k-1}-\bar{f}_{k}\right) k =-\frac{\Delta t}{\Delta x} \sum_{k}[(k+1)-k] \bar{f}_{k}\\
-	&=-\frac{\Delta t}{\Delta x} a(u), 
-\end{aligned}
-\label{eq:24}
-\end{equation}
-\begin{equation}
-	\begin{aligned}
-		\sum_{k, m=-l}^{l}(k-m)^{2} H_{k, m}(u, \cdots, u)&=-\frac{\Delta t}{\Delta x} \sum_{k, \infty}(k-m)^{2}\left[\bar{f}_{k, m}-\bar{f}_{k-1, m-1}\right]\\
-		&=\sum_{k,m}(k-m)^2\bar{f}_{k,m}-\sum_{k,m}[k-1-(m-1)]^2\bar{f}_{k-1,m-1}\\
-		&=0.
-	\end{aligned}
-	\label{eq:25}
-\end{equation}
-由 Taylor 展开及\cref{eq:23}则有
-\begin{equation}
-	\begin{aligned}
-		H\left(u_{-l}, u_{-l+1}, \cdots, u_{l}\right)=&\ H\left(u_0, u_0, \cdots, u_0\right)+\sum_{i=-1}^{l} H_{j}\left(u_{0}, \cdots, u_{0}\right)\left(u_{j}-u_{0}\right) \\
-		&+\frac{1}{2} \sum_{k, m} H_{k, m}\left(u_{0}, \cdots, u_{0}\right)\left(u_{k}-u_{0}\right)\left(u_{m}-u_{0}\right)+\mathcal{O}\left(\Delta x^{3}\right) \\
-		=&\ u_{0}+\Delta x u_{x} \sum_{j} j H_{j}+\frac{1}{2} \Delta x^{2} u_{x x} \sum_{j} j^{2} H_{j} \\
-		&+\frac{1}{2} \Delta x^{2} u_{x}^{2} \sum_{k, m} k m H_{k, m}+\mathcal{O}\left(\Delta x^{3}\right) \\
-		=&\ u_{0} +\Delta x u_{x} \sum_{j} j H_{j}+\frac{1}{2} \Delta x^{2}\left[\sum_{j} j^{2} H_{j} u_{x}\right]_{x} \\
-		&+\frac{1}{2} \Delta x^{2} u_{x}^{2} \sum_{k, m} H_{k, m}(k m-k^{2})+\mathcal{O}\left(\Delta x^{3}\right).
-		\end{aligned}
-\end{equation}
-由\cref{eq:24}有
-\begin{equation}
-	\Delta x u_{x} \sum j H_{j}=\Delta x u_{x}\left[-\frac{\Delta t}{\Delta x} a(u)\right]=-\Delta tf(u),
-\end{equation}
-
-利用对称性 $H_{k, m}=H_{m, k}$ 及\cref{eq:25}, 则有
-\begin{equation}
-	\sum_{k, m} H_{k, m}(k m-k^{2})=-\frac{1}{2} \sum {H}_{k, m}(k-m)^{2}=0.
-\end{equation}
-因此差分格式的 Taylor 展式为
-\begin{equation}
-	\begin{aligned}
-		&\ H(u(x-l \Delta x, t), \cdots, u(x+l \Delta x, t)) \\
-		=&\ u(x, t)-\Delta t f(u)_{x}+\left(\frac{1}{2} \Delta x^{2}\right)\cdot\left\{\sum_{j=-l}^{l} j^{2} H_{j}(u(x, t), \cdots, u(x, t)) u_{x}(x, t)\right\}_{x}+\mathcal{O}\left(\Delta x^{3}\right)
-	\end{aligned}
-\end{equation}
-如果$u$ 是一维守恒律方程式的光滑解,则有
-\begin{equation}
-	u(x, t+\Delta t)=u(x, t)-\Delta tf(u)_{x}+\left(\frac{1}{2} \Delta t^{2}\right)\left[a^{2}(u) u_{x}\right]_{x}+\mathcal{O}\left(\Delta t^{3}\right),
-\end{equation}
-因此截断误差为
-\begin{equation}
-	u(x, t+\Delta t)-H(u(x-l \Delta x, t), \cdots, u(x+l \Delta x, t))=-(\Delta t)^{2}\left[\beta\left(u, \frac{\Delta t}{\Delta x}\right) u_{*}\right]_{x}+\mathcal{O}\left(\Delta t^{3}\right),
-	\label{eq:26}
-\end{equation}
-其中
-\begin{equation}
-	\beta(u, \lambda)=\frac{1}{2 \lambda^{2}} \sum_{j=-l}^{l} j^{2} H_{j}(u, \cdots, u)-\frac{1}{2} a^{2}(u)
-\end{equation}
-由于格式是单调的,所以 $H_{j} \geqslant 0$, 再利用 \cref{eq:24} 及 $\mathrm{Schwarz}$ 不
-等式就得到
-\begin{equation}
-	\begin{aligned}
-	\lambda^{2} a^{2}(u) &=\left(\sum_{j} j H_{j}\right)^{2}=\left(\sum j \sqrt{H_{j}} \sqrt{H_{j}}\right)^{2} \\
-	& \leqslant \sum j^{2} H_{j} \cdot \sum H_{j}=\sum j^{2} H_{j}.
-	\end{aligned}
-	\end{equation}
-由此可知 $\beta(u, \lambda) \geqslant 0$, 而等号只有当 $j \sqrt{H}_{j}=\sqrt{H_{j}}(j=-l, \cdots,
-l)$ 满足时才成立. 这意味着除 $j=1$ 外，所有的 $H_{j}=0,$ 也即 $H$ 仅与 $u_{j+1}^{n}$ 有关。这样的格式是没有意义的。所以\cref{eq:26} 右端第一项的系数不为0，定理得证。
-
-
-\end{proof}
 
 \section{3}
 
-证明讲义 (CFDLect05-com02\_cn.pdf) 的第11页的引理.
+Vinokur已经证明：微分类算法（有限差分算法等）和及分类算法（有限体积算法等）仅仅在集合处理上有差别，这种差别会影响到算法到计算精度和效率，但在算法本质上没有根本的差别。所以这里给出二阶精度的Lax-Wendroff格式。\cite[P229]{zhang}
 
-引理: 令Q是具有如下形式的差分算子
-\begin{equation}
-	(\mathcal{Q} \cdot u)_{j}=u_{j}+C_{j+\frac{1}{2}} \Delta u_{j}-D_{j-\frac{1}{2}} \Delta u_{j-1},
-	\label{eq:31}
-\end{equation}
-则
-\begin{enumerate}
-	\item 如果对所有$j$
-	\begin{equation}
-		C_{j+\frac{1}{2}} \geq 0, \quad D_{j+\frac{1}{2}} \geq 0, \quad C_{j+\frac{1}{2}}+D_{j+\frac{1}{2}} \leqslant 1,
-	\end{equation}
-	则$\mathcal{Q}$为TVD; 
-	\item 如果对所有 $j$
-	\begin{equation}
-		-\infty<C \leqslant C_{j+\frac{1}{2}},  D_{j+\frac{1}{2}} \leqslant 0,
-	\end{equation}	
-	则 $\mathcal{Q}$ 为TVI.
-\end{enumerate}
-
-\begin{proof}
-~
-	\subsection{1}
-
-由\cref{eq:31}得	
-	\begin{equation}
-		(\mathcal{Q} \cdot u)_{j+1}=\ u_{j+1}+C_{j+\frac{3}{2}} \Delta u_{j+1}-D_{j+\frac{1}{2}} \Delta u_{j}
-		\label{eq:32}
-	\end{equation}
-	\cref{eq:32}减\cref{eq:31}得
-	\begin{equation}
-		\begin{aligned}
-			\abs{\Delta (\mathcal{Q} \cdot u)_{j}}=&\ \abs{\Delta u_{j} + C_{j+\frac{3}{2}} \Delta u_{j+1} - C_{j+\frac{1}{2}} \Delta u_{j}-D_{j+\frac{1}{2}} \Delta u_{j}+D_{j-\frac{1}{2}} \Delta u_{j-1}}\\
-			=&\ \abs{D_{j-\frac{1}{2}} \Delta u_{j-1}+\left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\Delta u_{j} + C_{j+\frac{3}{2}} \Delta u_{j+1}}\\
-			\leqslant&\ D_{j-\frac{1}{2}} \abs{\Delta u_{j-1}}+\left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\abs{\Delta u_{j}} + C_{j+\frac{3}{2}} \abs{\Delta u_{j+1}}.
-		\end{aligned}
-	\end{equation}
-因为对所有$j$
-\begin{equation}
-	C_{j+\frac{1}{2}} \geq 0, \quad D_{j+\frac{1}{2}} \geq 0, \quad C_{j+\frac{1}{2}}+D_{j+\frac{1}{2}} \leqslant 1,
-\end{equation}
-所以有上面的不等式，然后对$j$求和
-\begin{equation}
-	\begin{aligned}
-		\mathrm{TV}(\mathcal{Q}\cdot u)=&\ \sum_j \abs{\Delta (\mathcal{Q} \cdot u)_{j}}\\
-		\leqslant&\ \sum_j D_{j-\frac{1}{2}} \abs{\Delta u_{j-1}}+\sum_j \left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\abs{\Delta u_{j}} + \sum_j  C_{j+\frac{3}{2}} \abs{\Delta u_{j+1}}\\
-		=&\ \sum_j \abs{\Delta u_{j}}=\mathrm{TV}(u),
-	\end{aligned}
-\end{equation}
-所以差分算子是TVD。
+\subsection{Lax-Wendroff}
 
 
-\subsection{2}
+\begin{align}
+\bm{U}\left(x_{j}, y_k, t_{n+1}\right) =&\bm{U}\left(x_{j}, y_k, t_{n}\right)+\tau\left(\bm{U}_{t}\right)_{j,k}^{n}+\frac{1}{2} \tau^{2}\left(\bm{U}_{t t}\right)_{j,k}^{n}+\mathcal{O}\left(\tau^{3}\right) \\
+=&\bm{U}\left(x_{j}, y_k, t_{n}\right)-\tau\left(\bm{F}_{x}+\bm{G}_y\right)_{j,k}^{n}\\
+& +\frac{1}{2} \tau^{2} \left[\partial_{x}\left(\bm{A}\left(\bm{F}_{x}+\bm{G}_y\right) \right)+\partial_{y}\left(\bm{B}\left(\bm{F}_{x}+\bm{G}_y\right) \right)\right]_{j,k}^{n}+\mathcal{O}\left(\tau^{3}\right) \\
+=&\bm{U}\left(x_{j}, y_k, t_{n}\right)-\tau\left(\bm{F}_{x}+\bm{G}_y\right)_{j,k}^{n}\\
+&+\frac{1}{2} \tau^{2} \left[\partial_{x}\left(\bm{A}\left(\bm{A}\bm{U}_{x}+\bm{B}\bm{U}_{y}\right) \right)+\partial_{y}\left(\bm{B}\left(\bm{A}\bm{U}_{x}+\bm{B}\bm{U}_{y}\right) \right)\right]_{j,k}^{n}+\mathcal{O}\left(\tau^{3}\right).
+\end{align}
 
-同样的，\cref{eq:32}减\cref{eq:31}并移项得
-\begin{equation}
-	{\Delta (\mathcal{Q} \cdot u)_{j}}-{D_{j-\frac{1}{2}} \Delta u_{j-1} - C_{j+\frac{3}{2}} \Delta u_{j+1}} = \left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\Delta u_{j} .
-\end{equation}
-两边取绝对值，并利用三角不等式得
-\begin{equation}
-	\abs{\Delta (\mathcal{Q} \cdot u)_{j}}-{D_{j-\frac{1}{2}} \abs{\Delta u_{j-1}} - C_{j+\frac{3}{2}} \abs{\Delta u_{j+1}}} \geqslant \left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\Delta u_{j} .
-\end{equation}
-然后对式子两边求和得
-\begin{equation}
-	\sum_j \abs{\Delta (\mathcal{Q} \cdot u)_{j}}-\sum_j {D_{j-\frac{1}{2}} \abs{\Delta u_{j-1}} - \sum_j C_{j+\frac{3}{2}} \abs{\Delta u_{j+1}}} \geqslant \sum_j \left(1- C_{j+\frac{1}{2}}-D_{j+\frac{1}{2}} \right)\Delta u_{j}.
-\end{equation}
-移项得
-\begin{equation}
-	\mathrm{TV}(\mathcal{Q}\cdot u)\geqslant \mathrm{TV}(u).
-\end{equation}
+利用中心差商代替空间微商, 略去高阶项, 并用 $\bm{U}_{j,k}^{n}$ 代替 $\bm{U}\left(x_{j}, y_k, t_{n}\right)$, 得
 
-\end{proof}
+\begin{align}
+\bm{U}_{j,k}^{n+1}=& \bm{U}_{j,k}^{n}-\frac{\lambda_x}{2}\left(\bm{F}\left(\bm{U}_{j+1,k}^{n}\right)-\bm{F}\left(\bm{U}_{j-1,k}^{n}\right)\right)-\frac{\lambda_y}{2}\left(\bm{G}\left(\bm{U}_{j,k+1}^{n}\right)-\bm{G}\left(\bm{U}_{j,k-1}^{n}\right)\right) \\
+&+\frac{\lambda_x^{2} \bm{A}^{2}\left(\bm{U}_{j+\frac{1}{2},k}^{n}\right)}{2}\left(\bm{U}_{j+1,k}^{n}-\bm{U}_{j,k}^{n}\right)-\frac{\lambda_x^{2} \bm{A}^{2}\left(\bm{U}_{j-\frac{1}{2},k}^{n}\right)}{2}\left(\bm{U}_{j,k}^{n}-\bm{U}_{j-1,k}^{n}\right)\\
+&+\frac{\lambda_x\lambda_y \bm{A}\bm{B}\left(\bm{U}_{j,k}^{n}\right)}{8}\left(\bm{U}_{j+1,k+1}^{n}-\bm{U}_{j-1,k+1}^{n}\right)-\frac{\lambda_x\lambda_y \bm{A}\bm{B}\left(\bm{U}_{j,k}^{n}\right)}{8}\left(\bm{U}_{j+1,k-1}^{n}-\bm{U}_{j-1,k-1}^{n}\right)\\
+&+\frac{\lambda_x\lambda_y \bm{B}\bm{A}\left(\bm{U}_{j,k}^{n}\right)}{8}\left(\bm{U}_{j+1,k+1}^{n}-\bm{U}_{j+1,k-1}^{n}\right)-\frac{\lambda_x\lambda_y \bm{B}\bm{A}\left(\bm{U}_{j,k}^{n}\right)}{8}\left(\bm{U}_{j-1,k+1}^{n}-\bm{U}_{j-1,k-1}^{n}\right)\\
+&+\frac{\lambda_y^{2} \bm{B}^{2}\left(\bm{U}_{j,k+\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j,k+1}^{n}-\bm{U}_{j,k}^{n}\right)-\frac{\lambda_y^{2} \bm{B}^{2}\left(\bm{U}_{j,k-\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j,k}^{n}-\bm{U}_{j,k-1}^{n}\right).
+\end{align}
+
+其中 $\bm{U}_{j+\frac{1}{2},k}^{n}=\frac{1}{2}\left(\bm{U}_{j,k}^{n}+\bm{U}_{j+1,k}^{n}\right)$.
+
+说明: 其中的 $\bm{A}\left(\bm{U}_{j+\frac{1}{2},k}\right)$ 可以替代为
+\begin{equation}
+	\bm{A}_{j+\frac{1}{2},k}=\left\{
+		\begin{array}{ll}
+		\frac{\bm{F}\left(\bm{U}_{j+1,k}\right)-\bm{F}\left(\bm{U}_{j,k}\right)}{\bm{U}_{j+1,k}-\bm{U}_{j,k}}, & \bm{U}_{j+1,k} \neq \bm{U}_{j,k}, \\
+		\bm{A}\left(\bm{U}_{j,k}\right), & \bm{U}_{j+1,k}=\bm{U}_{j,k}.
+		\end{array}\right.
+\end{equation}
+$\bm{B}$同理。
 
 
 \section{4}
 
+\subsection{一维情况}
 
-设讲义 ( CFDLect05-com02\_cn.pdf) 的第39页中对流方程的系数$a <0$, 类似 (4.5)的做法, 给出和讨论相关TVD格式及限制器.
+% 高维的情况中，类似的MUSCL离散方法可以应用在每一维上。考虑多维松弛系统
+% \begin{gather}
+% \frac{\partial}{\partial t} \bm{u}+\sum_{i=1}^{m} \frac{\partial}{\partial x_{i}} \bm{v}_{i}=0, \\
+% \frac{\partial}{\partial t} \bm{v}_{i}+A_{i} \frac{\partial}{\partial x_{i}} \bm{u}=-\frac{1}{\varepsilon}\left(\bm{v}_{i}-F_{i}(\bm{u})\right), \quad i=1,2, \ldots, m.
+% \end{gather}
+% 对于二维问题，考虑
+% \begin{equation}
+% 	\begin{aligned}
+% 		\frac{\partial}{\partial t} \bm{u}+\frac{\partial}{\partial x} \bm{v}+\frac{\partial}{\partial y} \bm{w} &=0, \\
+% 		\frac{\partial}{\partial t} \bm{v}+\bm{A} \frac{\partial}{\partial x} \bm{u} &=-\frac{1}{{\varepsilon}}(\bm{v}-F(\bm{u})),\\
+% 		\frac{\partial}{\partial t} \bm{w}+\bm{B} \frac{\partial}{\partial y} \bm{u}&=-\frac{1}{{\varepsilon}}(\bm{w}-G(\bm{u})).
+% 		\end{aligned}
+% 		\label{eq:41}
+% \end{equation}
+% Here $A=\operatorname{diag}\left\{a_{1}, \ldots, a_{n}\right\}$ and $B=\operatorname{diag}\left\{b_{1}, \ldots, b_{n}\right)$ with $a_{i}>0, b_{i}>0$ for
+% $1 \leqq i \leqq n$
+% Suppose the spatial grid points are located at $\left(x_{i+1 / 2}, y_{j+1 / 2}\right)$, the grid widths are $h_{i}^{x}=x_{i+1 / 2}-x_{i-1 / 2}$ and $h_{j}^{y}=y_{j+1 / 2}-y_{j-1 / 2}$ respectively. For a vector $\bm{U}(x, y)$ the point value is $\bm{U}_{i+1 / 2, j+1 / 2}=\bm{U}\left(x_{i+1 / 2}, y_{j+1 / 2}\right)$, the cell average value is defined as
+% \begin{equation}
+% 	\bm{U}_{i j}=\frac{1}{h_{i}^{x} h_{j}^{y}} \int_{x_{i-1 / 2}}^{x_{i+1 / 2}} \int_{y_{j-1 / 2}}^{y_{j+1 / 2}} \bm{U}(x, y) d x d y .
+% \end{equation}
+
+% A conservative, semi-discrete differencing to \cref{eq:41} is
+% \begin{gather}
+% \frac{\partial}{\partial t} \bm{u}_{i j}+\frac{1}{h_{i}^{x}}\left(\bm{v}_{i+1 / 2, j}-\bm{v}_{i-1 / 2, j}\right)+\frac{1}{h_{j}^{y}}\left(\bm{w}_{i, j+1 / 2}-\bm{w}_{i, j-1 / 2}\right)=0,\\
+% \frac{\partial}{\partial t} \bm{v}_{i j}+A \frac{1}{h_{i}^{x}}\left(\bm{u}_{i+1 / 2, j}-\bm{u}_{i-1 / 2, j}\right)=-\frac{1}{\varepsilon}\left(\bm{v}_{i j}-F\left(\bm{u}_{i j}\right)\right), \\
+% \frac{\partial}{\partial t} \bm{w}_{i j}+B \frac{1}{h_{j}^{y}}\left(\bm{u}_{i, j+1 / 2}-\bm{u}_{i, j-1 / 2}\right)=-\frac{1}{\varepsilon}\left(\bm{w}_{i j}-G\left(\bm{u}_{i j}\right)\right).
+% \end{gather}
+% Applying the MUSCL discretization to $\bm{v} \pm A^{1 / 2} \bm{u}$ in the $x$-direction and $\bm{w} \pm B^{1 / 2} \bm{u}$ in the ${y}$-direction respectively, for the $p$-th component,
+% \begin{align}
+% u_{i+1 / 2, j}=& \frac{1}{2}\left(u_{i j}+u_{i+1, j}\right)-\frac{1}{2 \sqrt{a_{p}}}\left(v_{i+1, j}-v_{i j}\right) \\
+% &+\frac{1}{4 \sqrt{a_{p}}}\left(h_{i}^{x} \sigma_{i j}^{x,+}+h_{i+1}^{x} \sigma_{i+1, j}^{x_{i}-},\right),\\
+% v_{i+1 / 2, j}=& \frac{1}{2}\left(v_{i j}+v_{i+1, j}\right)-\frac{\sqrt{a_{p}}}{2}\left(u_{i+1, j}-u_{i j}\right) \\
+% &+\frac{1}{4}\left(h_{i}^{x} \sigma_{i j}^{x_{i}+}-h_{i+1}^{x}{\sigma_{i+1, j}}^{x_{i j}}\right), \\
+% u_{i, j+1 / 2}=& \frac{1}{2}\left(u_{i j}+u_{i, j+1}\right)-\frac{1}{2 \sqrt{b_{p}}}\left(w_{i, j+1}-w_{i j}\right) \\
+% &+\frac{1}{4 \sqrt{b_{p}}}\left(h_{j}^{y} \sigma_{i j}^{y_{i j}}+h_{j+1}^{y} \sigma_{i, j+1}^{y,-}\right), \\
+% w_{i, j+1 / 2}=& \frac{1}{2}\left(w_{i j}+w_{i, j+1}\right)-\frac{\sqrt{b_{p}}}{2}\left(u_{i, j+1}-u_{i j}\right) \\
+% &+\frac{1}{4}\left(h_{j}^{y} \sigma_{i j}^{y_{i j}+}-h_{j+1}^{y}{_{i, j+1}}^{y,-}\right).
+% \end{align}
+% The slope limiters are defined as
+% \begin{gather}
+% \sigma_{i j}^{x, \pm}=\frac{1}{h_{i}^{x}}\left(v_{i+1, j} \pm \sqrt{a_{p}} u_{i+1, j}-v_{i j} \mp \sqrt{a_{p}} u_{i j}\right) \phi\left(\theta_{i j}^{x, \pm}\right), \\
+% \theta_{i j}^{x, \pm}=\frac{v_{i j} \pm \sqrt{a_{p}} u_{i j}-v_{i-1, j} \mp \sqrt{a_{p}} u_{i-1, j}}{v_{i+1, j} \pm \sqrt{a_{p}} u_{i+1, j}-v_{i j} \mp \sqrt{a_{p}} u_{i j}}, \\
+% \sigma_{i j}^{y, \pm}=\frac{1}{h_{j}^{y}}\left(w_{i, j+1} \pm \sqrt{b_{p}} u_{i, j+1}-w_{i j} \mp \sqrt{b_{p}} u_{i j}\right) \phi\left(\theta_{i j}^{y, \pm}\right), \\
+% \theta_{i j}^{y, \pm}=\frac{w_{i j} \pm \sqrt{b_{p}} u_{i j}-w_{i, j-1} \mp \sqrt{b_{p}} u_{i, j-1}}{w_{i, j+1} \pm \sqrt{b_{p}} u_{i, j+1}-w_{i j} \mp \sqrt{b_{p}} u_{i j}}.
+% \end{gather}
 
 
-
+这里考虑标量的情况。
 \begin{equation}
-u_{t}+a u_{x}=0,
+	\begin{aligned}
+		\frac{\partial}{\partial t} {u}+\frac{\partial}{\partial x} {v}&=0, \quad {v} \in \mathbb{R}^{1}, \\
+		\frac{\partial}{\partial t} {v}+{a} \frac{\partial}{\partial x} {u}&=-\frac{1}{\varepsilon}({v}-F({u})), \quad \varepsilon>0.
+	\end{aligned}
+	\label{eq:42}
 \end{equation}
-取  $\hat{f}^{H}=\hat{f}^{L W}, \quad \hat{f}^{L}=\hat{f}^{U}(\text { 一阶迎风 })$.
 
-如果 $a<0$, 则可将LW格式改写为
+松弛系统\cref{eq:42}的均匀网格的简单一阶守恒格式可以写成
 \begin{equation}
-u_{j}^{n+1}=u_{j}^{n}-\nu\left(u_{j+1}^{n}-u_{j}^{n}\right)+\frac{1}{2} \nu(1+\nu)\left(u_{j+1}^{n}-2 u_{j}^{n}+u_{j-1}^{n}\right),
-\label{eq:41}
+	\begin{aligned}
+		\frac{u_{j}^{n+1}-u_{j}^{n}}{\tau}+ \frac{v_{j+1 / 2}^{n}-v_{j-1 / 2}^{n}}{h}&=0, \\
+		\frac{v_{j}^{n+1}-v_{j}^{n}}{\tau}+a \frac{u_{j+1 / 2}^{n}-u_{j-1 / 2}^{n}}{h} &=-\frac{1}{\varepsilon}\left(v_{j}^{n+1}-f\left(u_{j}^{n+1}\right)\right).
+		\end{aligned}
+		\label{eq:412}
 \end{equation}
-其中$\nu=a\tau/h$.
 
-可以将LW格式看作是在迎风格式上加了一校正项得到的, 此时数值 通量又可写为
+
+\cref{eq:42}的一阶迎风格式是
 \begin{equation}
-\hat{f}^{L W}=a u_{j+1}-\frac{1}{2} a(1+\nu)\left(u_{j+1}-u_{j}\right),
+	\begin{aligned}
+		u_{j+1 / 2}^{n}=&\frac{1}{2}\left(u_{j}^{n}+u_{j+1}^{n}\right)-\frac{1}{2 \sqrt{a}}\left(v_{j+1}^{n}-v_{j}^{n}\right), \\
+		v_{j+1 / 2}^{n}=&\frac{1}{2}\left(v_{j}^{n}+v_{j+1}^{n}\right)+\frac{\sqrt{a}}{2}\left(u_{j+1}^{n}-u_{j}^{n}\right).
+	\end{aligned}
 \end{equation}
-由于LW格式不是TVD的, 所以我们需要修正它, 以便得到一个具有TVD性质的 高分辨通量限制器方法. 思想是加一个有限制的反扩散通量于一阶格式, 具体 是将\cref{eq:41}修改为
+应用\cref{eq:412}得
 \begin{equation}
-u_{j}^{n+1}=u_{j}^{n}-\nu \Delta_{x}^{+} u_{j}^{n}+\Delta_{x}^{-}\left(\varphi_{j+1}^{n} \frac{1}{2} \nu(1+\nu) \Delta_{x}^{+} u_{j}^{n}\right),
-\label{eq:42}
+	\frac{u_{j}^{n+1}-u_{j}^{n}}{k}+\frac{1}{2 h}\left(v_{j+1}^{n}-v_{j-1}^{n}\right)-\frac{\sqrt{a}}{2 h}\left(u_{j+1}^{n}-2 u_{j}^{n}+u_{j-1}^{n}\right)=0.
 \end{equation}
-这里 $\varphi_{j}$ 是某种形式的limiter, 取值为非正, 以便保持反扩散项的符号. 下面的任务是定义 $\varphi_{j} .$
-
-将\cref{eq:42}改写为另一种增量形式:
 \begin{equation}
-\begin{aligned}
-u_{j}^{n+1} &=u_{j}^{n}-\left[\nu-\frac{1}{2} \nu(1+\nu) \frac{\varphi_{j+1} \Delta_{x}^{+} u_{j}^{n}-\varphi_{j} \Delta_{x}^{-} u_{j}^{n}}{\Delta_{x}^{+} u_{j}^{n}}\right] \Delta_{x}^{+} u_{j}^{n} \\
-&=: u_{j}^{n}-D_{j-\frac{1}{2}}^{n} \Delta_{x}^{+} u_{j}^{n},
-\end{aligned}
-\label{eq:421}
+	\frac{v_{j}^{n+1}-v_{j}^{n}}{k} +\frac{a}{2 h}\left(u_{j+1}^{n}-u_{j-1}^{n}\right)-\frac{1}{2 \sqrt{a} h}\left(v_{j+1}^{n}-2 v_{j}^{n}+v_{j-1}^{n}\right)=-\frac{1}{\varepsilon}\left(v_{j}^{n}-f\left(u_{j}^{n}\right)\right).
 \end{equation}
-其中
+
+
+Using a Hilbert expansion gives the leading order equations (as $\left.\varepsilon \rightarrow 0^{+}\right)$,
 \begin{equation}
-D_{j-\frac{1}{2}}^{n}=\nu\left\{1-\frac{1}{2}(1+\nu)\left[\varphi\left(r_{j+1}\right)-r_j \varphi\left(r_{j}\right)\right]\right\},
+	\begin{aligned}
+		v_{j}^{n} &=f\left(u_{j}^{n}\right), \\
+		u_{j}^{n+1} &=u_{j}^{n}-\frac{\lambda}{2}\left(f\left(u_{j+1}^{n}\right)-f\left(u_{j-1}^{n}\right)\right)+\frac{\sqrt{a} \lambda}{2}\left(u_{j+1}^{n}-2 u_{j}^{n}+u_{j-1}^{n}\right).
+	\end{aligned}
+	\label{eq:43}
 \end{equation}
-设$\Phi$为 $\left|\varphi\left(r_{j+1}\right)- r_j\varphi\left(r_{j}\right)\right|$ 的上界, 即
+where
 \begin{equation}
-\left|\varphi\left(r_{j+1}\right) - r_j\varphi\left(r_{j}\right)\right| \leqslant \Phi,
-\label{eq:43}
+	\lambda=\frac{k}{h}.
 \end{equation}
-其中
+
+The scheme in (\ref{eq:43}) is a first-order relaxed scheme which is a Lax-Friedrichs type scheme. A numerical scheme
 \begin{equation}
-	r_j = \frac{\Delta^-_x u_j}{\Delta^+_x u_j},
+	U_{j}^{n+1}=\mathbf{H}\left(U^{n} ; j\right)
 \end{equation}
-则有
+is called a monotone scheme if
 \begin{equation}
-\nu\left(1+\frac{1}{2}(1+\nu) \Phi\right) \leqslant D_{j-\frac{1}{2}} \leqslant \nu\left(1-\frac{1}{2}(1+\nu) \Phi\right).
+	\frac{\partial}{\partial U_{i}^{n}} \mathbf{H}\left(U^{n} ; j\right) \geqq 0 \quad \text { for all } \quad i, j, U^{n}.
 \end{equation}
-如果格式\cref{eq:421}中增量系数满足
+It can be checked easily that (\ref{eq:43}) is a monotone scheme provided the standard CFL condition arising from the discrete convection terms
 \begin{equation}
--1 \leqslant D_{j-\frac{1}{2}} \leqslant 0,
+	\sqrt{a} \lambda \leqq 1.
+	\label{eq:44}
 \end{equation}
-则格式\cref{eq:42}为TVD的. 由此得:
+where $\lambda = \frac{\tau}{h}$ and the subcharacteristic condition 
 \begin{equation}
-\Phi \leqslant -\frac{2}{\nu}, \quad \Phi \leqslant \frac{2}{1+\nu},
+	-\sqrt{a} \leq f^{\prime}(u) \leq \sqrt{a} \quad \text { for all } u
+	\label{eq:45}
 \end{equation}
-即需要$\Phi \leqslant \min \left\{ -\frac{2}{\nu}, \frac{2}{1+\nu}\right\} \leqslant 2 .$
-如果除了需要 $\varphi(r)$ 非正, 也假设, 当 $r \leqslant 0$ 时, $\varphi(r)=0$, 则由\cref{eq:43}及 $\Phi \leqslant 2$ 得
+are satisfied. Thus we have the following theorem.
+
+Under the CFL condition (\ref{eq:44}) and the subcharacteristic condition (\ref{eq:45}), the relaxed scheme (\ref{eq:43}) is a monotone scheme.
+
+所以时间步长应该满足\cref{eq:44}。
+
+\subsection{二维情况}
+
+对于二维问题，考虑标量情况
 \begin{equation}
--2 \leqslant \varphi(r), r\varphi(r) \leqslant 0
+	\begin{aligned}
+		\frac{\partial}{\partial t} {u}+\frac{\partial}{\partial x} {v}+\frac{\partial}{\partial y} {w} &=0, \\
+		\frac{\partial}{\partial t} {v}+{a} \frac{\partial}{\partial x} {u} &=-\frac{1}{{\varepsilon}}({v}-F({u})),\\
+		\frac{\partial}{\partial t} {w}+{b} \frac{\partial}{\partial y} {u}&=-\frac{1}{{\varepsilon}}({w}-G({u})).
+		\end{aligned}
+		\label{eq:46}
 \end{equation}
-这是格式\cref{eq:42}为TVD的充分条件.
-
-
-
-\section{5}
-
-
-证明标量方程$u_{t} +f(u)_{x}=0$ 的LF格式在CFL条件下满足离散的商不 等式. ( 提示: 格式两边乘以 $v_{j}^{n+1}:=\eta^{\prime}\left(u_{j}^{n+1}\right) $)
-
-\begin{proof}
-
-	对于LF格式，
-	\begin{equation}
-		u_{j}^{n+1}=\frac{u_{j+1}^{n}+u_{j-1}^{n}}{2}-\frac{\lambda}{2}\left(f\left(u_{j+1}^{n}\right)-f\left(u_{j-1}^{n}\right)\right),
-	\end{equation}
-是相容的守恒型差分格式，因为
+松弛系统\cref{eq:46}的均匀网格的简单一阶守恒格式可以写成
 \begin{equation}
-	\hat{f}^n_{1+\frac{1}{2}} = \hat{f}\left(u^n_j,u^n_{j+1}\right)=\frac{1}{2}\left[f\left(u^n_j\right)+f\left(u^n_{j+1}\right)\right]-\frac{1}{2}\left(u^n_{j+1}-u^n_j\right)\frac{h}{\tau},
+	\begin{aligned}
+		\frac{u_{j,k}^{n+1}-u_{j,k}^{n}}{\tau}+ \frac{v_{j+\frac{1}{2},k}^{n}-v_{j-\frac{1}{2},k}^{n}}{h_x}+ \frac{w_{j,k+\frac{1}{2}}^{n}-w_{j,k-\frac{1}{2}}^{n}}{h_y}&=0, \\
+		\frac{v_{j,k}^{n+1}-v_{j,k}^{n}}{\tau}+a \frac{u_{j+\frac{1}{2},k}^{n}-u_{j-\frac{1}{2},k}^{n}}{h_x} &=-\frac{1}{\varepsilon}\left(v_{j,k}^{n+1}-f\left(u_{j,k}^{n+1}\right)\right),\\
+		\frac{w_{j,k}^{n+1}-w_{j,k}^{n}}{\tau}+b \frac{u_{j,k+\frac{1}{2}}^{n}-u_{j,k-\frac{1}{2}}^{n}}{h_x} &=-\frac{1}{\varepsilon}\left(w_{j,k}^{n+1}-f\left(u_{j,k}^{n+1}\right)\right).
+		\end{aligned}
+	\label{eq:47}
 \end{equation}
-所以$\hat{f}(u,u)=f(u)$.
-
-下面证LF格式在CFL条件
+一阶迎风格式是
 \begin{equation}
-	\frac{\tau}{h} \max \left\{\left|f^{\prime}(u)\right|\right\} \leqslant 1
-	\label{eq:51}
+	\begin{aligned}
+		u_{j+1 / 2}^{n}=&\frac{1}{2}\left(u_{j}^{n}+u_{j+1}^{n}\right)-\frac{1}{2 \sqrt{a}}\left(v_{j+1}^{n}-v_{j}^{n}\right), \\
+		v_{j+1 / 2}^{n}=&\frac{1}{2}\left(v_{j}^{n}+v_{j+1}^{n}\right)+\frac{\sqrt{a}}{2}\left(u_{j+1}^{n}-u_{j}^{n}\right).
+	\end{aligned}
 \end{equation}
-下是单调的.
+特征条件
+\begin{gather}
+	-\sqrt{a} \leq F^{\prime}(u) \leq \sqrt{a} \quad \text { for all } u,\\
+	-\sqrt{b} \leq G^{\prime}(u) \leq \sqrt{b} \quad \text { for all } u.
+\end{gather}
 
-因为$H$可以表示成
-\begin{equation}
-	H\left(u_{j+1}^{n}, u_{j}^{n}, u_{j-1}^{n}\right)=\frac{u_{j+1}^{n}+u_{j-1}^{n}}{2}-\frac{\tau}{2 h}\left(f\left(u_{j+1}^{n}\right)-f\left(u_{j-1}^{n}\right)\right),
-\end{equation}
-当\cref{eq:51}满足时，有
-\begin{equation}
-	\frac{\partial H}{\partial u_{j \pm 1}^{n}}=\frac{1}{2}\left(1 \mp \frac{\Delta t}{\Delta x} f^{\prime}\left(u_{j \pm 1}^{n}\right)\right) \geqslant 0,\quad \frac{\partial H}{\partial u_{j}^{n}}=0.
-\end{equation}
-所以LF格式是单调的。
-
-根据CFDLect04-com01_cn.pdf中P92的定理：如果守恒型单调差分格式相容, 则它满足离散的熵条件，由此得证。
-
-
-
-\end{proof}
-
+时间步长需要满足
+\begin{gather}
+	\sqrt{a} \lambda_x \leqq 1,\\
+	\sqrt{b} \lambda_y \leqq 1.
+\end{gather}
+这样格式是单调的。
 
 
 % \nocite{*}

@@ -10,7 +10,7 @@
 %pdf文件设置
 \hypersetup{
 	pdfauthor={袁磊祺},
-	pdftitle={计算流体力学作业6}
+	pdftitle={计算流体力学上机作业1}
 }
 
 \title{
@@ -18,7 +18,7 @@
 		\usefont{OT1}{bch}{b}{n}
 		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
 		\horrule{0.5pt} \\[0.2cm]
-		\huge \bfseries{计算流体力学作业6} \\[-0.2cm]
+		\huge \bfseries{计算流体力学上机作业1} \\[-0.2cm]
 		\horrule{2pt} \\[0.2cm]
 }
 \author{
@@ -38,16 +38,16 @@
 
 \begin{equation}
 	\left\{\begin{array}{c}
-	\left(\begin{array}{c}
-	\rho \\
-	\rho u \\
-	E
-	\end{array}\right)_{t}+\left(\begin{array}{c}
-	\rho u \\
-	\rho u^{2}+p \\
-	u(E+p)
-	\end{array}\right)_x=0, \\
-	p=(\gamma-1)\left(E-\frac{1}{2} \rho u^{2}\right),\ \gamma=1.4.
+		\left(\begin{array}{c}
+			\rho   \\
+			\rho u \\
+			E
+		\end{array}\right)_{t}+\left(\begin{array}{c}
+				\rho u       \\
+				\rho u^{2}+p \\
+				u(E+p)
+			\end{array}\right)_x=0, \\
+		p=(\gamma-1)\left(E-\frac{1}{2} \rho u^{2}\right),\ \gamma=1.4.
 	\end{array}\right.
 \end{equation}
 
@@ -61,9 +61,9 @@
 初始条件
 \begin{equation}
 	\boldsymbol{U}=\left\{\begin{array}{ll}
-		(1,0,2.5)^{\mathrm{T}}, & x<0.3, \\
+		(1,0,2.5)^{\mathrm{T}},      & x<0.3, \\
 		(0.125,0,0.25)^{\mathrm{T}}, & x>0.3.
-		\end{array}\right.
+	\end{array}\right.
 \end{equation}
 
 计算区间为 $[0,1],$ 输出时刻 $t=0.2 .$
@@ -103,22 +103,22 @@
 MacCormack格式[R.W. MacCormack, AIAA Paper No. 1969-354 (1969)]
 \begin{equation}
 	\begin{aligned}
-		u\left(x_{j}, t_{n+1}\right)=& u\left(x_{j}, t_{n}\right)+\tau\left(u_{t}\right)_{j}^{n}+\frac{1}{2} \tau^{2}\left(u_{t t}\right)_{j}^{n}+\mathcal{O}\left(\tau^{3}\right) \\
-		=& \frac{1}{2} u\left(x_{j}, t_{n}\right)+\frac{1}{2}\left(\bar{u}+\tau \bar{u}_{t}\right)_{j}^{n}+\mathcal{O}\left(\tau^{3}\right), \quad \bar{u}:=u+\tau u_{t} 
-		\end{aligned}
+		u\left(x_{j}, t_{n+1}\right)= & u\left(x_{j}, t_{n}\right)+\tau\left(u_{t}\right)_{j}^{n}+\frac{1}{2} \tau^{2}\left(u_{t t}\right)_{j}^{n}+\mathcal{O}\left(\tau^{3}\right)                   \\
+		=                             & \frac{1}{2} u\left(x_{j}, t_{n}\right)+\frac{1}{2}\left(\bar{u}+\tau \bar{u}_{t}\right)_{j}^{n}+\mathcal{O}\left(\tau^{3}\right), \quad \bar{u}:=u+\tau u_{t}
+	\end{aligned}
 \end{equation}
 \begin{equation}
-		\left\{\begin{array}{l}
+	\left\{\begin{array}{l}
 		\bar{u}_{j}^{*}=u_{j}^{n}-\frac{\tau}{h}\left(f\left(u_{j+1}^{n}\right)-f\left(u_{j}^{n}\right)\right), \\
 		u_{j}^{n+1}=\frac{1}{2}\left(u_{j}^{n}+\bar{u}_{j}^{*}\right)-\frac{\tau}{2 h}\left(f\left(\bar{u}_{j}^{*}\right)-f\left(\bar{u}_{j-1}^{*}\right)\right).
-		\end{array}\right.
+	\end{array}\right.
 \end{equation}
 或
 \begin{equation}
 	\left\{\begin{array}{l}
 		\bar{u}_{j}^{*}=u_{j}^{n}-\frac{\tau}{h}\left(f\left(u_{j}^{n}\right)-f\left(u_{j-1}^{n}\right)\right), \\
 		u_{j}^{n+1}=\frac{1}{2}\left(u_{j}^{n}+\bar{u}_{j}^{*}\right)-\frac{\tau}{2 h}\left(f\left(\bar{u}_{j+1}^{*}\right)-f\left(\bar{u}_{j}^{*}\right)\right).
-		\end{array}\right.
+	\end{array}\right.
 \end{equation}
 
 如\cref{fig:2Mac} 所示， MacCormack格式震荡严重，导致$\dif t$只能取非常小的值，所以经过$300$步的计算后还是停留在$t=0.001$。
@@ -140,16 +140,16 @@ MacCormack格式[R.W. MacCormack, AIAA Paper No. 1969-354 (1969)]
 其中 $|\hat{\bm{A}}|$ 定义为: $|\hat{\bm{A}}|=\bm{R}|\hat{\bm{\Lambda}}| \bm{R}^{-1}|,| \hat{\bm{\Lambda}} \mid=\operatorname{diag}\left\{\left|\hat{\lambda}_{1}\right|, \cdots,\left|\hat{\lambda}_{m}\right|\right\}, \bm{R}$为 $\hat{\bm{A}}$ 的右特征向量矩阵, $\hat{\Lambda}=\operatorname{diag}\left\{\hat{\lambda}_{1}, \cdots, \hat{\lambda}_{m}\right\}$, 即 $\bm{R}^{-1} \hat{\bm{A}} \bm{R}=\hat{\bm{\Lambda}}$,
 \begin{equation}
 	\begin{array}{c}
-	\boldsymbol{R}=\left(\boldsymbol{R}^{(1)}, \boldsymbol{R}^{(2)}, \boldsymbol{R}^{(3)}\right)=\left(\begin{array}{ccc}
-	1 & 1 & 1 \\
-	u-a & u & u+a \\
-	H-u a & \frac{1}{2} u^{2} & H+u a
-	\end{array}\right).
+		\boldsymbol{R}=\left(\boldsymbol{R}^{(1)}, \boldsymbol{R}^{(2)}, \boldsymbol{R}^{(3)}\right)=\left(\begin{array}{ccc}
+				1     & 1                 & 1     \\
+				u-a   & u                 & u+a   \\
+				H-u a & \frac{1}{2} u^{2} & H+u a
+			\end{array}\right).
 	\end{array}
 \end{equation}
 \begin{equation}
 	\bm{\Lambda} = \begin{pmatrix}
-		u-a&&\\&u&\\&&u+a
+		u-a &  & \\&u&\\&&u+a
 	\end{pmatrix},
 \end{equation}
 \begin{equation}
@@ -162,17 +162,17 @@ MacCormack格式[R.W. MacCormack, AIAA Paper No. 1969-354 (1969)]
 \begin{equation}
 	\left\{
 	\begin{aligned}
-		\bar{\rho}&=\frac{\sqrt{\rho_{r}} \rho_{\ell}+\sqrt{\rho_{\ell}} \rho_{r}}{\sqrt{\rho_{\ell}}+\sqrt{\rho_{r}}}=\sqrt{\rho_{\ell} \rho_{r}}=\left[\frac{1}{2}\left(\sqrt{\rho_{r}} +\sqrt{\rho_{\ell}} \right)\right]^2, \\
-		\bar{u}&=\frac{\sqrt{\rho_{\ell}} u_{\ell}+\sqrt{\rho_{r}} u_{r}}{\sqrt{\rho_{\ell}}+\sqrt{\rho_{r}}}, \\
-		\bar{H}&=\frac{\sqrt{\rho_{\ell}} H_{\ell}+\sqrt{\rho_{r}} H_{r}}{\sqrt{\rho_{\ell}}+\sqrt{\rho_{r}}}.
+		\bar{\rho} & =\frac{\sqrt{\rho_{r}} \rho_{\ell}+\sqrt{\rho_{\ell}} \rho_{r}}{\sqrt{\rho_{\ell}}+\sqrt{\rho_{r}}}=\sqrt{\rho_{\ell} \rho_{r}}=\left[\frac{1}{2}\left(\sqrt{\rho_{r}} +\sqrt{\rho_{\ell}} \right)\right]^2, \\
+		\bar{u}    & =\frac{\sqrt{\rho_{\ell}} u_{\ell}+\sqrt{\rho_{r}} u_{r}}{\sqrt{\rho_{\ell}}+\sqrt{\rho_{r}}},                                                                                                               \\
+		\bar{H}    & =\frac{\sqrt{\rho_{\ell}} H_{\ell}+\sqrt{\rho_{r}} H_{r}}{\sqrt{\rho_{\ell}}+\sqrt{\rho_{r}}}.
 	\end{aligned}\right.
 \end{equation}
 \begin{equation}
 	\boldsymbol{A}(\boldsymbol{U})=\left(\begin{array}{ccc}
-	0 & 1 & 0 \\
-	\frac{\gamma-3}{2} u^{2} & (3-\gamma) u & \gamma-1 \\
-	\frac{\gamma-2}{2} u^{3}-\frac{a^{2} u}{\gamma-1} & \frac{3-2 \gamma}{2} u^{2}+\frac{a^{2}}{\gamma-1} & \gamma u
-	\end{array}\right),
+			0                                                 & 1                                                 & 0        \\
+			\frac{\gamma-3}{2} u^{2}                          & (3-\gamma) u                                      & \gamma-1 \\
+			\frac{\gamma-2}{2} u^{3}-\frac{a^{2} u}{\gamma-1} & \frac{3-2 \gamma}{2} u^{2}+\frac{a^{2}}{\gamma-1} & \gamma u
+		\end{array}\right),
 \end{equation}
 \begin{equation}
 	a=\sqrt{\gamma p / \rho},\quad H=(E+p) / \rho,\quad p=(\gamma-1)\left(E-\frac{1}{2} \rho u^{2}\right).
@@ -206,9 +206,9 @@ MacCormack格式[R.W. MacCormack, AIAA Paper No. 1969-354 (1969)]
 初 始 条 件
 \begin{equation}
 	(\rho, u, p)(x, 0)=\left\{\begin{array}{ll}
-		(3.857143,2.629369,10.33333), & x<-4, \\
-		(1+0.2 \sin (5 x), 0,1), & x \geq-4.
-		\end{array}\right.
+		(3.857143,2.629369,10.33333), & x<-4,     \\
+		(1+0.2 \sin (5 x), 0,1),      & x \geq-4.
+	\end{array}\right.
 \end{equation}
 计算区间为 $[-5,5]$, 其中在 $x=\pm 5$ 边界处 $\partial_{x} \rho=\partial_{x} u=\partial_{x} p=0 .$ 输出时刻 为 $t=1.8$.
 

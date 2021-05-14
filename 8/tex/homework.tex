@@ -10,7 +10,7 @@
 %pdf文件设置
 \hypersetup{
 	pdfauthor={袁磊祺},
-	pdftitle={计算流体力学作业7}
+	pdftitle={计算流体力学作业8}
 }
 
 \title{
@@ -18,7 +18,7 @@
 		\usefont{OT1}{bch}{b}{n}
 		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
 		\horrule{0.5pt} \\[0.2cm]
-		\huge \bfseries{计算流体力学作业7} \\[-0.2cm]
+		\huge \bfseries{计算流体力学作业8} \\[-0.2cm]
 		\horrule{2pt} \\[0.2cm]
 }
 \author{
@@ -30,278 +30,371 @@
 
 \begin{document}
 
-\input{setc.tex}
+\input{/Users/circle/Documents/博一下/homework/setc.tex}
 
 \maketitle
 
-\section{1}
+\section{A}
 
-可以。
+\subsection{1}
 
-例如松弛系统的一阶半离散迎风近似
-\begin{gather}
-	\frac{\partial}{\partial t} \bm{u}_{j}+\frac{1}{2 h_{j}}\left(\bm{v}_{j+1}-\bm{v}_{j-1}\right)-\frac{1}{2 h_{j}} \bm{A}^{1 / 2}\left(\bm{u}_{j+1}-2 \bm{u}_{j}+\bm{u}_{j-1}\right)=0, \\
-	\frac{\partial}{\partial t} \bm{v}_{j}+\frac{1}{2 h_{j}} \bm{A}\left(\bm{u}_{j+1}-\bm{u}_{j-1}\right)-\frac{1}{2 h_{j}} \bm{A}^{1 / 2}\left(\bm{v}_{j+1}-2 \bm{v}_{j}+\bm{v}_{j-1}\right)=-\frac{1}{\varepsilon}\left(\bm{v}_{j}-F\left(\bm{u}_{j}\right)\right).
-\end{gather}
-
-
-考虑一维空间变量的守恒系统
+考虑1D双曲守恒律方程
 \begin{equation}
-	\frac{\partial}{\partial t} \bm{u}+\frac{\partial}{\partial x} \bm{F}(\bm{u})=0, \quad(x, t) \in \mathbb{R}^{1} \times \mathbb{R}, \quad \bm{u} \in \mathbb{R}^{n},
+	u_{t}+f(u)_{x}=0,\ x \in \mathbb{R},\ t>0,
+\end{equation}
+$u(x, 0)=u_{0}(x)$, 和均匀网格 $\left\{x_{j}: x_{j}=j h,\ j \in \mathbb{Z}\right\} .$ 试写出上述方程的
+守恒形式的Engquist-Osher格式. 它是否是单调格式？ 如果是, 是否可以证明它满足极值原理？如果应用这些格式于具体问题的数值计算,
+则时间步长如何选取?
+
+
+迎风格式的特征是: 根据信息传播的方向离散微分方程. 考虑标量方程
+\begin{equation}
+	u_{t}+f_{x}=0,
 	\label{eq:11}
 \end{equation}
-其中 $\bm{F}(\bm{u}) \in \mathbb{R}^{n}$ 是一个光滑的向量值函数， 我们引入一个关于\cref{eq:11}的松弛系统
-\begin{gather}
-\frac{\partial}{\partial t} \bm{u}+\frac{\partial}{\partial x} \bm{v}=0, \quad \bm{v} \in \mathbb{R}^{n}, \\
-\frac{\partial}{\partial t} \bm{v}+\bm{A} \frac{\partial}{\partial x} \bm{u}=-\frac{1}{\varepsilon}(\bm{v}-F(\bm{u})), \quad \varepsilon>0.
-\end{gather}
+如果 $f^{\prime}(u)>0,\ \forall u \in \mathbb{R}$, 则
+\begin{equation}
+	\left.\frac{\dif u}{\dif t}\right|_{j}+\frac{1}{h}\left(f_{j}-f_{j-1}\right)=0,
+\end{equation}
+或如果 $f^{\prime}(u)<0,\ \forall u \in \mathbb{R}$, 则
+\begin{equation}
+	\left.\frac{\dif u}{\dif t}\right|_{j}+\frac{1}{h}\left(f_{j+1}-f_{j}\right)=0,
+\end{equation}
+一般地, \cref{eq:11}可改写为
+\begin{equation}
+	u_{t}+f_{x}^{+}+f_{x}^{-}=0,
+\end{equation}
+其中 $f^{+}(u)+f^{-}(u)=f(u),\ \frac{\dif f^{+}}{\dif u} \geq 0,\ \frac{\dif f^{-}}{\dif u} \leq 0$, 因而可离散为
+\begin{equation}
+	\left.\frac{\dif u}{\dif t}\right|_{j}+\frac{1}{h}\left(f_{j}^{+}-f_{j-1}^{+}\right)+\frac{1}{h}\left(f_{j+1}^{-}-f_{j}^{-}\right)=0,
+\end{equation}
+进一步离散为
+\begin{align}
+	u_{j}^{n+1} & = \ u_{j}^{n}-\frac{\Delta t}{\Delta x}\left(\Delta_{+} f^{-}\left(u_{j}^{n}\right)+\Delta_{-} f^{+}\left(u_{j}^{n}\right)\right) \\
+	            & =\ H(u^n_{j-1},u^n_{j},u^n_{j+1}),
+	\label{eq:13}
+\end{align}
 其中
 \begin{equation}
-	\bm{A}=\operatorname{diag}\left\{a_{1}, a_{2}, \ldots, a_{n}\right\},
+	f^{+}(u)=\int_{0}^{u} \max \left(0, f^{\prime}(\xi)\right) \dif \xi+f(0), \quad f^{-}(u)=\int_{0}^{u} \min \left(0, f^{\prime}(\xi)\right) \dif \xi+f(0).
 \end{equation}
-是一个需要确定的对角矩阵。对于小的$\varepsilon$, 应用ChapmanEnskog展开得下面的近似
+考虑格式的单调性，
 \begin{equation}
-	\frac{\partial}{\partial t} \bm{u}+\frac{\partial}{\partial x} \bm{F}(\bm{u})=\varepsilon \frac{\partial}{\partial x}\left(\left(\bm{A}-\bm{F}^{\prime}(\bm{u})^{2}\right) \frac{\partial}{\partial x} \bm{u}\right)
-	\label{eq:12}
+	\frac{\partial u^{n+1}_j}{\partial u^{n}_j} = 1 + r\min \left(0, f^{\prime}(u^{n}_j)\right) - r\max \left(0, f^{\prime}(u^{n}_j)\right) = 1 - r\abs{f^{\prime}(u^{n}_j)}.
 \end{equation}
-其中 $\bm{F}^{\prime}(\bm{u})$ 是 $\bm{F}$的雅可比矩阵.\cref{eq:12} 控制松弛系统的一阶行为。 为了确保\cref{eq:12}的耗散性，则需要
+其中
 \begin{equation}
-	\bm{A}-\bm{F}^{\prime}(\bm{u})^{2} \geqslant 0 \quad \text {对所有的} \quad \bm{u}.
+	r = \frac{\Delta t}{\Delta x}.
 \end{equation}
 
-我们假设$\bm{A}$具有
+易得另外两个偏导
 \begin{equation}
-	\bm{A} = a \bm{I},\quad a>0,
+	\frac{\partial u^{n+1}_j}{\partial u^{n}_{j+1}} = - r\min \left(0, f^{\prime}(u^{n}_{j+1})\right) \geq 0,\quad \frac{\partial u^{n+1}_j}{\partial u^{n}_{j-1}} =  r\max \left(0, f^{\prime}(u^{n}_{j-1})\right) \geq 0.
 \end{equation}
-的形式，其中$\bm{I}$是单位矩阵。如果
+当满足CFL
 \begin{equation}
-	\frac{\lambda \mu}{a} \leqslant 1 .
+	1 \geq r\abs{f^{\prime}(u)}
+	\label{eq:12cfl}
 \end{equation}
-则系统是耗散的，即$\bm{A}$的一个充分条件。
+条件时，格式是单调的。
 
-
-\section{2}
-
-对 Hamilton-Jacobi 方程
+对于局部极值原理，根据\cref{eq:13}有
 \begin{equation}
-	\phi_x + H(\phi_x) = 0,
+	H(u,u,u) = u,
+	\label{eq:14}
 \end{equation}
-的半离散格式可以写成
-\begin{equation}
-	\frac{\dif }{\dif t} \phi_i = - \hat{H}\left(\frac{\Delta^+ \phi_i}{h},\frac{\Delta^- \phi_i}{h}\right),
-\end{equation}
-其中$\hat{H}$称为数值哈密顿量，它是所有参数的Lipschitz连续函数，并且与PDE中的哈密顿量$H$一致.
-
-相容条件
-\begin{equation}
-	\hat{H}\left(u,u\right) = H(u).
-\end{equation}
-
-
-\section{3}
-
-Vinokur已经证明：微分类算法（有限差分算法等）和及分类算法（有限体积算法等）仅仅在集合处理上有差别，这种差别会影响到算法到计算精度和效率，但在算法本质上没有根本的差别。所以这里给出二阶精度的Lax-Wendroff格式。\cite[P229]{zhang}
-
-\subsection{Lax-Wendroff}
-
-
+又根据之前得到的格式的单调性有
 \begin{align}
-\bm{U}\left(x_{j}, y_k, t_{n+1}\right) =&\bm{U}\left(x_{j}, y_k, t_{n}\right)+\tau\left(\bm{U}_{t}\right)_{j,k}^{n}+\frac{1}{2} \tau^{2}\left(\bm{U}_{t t}\right)_{j,k}^{n}+\mathcal{O}\left(\tau^{3}\right) \\
-=&\bm{U}\left(x_{j}, y_k, t_{n}\right)-\tau\left(\bm{F}_{x}+\bm{G}_y\right)_{j,k}^{n}\\
-& +\frac{1}{2} \tau^{2} \left[\partial_{x}\left(\bm{A}\left(\bm{F}_{x}+\bm{G}_y\right) \right)+\partial_{y}\left(\bm{B}\left(\bm{F}_{x}+\bm{G}_y\right) \right)\right]_{j,k}^{n}+\mathcal{O}\left(\tau^{3}\right) \\
-=&\bm{U}\left(x_{j}, y_k, t_{n}\right)-\tau\left(\bm{F}_{x}+\bm{G}_y\right)_{j,k}^{n}\\
-&+\frac{1}{2} \tau^{2} \left[\partial_{x}\left(\bm{A}\left(\bm{A}\bm{U}_{x}+\bm{B}\bm{U}_{y}\right) \right)+\partial_{y}\left(\bm{B}\left(\bm{A}\bm{U}_{x}+\bm{B}\bm{U}_{y}\right) \right)\right]_{j,k}^{n}+\mathcal{O}\left(\tau^{3}\right).
+	H(u_{j-1},u_{j},u_{j+1}) \leq H(u,u,u) = u,\quad u = \max{\left\{u_{j-1},u_{j},u_{j+1}\right\}}, \\
+	H(u_{j-1},u_{j},u_{j+1}) \geq H(u,u,u) = u,\quad u = \min{\left\{u_{j-1},u_{j},u_{j+1}\right\}}.
+\end{align}
+所以格式在\cref{eq:12cfl}条件下是满足局部极值原理的。
+
+时间步长需要满足\cref{eq:12cfl}。对每一步来说
+\begin{equation}
+	\tau \leq \frac{h}{\max_j\left\{\abs{f'(u^n_j)}\right\}}.
+\end{equation}
+
+
+\subsection{2}
+
+
+上述格式可以看成是对双曲守恒律方程先空间离散为
+\begin{equation}
+	\frac{\dif u_{j}}{\dif t}=-\frac{1}{h}\left(\hat{f}_{j+\frac{1}{2}}-\hat{f}_{j-\frac{1}{2}}\right)=: L\left(u_{j}(t)\right),
+\end{equation}
+[属于线方法或半离散方法]，然后再对上式中的时间导数采用显 式Euler方法离散. 如果把时间离散换成下列Runge-Kutta方法
+\begin{align}
+	u^{(1)} & =u^{n}+\Delta t L\left(u^{n}\right)                                               \\
+	u^{n+1} & =\frac{1}{2} u^{n}+\frac{1}{2} u^{(1)}+\frac{1}{2} \Delta t L\left(u^{(1)}\right)
+\end{align}
+或
+\begin{align}
+	u^{(1)} & =u^{n}+\Delta t_{n} L\left(u^{n}\right)                                               \\
+	u^{(2)} & =\frac{3}{4} u^{n}+\frac{1}{4}\left(u^{(1)}+\Delta t_{n} L\left(u^{(1)}\right)\right) \\
+	u^{n+1} & =\frac{1}{3} u^{n}+\frac{2}{3}\left(u^{(2)}+\Delta t_{n} L\left(u^{(2)}\right)\right)
+\end{align}
+前述结果又如何?
+
+
+定义
+\begin{equation}
+	H\left(u^n,j\right) = H \left(u_{j-1},u_{j},u_{j+1}\right).
+\end{equation}
+
+\begin{equation}
+	u^{(1)}_j  =u^{n}_j +\Delta t_{n} L\left(u^{n}_j \right) = H(u^n,j),
+\end{equation}
+
+\begin{equation}
+	\begin{aligned}
+		u^{n+1} & =\frac{1}{2} u^{n}+\frac{1}{2} u^{(1)}+\frac{1}{2} \Delta t L\left(u^{(1)}\right)                                                                                                                        \\
+		        & =\frac{1}{2} u^{n}+\frac{1}{2}H\left(u^{(1)}_j\right)                                                                                                                                                    \\
+		        & =  \frac{1}{2} u^{n}+ \frac{1}{2} H\left(H\left(u_{j-2}^{n}, u_{j-1}^{n}, u_{j}^{n}\right), H\left(u_{j-1}^{n}, u_{j}^{n}, u_{j+1}^{n}\right), H\left(u_{j}^{n}, u_{j+1}^{n}, u_{j+2}^{n}\right)\right),
+	\end{aligned}
+\end{equation}
+定义
+\begin{equation}
+	H\left(H\left(u_{j-2}^{n}, u_{j-1}^{n}, u_{j}^{n}\right), H\left(u_{j-1}^{n}, u_{j}^{n}, u_{j+1}^{n}\right), H\left(u_{j}^{n}, u_{j+1}^{n}, u_{j+2}^{n}\right)\right) =: H^{(1)}\left(u^n,j\right).
+\end{equation}
+在\cref{eq:12cfl} 条件下$H$是单调的，所以复合函数也是单调的，故格式是单调的。
+
+根据\cref{eq:14}易知
+\begin{equation}
+	H\left(H(u,u,u),H(u,u,u),H(u,u,u)\right) = H(u,u,u) = u.
+\end{equation}
+同理可得格式是满足局部极值原理的。
+
+而对于
+\begin{align}
+	u^{(1)} & =u^{n}+\Delta t_{n} L\left(u^{n}\right)                                                \\
+	u^{(2)} & =\frac{3}{4} u^{n}+\frac{1}{4}\left(u^{(1)}+\Delta t_{n} L\left(u^{(1)}\right)\right)  \\
+	u^{n+1} & =\frac{1}{3} u^{n}+\frac{2}{3}\left(u^{(2)}+\Delta t_{n} L\left(u^{(2)}\right)\right),
 \end{align}
 
-利用中心差商代替空间微商, 略去高阶项, 并用 $\bm{U}_{j,k}^{n}$ 代替 $\bm{U}\left(x_{j}, y_k, t_{n}\right)$, 得
-
-\begin{align}
-\bm{U}_{j,k}^{n+1}=& \bm{U}_{j,k}^{n}-\frac{\lambda_x}{2}\left(\bm{F}\left(\bm{U}_{j+1,k}^{n}\right)-\bm{F}\left(\bm{U}_{j-1,k}^{n}\right)\right)-\frac{\lambda_y}{2}\left(\bm{G}\left(\bm{U}_{j,k+1}^{n}\right)-\bm{G}\left(\bm{U}_{j,k-1}^{n}\right)\right) \\
-&+\frac{\lambda_x^{2} \bm{A}^{2}\left(\bm{U}_{j+\frac{1}{2},k}^{n}\right)}{2}\left(\bm{U}_{j+1,k}^{n}-\bm{U}_{j,k}^{n}\right)-\frac{\lambda_x^{2} \bm{A}^{2}\left(\bm{U}_{j-\frac{1}{2},k}^{n}\right)}{2}\left(\bm{U}_{j,k}^{n}-\bm{U}_{j-1,k}^{n}\right)\\
-&+\frac{\lambda_x\lambda_y \bm{A}\bm{B}\left(\bm{U}_{j,k}^{n}\right)}{8}\left(\bm{U}_{j+1,k+1}^{n}-\bm{U}_{j-1,k+1}^{n}\right)-\frac{\lambda_x\lambda_y \bm{A}\bm{B}\left(\bm{U}_{j,k}^{n}\right)}{8}\left(\bm{U}_{j+1,k-1}^{n}-\bm{U}_{j-1,k-1}^{n}\right)\\
-&+\frac{\lambda_x\lambda_y \bm{B}\bm{A}\left(\bm{U}_{j,k}^{n}\right)}{8}\left(\bm{U}_{j+1,k+1}^{n}-\bm{U}_{j+1,k-1}^{n}\right)-\frac{\lambda_x\lambda_y \bm{B}\bm{A}\left(\bm{U}_{j,k}^{n}\right)}{8}\left(\bm{U}_{j-1,k+1}^{n}-\bm{U}_{j-1,k-1}^{n}\right)\\
-&+\frac{\lambda_y^{2} \bm{B}^{2}\left(\bm{U}_{j,k+\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j,k+1}^{n}-\bm{U}_{j,k}^{n}\right)-\frac{\lambda_y^{2} \bm{B}^{2}\left(\bm{U}_{j,k-\frac{1}{2}}^{n}\right)}{2}\left(\bm{U}_{j,k}^{n}-\bm{U}_{j,k-1}^{n}\right).
-\end{align}
-
-其中 $\bm{U}_{j+\frac{1}{2},k}^{n}=\frac{1}{2}\left(\bm{U}_{j,k}^{n}+\bm{U}_{j+1,k}^{n}\right)$.
-
-说明: 其中的 $\bm{A}\left(\bm{U}_{j+\frac{1}{2},k}\right)$ 可以替代为
 \begin{equation}
-	\bm{A}_{j+\frac{1}{2},k}=\left\{
-		\begin{array}{ll}
-		\frac{\bm{F}\left(\bm{U}_{j+1,k}\right)-\bm{F}\left(\bm{U}_{j,k}\right)}{\bm{U}_{j+1,k}-\bm{U}_{j,k}}, & \bm{U}_{j+1,k} \neq \bm{U}_{j,k}, \\
-		\bm{A}\left(\bm{U}_{j,k}\right), & \bm{U}_{j+1,k}=\bm{U}_{j,k}.
-		\end{array}\right.
+	u^{(1)} =u^{n}+\Delta t_{n} L\left(u^{n}\right)=H\left(u^n,j\right).
 \end{equation}
-$\bm{B}$同理。
+\begin{equation}
+	u^{(2)} =\frac{3}{4} u^{n}+\frac{1}{4}\left(u^{(1)}+\Delta t_{n} L\left(u^{(1)}\right)\right)=\frac{3}{4} u^{n}+\frac{1}{4}H\left(u^{(1)},j\right).
+\end{equation}
+\begin{equation}
+	u^{n+1} =\frac{1}{3} u^{n}+\frac{2}{3}\left(u^{(2)}+\Delta t_{n} L\left(u^{(2)}\right)\right) = \frac{1}{3} u^{n}+\frac{2}{3}H\left(u^{(2)},j\right).
+\end{equation}
+由此可见，在\cref{eq:12cfl}的条件下该格式同样有单调性，且有\cref{eq:14}的性质，所以满足局部极值原理。
 
 
-\section{4}
+\section{B}
 
-\subsection{一维情况}
+考虑2D双曲守恒律方程
+\begin{equation}
+	u_{t}+f(u)_{x}+g(u)_{y}=0, x, y \in \mathbb{R}, t>0,
+\end{equation}
 
-% 高维的情况中，类似的MUSCL离散方法可以应用在每一维上。考虑多维松弛系统
-% \begin{gather}
-% \frac{\partial}{\partial t} \bm{u}+\sum_{i=1}^{m} \frac{\partial}{\partial x_{i}} \bm{v}_{i}=0, \\
-% \frac{\partial}{\partial t} \bm{v}_{i}+A_{i} \frac{\partial}{\partial x_{i}} \bm{u}=-\frac{1}{\varepsilon}\left(\bm{v}_{i}-F_{i}(\bm{u})\right), \quad i=1,2, \ldots, m.
-% \end{gather}
-% 对于二维问题，考虑
-% \begin{equation}
-% 	\begin{aligned}
-% 		\frac{\partial}{\partial t} \bm{u}+\frac{\partial}{\partial x} \bm{v}+\frac{\partial}{\partial y} \bm{w} &=0, \\
-% 		\frac{\partial}{\partial t} \bm{v}+\bm{A} \frac{\partial}{\partial x} \bm{u} &=-\frac{1}{{\varepsilon}}(\bm{v}-F(\bm{u})),\\
-% 		\frac{\partial}{\partial t} \bm{w}+\bm{B} \frac{\partial}{\partial y} \bm{u}&=-\frac{1}{{\varepsilon}}(\bm{w}-G(\bm{u})).
-% 		\end{aligned}
-% 		\label{eq:41}
-% \end{equation}
-% Here $A=\operatorname{diag}\left\{a_{1}, \ldots, a_{n}\right\}$ and $B=\operatorname{diag}\left\{b_{1}, \ldots, b_{n}\right)$ with $a_{i}>0, b_{i}>0$ for
-% $1 \leqq i \leqq n$
-% Suppose the spatial grid points are located at $\left(x_{i+1 / 2}, y_{j+1 / 2}\right)$, the grid widths are $h_{i}^{x}=x_{i+1 / 2}-x_{i-1 / 2}$ and $h_{j}^{y}=y_{j+1 / 2}-y_{j-1 / 2}$ respectively. For a vector $\bm{U}(x, y)$ the point value is $\bm{U}_{i+1 / 2, j+1 / 2}=\bm{U}\left(x_{i+1 / 2}, y_{j+1 / 2}\right)$, the cell average value is defined as
-% \begin{equation}
-% 	\bm{U}_{i j}=\frac{1}{h_{i}^{x} h_{j}^{y}} \int_{x_{i-1 / 2}}^{x_{i+1 / 2}} \int_{y_{j-1 / 2}}^{y_{j+1 / 2}} \bm{U}(x, y) d x d y .
-% \end{equation}
-
-% A conservative, semi-discrete differencing to \cref{eq:41} is
-% \begin{gather}
-% \frac{\partial}{\partial t} \bm{u}_{i j}+\frac{1}{h_{i}^{x}}\left(\bm{v}_{i+1 / 2, j}-\bm{v}_{i-1 / 2, j}\right)+\frac{1}{h_{j}^{y}}\left(\bm{w}_{i, j+1 / 2}-\bm{w}_{i, j-1 / 2}\right)=0,\\
-% \frac{\partial}{\partial t} \bm{v}_{i j}+A \frac{1}{h_{i}^{x}}\left(\bm{u}_{i+1 / 2, j}-\bm{u}_{i-1 / 2, j}\right)=-\frac{1}{\varepsilon}\left(\bm{v}_{i j}-F\left(\bm{u}_{i j}\right)\right), \\
-% \frac{\partial}{\partial t} \bm{w}_{i j}+B \frac{1}{h_{j}^{y}}\left(\bm{u}_{i, j+1 / 2}-\bm{u}_{i, j-1 / 2}\right)=-\frac{1}{\varepsilon}\left(\bm{w}_{i j}-G\left(\bm{u}_{i j}\right)\right).
-% \end{gather}
-% Applying the MUSCL discretization to $\bm{v} \pm A^{1 / 2} \bm{u}$ in the $x$-direction and $\bm{w} \pm B^{1 / 2} \bm{u}$ in the ${y}$-direction respectively, for the $p$-th component,
-% \begin{align}
-% u_{i+1 / 2, j}=& \frac{1}{2}\left(u_{i j}+u_{i+1, j}\right)-\frac{1}{2 \sqrt{a_{p}}}\left(v_{i+1, j}-v_{i j}\right) \\
-% &+\frac{1}{4 \sqrt{a_{p}}}\left(h_{i}^{x} \sigma_{i j}^{x,+}+h_{i+1}^{x} \sigma_{i+1, j}^{x_{i}-},\right),\\
-% v_{i+1 / 2, j}=& \frac{1}{2}\left(v_{i j}+v_{i+1, j}\right)-\frac{\sqrt{a_{p}}}{2}\left(u_{i+1, j}-u_{i j}\right) \\
-% &+\frac{1}{4}\left(h_{i}^{x} \sigma_{i j}^{x_{i}+}-h_{i+1}^{x}{\sigma_{i+1, j}}^{x_{i j}}\right), \\
-% u_{i, j+1 / 2}=& \frac{1}{2}\left(u_{i j}+u_{i, j+1}\right)-\frac{1}{2 \sqrt{b_{p}}}\left(w_{i, j+1}-w_{i j}\right) \\
-% &+\frac{1}{4 \sqrt{b_{p}}}\left(h_{j}^{y} \sigma_{i j}^{y_{i j}}+h_{j+1}^{y} \sigma_{i, j+1}^{y,-}\right), \\
-% w_{i, j+1 / 2}=& \frac{1}{2}\left(w_{i j}+w_{i, j+1}\right)-\frac{\sqrt{b_{p}}}{2}\left(u_{i, j+1}-u_{i j}\right) \\
-% &+\frac{1}{4}\left(h_{j}^{y} \sigma_{i j}^{y_{i j}+}-h_{j+1}^{y}{_{i, j+1}}^{y,-}\right).
-% \end{align}
-% The slope limiters are defined as
-% \begin{gather}
-% \sigma_{i j}^{x, \pm}=\frac{1}{h_{i}^{x}}\left(v_{i+1, j} \pm \sqrt{a_{p}} u_{i+1, j}-v_{i j} \mp \sqrt{a_{p}} u_{i j}\right) \phi\left(\theta_{i j}^{x, \pm}\right), \\
-% \theta_{i j}^{x, \pm}=\frac{v_{i j} \pm \sqrt{a_{p}} u_{i j}-v_{i-1, j} \mp \sqrt{a_{p}} u_{i-1, j}}{v_{i+1, j} \pm \sqrt{a_{p}} u_{i+1, j}-v_{i j} \mp \sqrt{a_{p}} u_{i j}}, \\
-% \sigma_{i j}^{y, \pm}=\frac{1}{h_{j}^{y}}\left(w_{i, j+1} \pm \sqrt{b_{p}} u_{i, j+1}-w_{i j} \mp \sqrt{b_{p}} u_{i j}\right) \phi\left(\theta_{i j}^{y, \pm}\right), \\
-% \theta_{i j}^{y, \pm}=\frac{w_{i j} \pm \sqrt{b_{p}} u_{i j}-w_{i, j-1} \mp \sqrt{b_{p}} u_{i, j-1}}{w_{i, j+1} \pm \sqrt{b_{p}} u_{i, j+1}-w_{i j} \mp \sqrt{b_{p}} u_{i j}}.
-% \end{gather}
-
-
-这里考虑标量的情况。
+$f=g=\frac{1}{2} u^{2},\ u(x, y, 0)=u_{0}(x, y)$, 和均匀的矩形网格$\{\left(x_{j}, y_{k}\right):x_{j}=j h_{x},\ y_{k}=k h_{y},\ j,\ k \in \mathbb{Z}\}.$ 请详细写出上述方程的如下形式的Godunov格式
 \begin{equation}
 	\begin{aligned}
-		\frac{\partial}{\partial t} {u}+\frac{\partial}{\partial x} {v}&=0, \quad {v} \in \mathbb{R}^{1}, \\
-		\frac{\partial}{\partial t} {v}+{a} \frac{\partial}{\partial x} {u}&=-\frac{1}{\varepsilon}({v}-F({u})), \quad \varepsilon>0.
+		\bar{u}_{j, k}^{n+1} =\  & \bar{u}_{j, k}^{n}-\frac{\tau}{h_{x}}\left[f\left(\omega\left(0 ; \bar{u}_{j, k}^{n}, \bar{u}_{j+1, k}^{n}\right)\right)-f\left(\omega\left(0 ; \bar{u}_{j-1, k}^{n}, \bar{u}_{j, k}^{n}\right)\right)\right] \\
+		                         & -\frac{\tau}{h_{y}}\left[g\left(\omega\left(0 ; \bar{u}_{j, k}^{n} ,\bar{u}_{j, k+1}^{n}\right)\right)-g\left(\omega\left(0 ; \bar{u}_{j, k-1}^{n}, \bar{u}_{j, k}^{n}\right)\right)\right],
 	\end{aligned}
-	\label{eq:42}
+\end{equation}
+其中 $\omega \left(\frac{x-x_{j+\frac{1}{2}}}{t-t_n};\bar{u}_{j, k}^{n}, \bar{u}_{j+1, k}^{n}\right)$是
+\begin{equation}
+	u_{t}+f(u)_{x}=0,\ u\left(x, t_{n}\right)=\left\{\begin{array}{ll}
+		\bar{u}_{j, k}^{n},   & x-x_{j+\frac{1}{2}}<0, \\
+		\bar{u}_{j+1, k}^{n}, & x-x_{j+\frac{1}{2}}>0,
+	\end{array}\right.
+\end{equation}
+的精确解; $\omega\left(\frac{y-y_{k+\frac{1}{2}}}{t-t_{n}} ; \bar{u}_{j, k}^{n}, \bar{u}_{j, k+1}^{n}\right)$ 是
+\begin{equation}
+	u_{t}+g(u)_{y}=0,\ u\left(y, t_{n}\right)=\left\{\begin{array}{ll}
+		\bar{u}_{j, k}^{n},   & y-y_{k+\frac{1}{2}}<0, \\
+		\bar{u}_{j, k+1}^{n}, & y-y_{k+\frac{1}{2}}>0,
+	\end{array}\right.
+\end{equation}
+的精确解。也就是给出局部1D Riemann问题精确解, 再完整地给
+出 $f(\omega(0 ; \bar{u}_{j, k}^{n}, \bar{u}_{j+1, k}^{n}))$ 和 $g(\omega(0 ; \bar{u}_{j, k}^{n}, \bar{u}_{j, k+1}^{n}))$ 的计算. [提示: 参照课堂上写的1D Burgers方程的Godunov格式]
+
+
+对于 1D Burgers 方程的黎曼问题
+\begin{equation}
+	u_{t}+uu_x=0,\ u\left(x, 0\right)=\left\{\begin{array}{ll}
+		u_l, & x<0, \\
+		u_r, & x>0,
+	\end{array}\right.
+\end{equation}
+的精确解为
+\begin{enumerate}
+	\item $u_l>u_r$，为激波解
+	      \begin{equation}
+		      u\left(x, 0\right)=\left\{\begin{array}{ll}
+			      u_l, & x<ct, \\
+			      u_r, & x>ct,
+		      \end{array}\right.
+	      \end{equation}
+	      其中$c=\frac{u_l+u_r}{2}$.
+	\item $u_l<u_r$，为稀疏波解
+	      \begin{equation}
+		      u\left(x, 0\right)=\left\{\begin{array}{ll}
+			      u_l, & x<u_lt,      \\
+			      x/t, & u_lt<x<u_rt, \\
+			      u_r, & x>u_rt.
+		      \end{array}\right.
+	      \end{equation}
+\end{enumerate}
+
+下面分类讨论来求$x=0$的精确解, $\omega\left(0;u_l,u_r\right)=:\varphi(u_l,u_r).$
+
+\begin{enumerate}
+	\item $u_l>u_r$,
+	      \begin{enumerate}
+		      \item $c>0,\ \omega\left(0;u_l,u_r\right)=u_l.$
+		      \item $c<0,\ \omega\left(0;u_l,u_r\right)=u_r.$
+	      \end{enumerate}
+	\item $u_l<u_r$,
+	      \begin{enumerate}
+		      \item $u_l>0,\ \omega\left(0;u_l,u_r\right)=u_l.$
+		      \item $u_r<0,\ \omega\left(0;u_l,u_r\right)=u_r.$
+		      \item $u_l<0<u_r,\ \omega\left(0;u_l,u_r\right)=0.$
+	      \end{enumerate}
+\end{enumerate}
+
+\begin{equation}
+	f(\omega(0 ; \bar{u}_{j, k}^{n}, \bar{u}_{j+1, k}^{n}))=f(\varphi(\bar{u}_{j, k}^{n}, \bar{u}_{j+1, k}^{n}))=\frac{1}{2}\varphi^2(\bar{u}_{j, k}^{n}, \bar{u}_{j+1, k}^{n}),
+\end{equation}
+\begin{equation}
+	g(\omega(0 ; \bar{u}_{j, k}^{n}, \bar{u}_{j, k+1}^{n}))=g(\varphi(\bar{u}_{j, k}^{n}, \bar{u}_{j, k+1}^{n}))=\frac{1}{2}\varphi^2(\bar{u}_{j, k}^{n}, \bar{u}_{j, k+1}^{n}).
 \end{equation}
 
-松弛系统\cref{eq:42}的均匀网格的简单一阶守恒格式可以写成
 \begin{equation}
 	\begin{aligned}
-		\frac{u_{j}^{n+1}-u_{j}^{n}}{\tau}+ \frac{v_{j+1 / 2}^{n}-v_{j-1 / 2}^{n}}{h}&=0, \\
-		\frac{v_{j}^{n+1}-v_{j}^{n}}{\tau}+a \frac{u_{j+1 / 2}^{n}-u_{j-1 / 2}^{n}}{h} &=-\frac{1}{\varepsilon}\left(v_{j}^{n+1}-f\left(u_{j}^{n+1}\right)\right).
+		\bar{u}_{j, k}^{n+1} =\  & \bar{u}_{j, k}^{n}-\frac{\tau}{h_{x}}\left(\frac{1}{2}\varphi^2\left( \bar{u}_{j, k}^{n}, \bar{u}_{j+1, k}^{n}\right)-\frac{1}{2}\varphi^2\left( \bar{u}_{j-1, k}^{n}, \bar{u}_{j, k}^{n}\right)\right) \\
+		                         & -\frac{\tau}{h_{y}}\left(\frac{1}{2}\varphi^2\left( \bar{u}_{j, k}^{n} ,\bar{u}_{j, k+1}^{n}\right)-\frac{1}{2}\varphi^2\left( \bar{u}_{j, k-1}^{n}, \bar{u}_{j, k}^{n}\right)\right).
+	\end{aligned}
+\end{equation}
+
+
+
+\section{C}
+
+证明1D完全气体Euler方程组的1激波的关系式, 即讲义 [CFDLect06-com03_cn.pdf] 的第27页的1激波的关系式.
+
+
+\begin{proof}
+
+	以$s_1$速度行进的1激波（假设朝左）关系式，令
+	\begin{equation}
+		\hat{u}_{L}=u_{L}-s_{1}, \quad \hat{u}_{*}=u_{*}-s_{1}, \quad M_{L}=u_{L} / a_{L}, \quad M_{S}=s_{1} / a_{1}.
+	\end{equation}
+
+	在这个新框架下，应用RH条件, 有
+	\begin{equation}
+		\begin{aligned}
+			\rho_{*} \hat{u}_{*}                      & =\rho_{L} \hat{u}_{L},                      \\
+			\rho_{*} \hat{u}_{*}^{2}+p_{*}            & =\rho_{L} \hat{u}_{L}^{2}+p_{L},            \\
+			\hat{u}_{*}\left(\hat{E}_{*}+p_{*}\right) & =\hat{u}_{L}\left(\hat{E}_{L}+p_{L}\right),
 		\end{aligned}
-		\label{eq:412}
-\end{equation}
-
-
-\cref{eq:42}的一阶迎风格式是
-\begin{equation}
-	\begin{aligned}
-		u_{j+1 / 2}^{n}=&\frac{1}{2}\left(u_{j}^{n}+u_{j+1}^{n}\right)-\frac{1}{2 \sqrt{a}}\left(v_{j+1}^{n}-v_{j}^{n}\right), \\
-		v_{j+1 / 2}^{n}=&\frac{1}{2}\left(v_{j}^{n}+v_{j+1}^{n}\right)+\frac{\sqrt{a}}{2}\left(u_{j+1}^{n}-u_{j}^{n}\right).
-	\end{aligned}
-\end{equation}
-应用\cref{eq:412}得
-\begin{equation}
-	\frac{u_{j}^{n+1}-u_{j}^{n}}{k}+\frac{1}{2 h}\left(v_{j+1}^{n}-v_{j-1}^{n}\right)-\frac{\sqrt{a}}{2 h}\left(u_{j+1}^{n}-2 u_{j}^{n}+u_{j-1}^{n}\right)=0.
-\end{equation}
-\begin{equation}
-	\frac{v_{j}^{n+1}-v_{j}^{n}}{k} +\frac{a}{2 h}\left(u_{j+1}^{n}-u_{j-1}^{n}\right)-\frac{1}{2 \sqrt{a} h}\left(v_{j+1}^{n}-2 v_{j}^{n}+v_{j-1}^{n}\right)=-\frac{1}{\varepsilon}\left(v_{j}^{n}-f\left(u_{j}^{n}\right)\right).
-\end{equation}
-
-
-Using a Hilbert expansion gives the leading order equations (as $\left.\varepsilon \rightarrow 0^{+}\right)$,
-\begin{equation}
-	\begin{aligned}
-		v_{j}^{n} &=f\left(u_{j}^{n}\right), \\
-		u_{j}^{n+1} &=u_{j}^{n}-\frac{\lambda}{2}\left(f\left(u_{j+1}^{n}\right)-f\left(u_{j-1}^{n}\right)\right)+\frac{\sqrt{a} \lambda}{2}\left(u_{j+1}^{n}-2 u_{j}^{n}+u_{j-1}^{n}\right).
-	\end{aligned}
-	\label{eq:43}
-\end{equation}
-where
-\begin{equation}
-	\lambda=\frac{k}{h}.
-\end{equation}
-
-The scheme in (\ref{eq:43}) is a first-order relaxed scheme which is a Lax-Friedrichs type scheme. A numerical scheme
-\begin{equation}
-	U_{j}^{n+1}=\mathbf{H}\left(U^{n} ; j\right)
-\end{equation}
-is called a monotone scheme if
-\begin{equation}
-	\frac{\partial}{\partial U_{i}^{n}} \mathbf{H}\left(U^{n} ; j\right) \geqq 0 \quad \text { for all } \quad i, j, U^{n}.
-\end{equation}
-It can be checked easily that (\ref{eq:43}) is a monotone scheme provided the standard CFL condition arising from the discrete convection terms
-\begin{equation}
-	\sqrt{a} \lambda \leqq 1.
-	\label{eq:44}
-\end{equation}
-where $\lambda = \frac{\tau}{h}$ and the subcharacteristic condition 
-\begin{equation}
-	-\sqrt{a} \leq f^{\prime}(u) \leq \sqrt{a} \quad \text { for all } u
-	\label{eq:45}
-\end{equation}
-are satisfied. Thus we have the following theorem.
-
-Under the CFL condition (\ref{eq:44}) and the subcharacteristic condition (\ref{eq:45}), the relaxed scheme (\ref{eq:43}) is a monotone scheme.
-
-所以时间步长应该满足\cref{eq:44}。
-
-\subsection{二维情况}
-
-对于二维问题，考虑标量情况
-\begin{equation}
-	\begin{aligned}
-		\frac{\partial}{\partial t} {u}+\frac{\partial}{\partial x} {v}+\frac{\partial}{\partial y} {w} &=0, \\
-		\frac{\partial}{\partial t} {v}+{a} \frac{\partial}{\partial x} {u} &=-\frac{1}{{\varepsilon}}({v}-F({u})),\\
-		\frac{\partial}{\partial t} {w}+{b} \frac{\partial}{\partial y} {u}&=-\frac{1}{{\varepsilon}}({w}-G({u})).
+		\label{eq:31}
+	\end{equation}
+	其中 $\hat{E}_{*}=\rho_{*} e_{*}+\frac{1}{2} \rho_{*} \hat{u}_{*}^{2} .$
+	\cref{eq:31}中第三式的左端和右端分别可改写为
+	\begin{equation}
+		\hat{u}_{*} \rho_{*}\left[\frac{1}{2} \hat{u}_{*}^{2}+\left(e_{*}+\frac{p_{*}}{\rho_{*}}\right)\right], \quad \hat{u}_{L} \rho_{L}\left[\frac{1}{2} \hat{u}_{L}^{2}+\left(e_{L}+\frac{p_{L}}{\rho_{L}}\right)\right].
+	\end{equation}
+	应用\cref{eq:31}中的第一式和比含 $h=\frac{p}{\rho}+e$, 则有
+	\begin{equation}
+		\frac{1}{2} \hat{u}_{*}^{2}+h_{*}=\frac{1}{2} \hat{u}_{L}^{2}+h_{L},
+		\label{eq:311}
+	\end{equation}
+	又由\cref{eq:31}中的第一式和第二式, 得
+	\begin{equation}
+		\begin{aligned}
+			\rho_{*} \hat{u}_{*}^{2}=\left(\rho_{L} \hat{u}_{L}\right) \hat{u}_{L}+p_{L}-p_{*} \stackrel{\cref{eq:31}}{\implies } \rho_{*} \hat{u}_{*} \frac{\rho_{*} \hat{u}_{*}}{\rho_{L}}+p_{L}-p_{*}, \\
+			\Rightarrow \rho_{*}^{2} \hat{u}_{*}^{2}\left(\frac{\rho_{L}-\rho_{*}}{\rho_{*} \rho_{L}}\right)=p_{L}-p_{*}, \Rightarrow \hat{u}_{*}^{2}=\left(\frac{\rho_{L}}{\rho_{*}}\right)\left(\frac{p_{L}-p_{*}}{\rho_{L}-\rho_{*}}\right) .
 		\end{aligned}
-		\label{eq:46}
-\end{equation}
-松弛系统\cref{eq:46}的均匀网格的简单一阶守恒格式可以写成
-\begin{equation}
-	\begin{aligned}
-		\frac{u_{j,k}^{n+1}-u_{j,k}^{n}}{\tau}+ \frac{v_{j+\frac{1}{2},k}^{n}-v_{j-\frac{1}{2},k}^{n}}{h_x}+ \frac{w_{j,k+\frac{1}{2}}^{n}-w_{j,k-\frac{1}{2}}^{n}}{h_y}&=0, \\
-		\frac{v_{j,k}^{n+1}-v_{j,k}^{n}}{\tau}+a \frac{u_{j+\frac{1}{2},k}^{n}-u_{j-\frac{1}{2},k}^{n}}{h_x} &=-\frac{1}{\varepsilon}\left(v_{j,k}^{n+1}-f\left(u_{j,k}^{n+1}\right)\right),\\
-		\frac{w_{j,k}^{n+1}-w_{j,k}^{n}}{\tau}+b \frac{u_{j,k+\frac{1}{2}}^{n}-u_{j,k-\frac{1}{2}}^{n}}{h_x} &=-\frac{1}{\varepsilon}\left(w_{j,k}^{n+1}-f\left(u_{j,k}^{n+1}\right)\right).
-		\end{aligned}
-	\label{eq:47}
-\end{equation}
-一阶迎风格式是
-\begin{equation}
-	\begin{aligned}
-		u_{j+1 / 2}^{n}=&\frac{1}{2}\left(u_{j}^{n}+u_{j+1}^{n}\right)-\frac{1}{2 \sqrt{a}}\left(v_{j+1}^{n}-v_{j}^{n}\right), \\
-		v_{j+1 / 2}^{n}=&\frac{1}{2}\left(v_{j}^{n}+v_{j+1}^{n}\right)+\frac{\sqrt{a}}{2}\left(u_{j+1}^{n}-u_{j}^{n}\right).
-	\end{aligned}
-\end{equation}
-特征条件
-\begin{gather}
-	-\sqrt{a} \leq F^{\prime}(u) \leq \sqrt{a} \quad \text { for all } u,\\
-	-\sqrt{b} \leq G^{\prime}(u) \leq \sqrt{b} \quad \text { for all } u.
-\end{gather}
+		\label{eq:32}
+	\end{equation}
+	类似地，有
+	\begin{equation}
+		\hat{u}_{L}^{2}=\left(\frac{\rho_{*}}{\rho_{L}}\right)\left[\frac{p_{L}-p_{*}}{\rho_{L}-\rho_{*}}\right],
+		\label{eq:33}
+	\end{equation}
+	将\cref{eq:32,eq:33} 代入\cref{eq:311}, 得
+	\begin{equation}
+		h_{*}-h_{L}=\frac{1}{2}\left(p_{*}-p_{L}\right)\left[\frac{\rho_{*}+\rho_{L}}{\rho_{*} \rho_{L}}\right],
+	\end{equation}
+	或
+	\begin{equation}
+		e_{*}-e_{L}=\frac{1}{2}\left(p_{*}+p_{L}\right)\left[\frac{\rho_{*}-\rho_{L}}{\rho_{*} \rho_{L}}\right], \quad h=e+\frac{p}{\rho}.
+		\label{eq:34}
+	\end{equation}
 
-时间步长需要满足
-\begin{gather}
-	\sqrt{a} \lambda_x \leqq 1,\\
-	\sqrt{b} \lambda_y \leqq 1.
-\end{gather}
-这样格式是单调的。
+	注意: 直到此, 没有用到状态方程 $e=e(p, \rho)$ 的具体形式. 下面将仅考虑完全气 体 $e=\frac{p}{\rho(\gamma-1)} .$ 应用其及 \cref{eq:34}, 可得
+	\begin{equation}
+		\frac{\rho_{*}}{\rho_{L}}=\frac{\left(\frac{p_{*}}{p_{L}}\right)+\left(\frac{\gamma-1}{\gamma+1}\right)}{\left(\frac{\gamma-1}{\gamma+1}\right)\left(\frac{p_{*}}{p_{L}}\right)+1},
+		\label{eq:35}
+	\end{equation}
+	这建立了穿过激波的密度比 $\left(\frac{\rho_{*}}{\rho_{L}}\right)$ 和压力比 $\left(\frac{p_{*}}{p_{L}}\right)$ 之间的一个有用关系式.
+
+
+	引入Mach数
+	\begin{equation}
+		M_{L}=\frac{u_{L}}{a_{L}}, \quad \text{激波前流动的马赫数, 在老的框架里,}
+	\end{equation}
+	\begin{equation}
+		M_{S}=\frac{s_{3}}{a_{L}}, \quad \text{激波马赫数.}
+		\label{eq:36}
+	\end{equation}
+	由\cref{eq:33,eq:34,eq:35}, 可以给出穿过激波的密度比和压力比关于相对马赫 数 $M_{L}$ 和激波马赫数 $M_{S}$ 的差的函数表示式(激波关系):
+	\begin{align}
+		\frac{\rho_{*}}{\rho_{L}} & =\frac{(\gamma+1)\left(M_{L}-M_{S}\right)^{2}}{(\gamma-1)\left(M_{L}-M_{S}\right)^{2}+2}, \\
+		\frac{p_{*}}{p_{L}}       & =\frac{2 \gamma\left(M_{L}-M_{S}\right)^{2}-(\gamma-1)}{(\gamma+1)}.
+		\label{eq:37}
+	\end{align}
+	又由\cref{eq:37}, 得下列关系式(根号前的符号由Lax激波不等式决定)
+	\begin{equation}
+		M_{L}-M_{S}=\sqrt{\left(\frac{\gamma+1}{2 \gamma}\right)\left(\frac{p_{*}}{p}\right)+\left(\frac{\gamma-1}{2 \gamma}\right)},
+	\end{equation}
+	或
+	\begin{equation}
+		s_{3}=u_{L}-a_{L} \sqrt{\left(\frac{\gamma+1}{2 \gamma}\right)\left(\frac{p_{*}}{p}\right)+\left(\frac{\gamma-1}{2 \gamma}\right)} .
+	\end{equation}
+
+	由\cref{eq:31}中的第一式, 有
+	\begin{equation}
+		u_{*}=\left(1-\frac{\rho_{L}}{\rho_{*}}\right) s_{3}+\left(\frac{\rho_{L}}{\rho_{*}}\right) u_{L}.
+	\end{equation}
+
+	所以有
+	\begin{align}
+		\frac{\rho_{*}}{\rho_{L}}         & =\frac{\left(\frac{p_{*}}{p_{L}}\right)+\left(\frac{\gamma-1}{\gamma+1}\right)}{\left(\frac{\gamma-1}{\gamma+1}\right)\left(\frac{p_{*}}{p_{L}}\right)+1}, \\
+		\frac{\rho_{*}}{\rho_{L}}         & =\frac{(\gamma+1)\left(M_{L}-M_{S}\right)^{2}}{(\gamma-1)\left(M_{L}-M_{S}\right)^{2}+2},                                                                  \\
+		\frac{p_{*}}{p_{L}}               & =\frac{2 \gamma\left(M_{L}-M_{S}\right)^{2}-(\gamma-1)}{(\gamma+1)},                                                                                       \\
+		u_{*}                             & =\left(1-\frac{\rho_{L}}{\rho_{*}}\right) s_{1}+\left(\frac{\rho_{L}}{\rho_{*}}\right) u_{L},                                                              \\
+		s_{1}                             & =u_{L}-a_{L} \sqrt{\frac{\gamma+1}{2 \gamma}\left(\frac{p_{*}}{p_{L}}\right)+\left(\frac{\gamma-1}{2 \gamma}\right)},                                      \\
+		M_{L}                      -M_{S} & =+\sqrt{\left(\frac{\gamma+1}{2 \gamma}\right)\left(\frac{p_{*}}{p_{L}}\right)+\left(\frac{\gamma-1}{2 \gamma}\right)}.
+	\end{align}
+
+
+\end{proof}
 
 
 % \nocite{*}
 
-\input{bib.tex}
+% \input{bib.tex}
 
 \end{document}
+
+
+% Engquist-Osher格式(Math. Comput., 34(1980), 45-75; $36(1981)$, 321-352)
+% \begin{equation}
+% 	\hat{\boldsymbol{F}}\left(\boldsymbol{U}_{j}, \boldsymbol{U}_{j+1}\right)=\frac{1}{2}\left(\boldsymbol{F}\left(\boldsymbol{U}_{j}\right)+\boldsymbol{F}\left(\boldsymbol{U}_{j+1}\right)\right)-\frac{1}{2} \int_{\boldsymbol{U}_{j}}^{\boldsymbol{U}_{j+1}}|\boldsymbol{A}(\boldsymbol{U})| \dif \boldsymbol{U}
+% \end{equation}
+% 其中, 积分路径为 $\Gamma_{j}=\cup_{i=1}^{m} \Gamma_{j}^{(i)}$, 曲线 $\Gamma_{j}^{(i)}$ 为与 $A$ 的右特征向量 $\boldsymbol{R}^{(i)}$ 平行的线段, 即
+% \begin{equation}
+% 	\Gamma_{j}^{(i)}:\left\{\begin{array}{l}
+% 		\frac{\dif \boldsymbol{U}^{(i)}}{\dif s}=\boldsymbol{R}^{(i)}\left(\boldsymbol{U}^{(i)}\right), \quad 0 \leq s \leq s_{j}^{(i)} \text { 或 }\  0 \geq s \geq s_{j}^{(i)}, \\
+% 		\boldsymbol{U}^{(i)}(s=0)=\boldsymbol{U}^{(i+1)}\left(s_{j}^{(i+1)}\right),
+% 	\end{array}\right.
+% \end{equation}
+% 其中 $i=m, \cdots, 1,\ \boldsymbol{U}^{(m+1)}\left(s_{j}^{(m+1)}\right)=\boldsymbol{U}_{j},\ \boldsymbol{U}^{(1)}\left(s_{j}^{(1)}\right)=\boldsymbol{U}_{j+1}$.

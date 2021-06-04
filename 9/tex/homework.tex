@@ -10,7 +10,7 @@
 %pdf文件设置
 \hypersetup{
 	pdfauthor={袁磊祺},
-	pdftitle={计算流体力学作业8}
+	pdftitle={计算流体力学作业9}
 }
 
 \title{
@@ -18,7 +18,7 @@
 		\usefont{OT1}{bch}{b}{n}
 		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
 		\horrule{0.5pt} \\[0.2cm]
-		\huge \bfseries{计算流体力学作业8} \\[-0.2cm]
+		\huge \bfseries{计算流体力学作业9} \\[-0.2cm]
 		\horrule{2pt} \\[0.2cm]
 }
 \author{
@@ -36,9 +36,127 @@
 
 \section{1}
 
+取$(x_j,x_{j+1})\times [t_n,t_{n+1})$，对$u_t+f_x=0$积分，在$\lambda \max \limits_{u} \abs{f'(u)} \leq \frac{1}{2}$时，能得到什么格式？
+
+可以得到Godunov格式。
+
+定义 $I_{j}:=\left(x_{j-\frac{1}{2}}, x_{j+\frac{1}{2}}\right)$, 设
+\begin{equation}
+	\frac{\tau}{h} \max _{u}\left\{\left|f^{\prime}(u)\right|\right\} \leq \frac{1}{2}.
+	\label{eq:11}
+\end{equation}
+
+
+\begin{enumerate}
+	\item 计算初始函数的单元平均值:
+	      \begin{equation}
+		      u_{j}^{0}=\frac{1}{h} \int_{x_{j-\frac{1}{2}}}^{x_{j+\frac{1}{2}}} u(x, 0) \dif x.
+	      \end{equation}
+	\item 对于 $n \geq 0$, 由单元平均定义(重构) $t_{n}$ 时刻的近似解(分片常数函数)
+	      \begin{equation}
+		      u_{h}\left(x, t_{n}\right):=u_{j}^{n}, \quad x \in I_{j},\ t \in\left[t_{n}, t_{n+1}\right),
+	      \end{equation}
+
+	      并精确地解(局部)Riemann问题
+	      \begin{equation}
+		      \left\{\begin{array}{l}
+			      \frac{\partial u}{\partial t}+\frac{\partial f}{\partial x}=0, \quad t \in\left[t_{n}, t_{n+1}\right) \\
+			      u\left(x, t_{n}\right)=\left\{\begin{array}{ll}
+				      u_{h}\left(x_{j+\frac{1}{2}}-0, t_{n}\right), & x<x_{j+\frac{1}{2}} \\
+				      u_{h}\left(x_{j+\frac{1}{2}}+0, t_{n}\right), & x>x_{j+\frac{1}{2}}
+			      \end{array}\right.
+		      \end{array}\right.
+		      \label{eq:12}
+	      \end{equation}
+
+
+	      用 $\omega(x, t)$ 表示\cref{eq:12}的精确解. 特别地, $\omega(x, t)$ 具有形式:
+	      \begin{equation}
+		      \omega(x, t)=\omega\left(\frac{x-x_{j+\frac{1}{2}}}{t-t_{n}}, u_{h}\left(x_{j+\frac{1}{2}}-0, t_{n}\right), u_{h}\left(x_{j+\frac{1}{2}}+0, t_{n}\right)\right),
+	      \end{equation}
+	\item 计算单元平均:
+	      \begin{equation}
+		      u_{j}^{n+1}=\frac{1}{h} \int_{x_{j-\frac{1}{2}}}^{x_{j+\frac{1}{2}}} \omega\left(x, t_{n+1}\right) \dif x.
+	      \end{equation}
+
+	      在CFL条件\cref{eq:11}下, 有
+	      \begin{equation}
+		      u_{j}^{n+1}=  \frac{1}{h} \int_{x_{j}-\frac{1}{2} h}^{x_{j}} \omega\left(\frac{x-x_{j-\frac{1}{2}}}{\tau}, u_{j-1}^{n}, u_{j}^{n}\right) \dif x  +\frac{1}{h} \int_{x_{j}}^{x_{j}+\frac{1}{2} h} \omega\left(\frac{x-x_{j+\frac{1}{2}}}{\tau}, u_{j}^{n}, u_{j+1}^{n}\right) \dif x.
+	      \end{equation}
+\end{enumerate}
+
+
+
+
+
+
+
+
+\section{2}
+
+
+\begin{equation}
+	u_t + f_x+g_x=0
+\end{equation}
+在矩形网格$\left\{x_j=jh,\ y_k=kh\right\}$上可离散为
+\begin{equation}
+	u^{n+1}_{j,k} = u^n_{j,k} - \lambda_x\left(\hat{f}^n_{j+\frac{1}{2},k}-\hat{f}^n_{j-\frac{1}{2},k}\right) - \lambda_y \left(\hat{g}^n_{j,k+\frac{1}{2}}-\hat{g}^n_{j,k-\frac{1}{2}}\right),
+	\label{eq:21}
+\end{equation}
+其中$\hat{f}^n_{j-\frac{1}{2},k}$形式可以是一维方程对应格式的数值通量， $\hat{g}^n_{j,k+\frac{1}{2}}$类似
+
+问题：
+\begin{align}
+	\hat{f}^n_{j+\frac{1}{2},k} = & \frac{1}{2}\left(f_{j,k} + f_{j+1,k}\right)-\frac{1}{2\lambda_x}\left(u_{j+1,k}-u_{j,k}\right)
+	\label{eq:22}                                                                                                                  \\
+	\hat{g}^n_{j,k+\frac{1}{2}} = & \frac{1}{2}\left(g_{j,k} + g_{j,k+1}\right)-\frac{1}{2\lambda_x}\left(u_{j,k+1}-u_{j,k}\right)
+	\label{eq:23}
+\end{align}
+是否合适？
+
+将\cref{eq:22,eq:23}代入\cref{eq:21}可得
+\begin{equation}
+	\begin{aligned}
+		u^{n+1}_{j,k} = & \ u^n_{j,k} - \frac{\lambda_x}{2}\left({f}^n_{j+1,k}-{f}^n_{j-1,k}\right) -  \frac{\lambda_y}{2}\left({g}^n_{j,k+1}-{g}^n_{j,k-1}\right) \\
+		                & +\frac{1}{2}\left(u^n_{j+1,k}-2u^n_{j,k}+u^n_{j-1,k}\right)+\frac{1}{2}\left(u^n_{j,k+1}-2u^n_{j,k}+u^n_{j,k-1}\right).
+	\end{aligned}
+	\label{eq:24}
+\end{equation}
+这相当于在不稳定的中心差分格式上加了一个耗散项。
+
+假设
+\begin{equation}
+	{f}^n_{j+1,k}-{f}^n_{j-1,k} = f'\left(u^n_{j+1,k}-u^n_{j-1,k}\right),
+\end{equation}
+\begin{equation}
+	{g}^n_{j,k+1}-{g}^n_{j,k-1} = g' \left(u^n_{j,k+1}-u^n_{j,k-1}\right).
+\end{equation}
+
+将
+\begin{equation}
+	u^n_{j,k} = \xi^n_l \me^{\mi \beta (j+k)h}
+\end{equation}
+代入方程得放大因子为
+\begin{equation}
+	G(\beta,h) = -1 + 2\cos(\beta h) -\left[\lambda(f'+g')\sin(\beta h)\right]\mi.
+\end{equation}
+是恒不稳定的。
+
+
+
+
+
+
+
+
+
+
+
+
 
 % \nocite{*}
 
-\input{bib.tex}
+% \input{bib.tex}
 
 \end{document}
+

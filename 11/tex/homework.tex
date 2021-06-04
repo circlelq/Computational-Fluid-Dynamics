@@ -1,0 +1,284 @@
+\documentclass[12pt]{article}
+\input{/Users/circle/Documents/博一下/homework/setting.tex}
+\setcounter{secnumdepth}{2}
+\usepackage{autobreak}
+\usepackage{amsmath}
+\setlength{\parindent}{2em}
+\graphicspath{{../}}
+\ziju{0.1pt}
+
+%pdf文件设置
+\hypersetup{
+	pdfauthor={袁磊祺},
+	pdftitle={计算流体力学作业11}
+}
+
+\title{
+		\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
+		\horrule{0.5pt} \\[0.2cm]
+		\huge \bfseries{计算流体力学作业11} \\[-0.2cm]
+		\horrule{2pt} \\[0.2cm]
+}
+\author{
+		\normalfont 								\normalsize
+		College of Engineering \quad 2001111690  \quad 袁磊祺\\	\normalsize
+        \today
+}
+\date{}
+
+\begin{document}
+
+\input{/Users/circle/Documents/博一下/homework/setc.tex}
+
+\maketitle
+
+\section{A}
+
+讲义 (CFDLect06-com0_cn.pdf) 中给出了完全气体Euler方程组和等温方程组的Steger-Wearming 通量向量分裂格式， 是否能给出等熵方程组(见讲义 (CFDLect06-com03_cn.pdf) 的第12页页底)的Steger-Wearming 通量向量分裂格式?
+
+考虑气体动力学方程组
+\begin{equation}
+	\begin{pmatrix}
+		\rho \\
+		\rho u
+	\end{pmatrix}_t
+	+\begin{pmatrix}
+		\rho u \\
+		\rho u^2+\rho^\gamma/\gamma
+	\end{pmatrix}_x = 0,\quad p(\rho) = \rho^\gamma/\gamma.
+	\label{eq:11}
+\end{equation}
+对光滑解，\cref{eq:11}等价于
+\begin{equation}
+	\bm{U}_t + \nabla \bm{F}(\bm{U})\bm{U}_x=0,
+\end{equation}
+其中
+\begin{equation}
+	\bm{A} = \nabla \bm{F}(\bm{U}) = \begin{pmatrix}
+		0       & 1  \\
+		-u^2+p' & 2u
+	\end{pmatrix},\quad \bm{U}=\begin{pmatrix}
+		\rho \\
+		\rho u
+	\end{pmatrix}.
+\end{equation}
+\cref{eq:11}的特征值矩阵是
+\begin{equation}
+	\bm{\Lambda} =
+	\begin{pmatrix}
+		u - a & 0   \\
+		0     & u+a
+	\end{pmatrix}.
+\end{equation}
+其中
+\begin{equation}
+	a=\sqrt{p'},
+\end{equation}
+相应的特征向量矩阵是
+\begin{equation}
+	\bm{R} =
+	\begin{pmatrix}
+		1   & 1   \\
+		u-a & u+a
+	\end{pmatrix}.
+\end{equation}
+\begin{equation}
+	\bm{L}= \begin{pmatrix}
+		1 & u-a \\
+		1 & u+a
+	\end{pmatrix}.
+\end{equation}
+\begin{equation}
+	\bm{L^}{-1} = \frac{1}{2a} \begin{pmatrix}
+		u+a & -u+a \\
+		-1  & 1
+	\end{pmatrix}.
+\end{equation}
+所以
+\begin{equation}
+	\bm{A} = \bm{L}^{-1}\bm{\Lambda} \bm{L}.
+\end{equation}
+Steger-Wearming 通量向量分裂
+\begin{equation}
+	\bm{A} = \bm{A}^+ + \bm{A}^-,
+\end{equation}
+其中
+\begin{equation}
+	\bm{A}^+ = \frac{1}{2} \bm{L^}{-1}(\bm{\Lambda}+\abs{\bm{\Lambda}}) \bm{L },\quad \bm{A}^- = \frac{1}{2} \bm{L^}{-1}(\bm{\Lambda}-\abs{\bm{\Lambda}}) \bm{L^}.
+\end{equation}
+
+
+
+\section{B}
+
+尝试给出等熵方程组(同上) 的Roe矩阵及Roe格式/方法.
+
+Roe格式
+\begin{equation}
+	\hat{\bm{F}}\left(\bm{U}_{j}, \bm{U}_{j+1}\right)=\frac{\bm{F}\left(\bm{U}_{j}\right)+\bm{F}\left(\bm{U}_{j+1}\right)}{2}-\frac{1}{2}\left|\hat{\bm{A}}_{j+1 / 2}\right|\left(\bm{U}_{j+1}-\bm{U}_{j}\right).
+\end{equation}
+其中
+\begin{equation}
+	\hat{\bm{A}}(\bm{U}_l,\bm{U}_r) = \bm{A}(\bm{\bar{U}}),
+\end{equation}
+\begin{equation}
+	\bm{F}=
+	\begin{pmatrix}
+		\rho u \\
+		\rho u^2+\rho^\gamma/\gamma
+	\end{pmatrix},
+\end{equation}
+其中
+\begin{equation}
+	\bm{\bar{U}}=
+	\left\{
+	\begin{aligned}
+		\bar{\rho} & =\frac{\sqrt{\rho_{r}} \rho_{\ell}+\sqrt{\rho_{\ell}} \rho_{r}}{\sqrt{\rho_{\ell}}+\sqrt{\rho_{r}}}=\sqrt{\rho_{\ell} \rho_{r}}, \\
+		\bar{u}    & =\frac{\sqrt{\rho_{\ell}} u_{\ell}+\sqrt{\rho_{r}} u_{r}}{\sqrt{\rho_{\ell}}+\sqrt{\rho_{r}}}.
+	\end{aligned}\right.
+\end{equation}
+而
+\begin{equation}
+	\abs{\hat{\bm{A}}} = \bm{L^}{-1}\abs{\bm{\Lambda}} \bm{L}
+\end{equation}
+这里的$\bm{L},\ \bm{\Lambda}$为$\hat{\bm{A}}$的左特征向量矩阵和特征值矩阵。
+
+
+
+
+
+
+
+\section{C}
+
+尝试给出等温方程组(见讲义 (CFDLect06-com03_cn.pdf) 的第84页)和等熵方程组(同上) 的动理学通量向量分裂格式.
+
+等温方程
+\begin{equation}
+	\begin{pmatrix}
+		\rho \\
+		\rho u
+	\end{pmatrix}_t
+	+\begin{pmatrix}
+		\rho u \\
+		\rho u^2+\rho a^2
+	\end{pmatrix}_x = 0,\quad p(\rho) = \rho a^2.
+	\label{eq:31}
+\end{equation}
+
+Kinetic flux-vector splitting: KFVS:
+\begin{equation}
+	F^{\pm}=\int v^{\pm} \Psi g d v d \xi=\rho\left(\begin{array}{c}
+			<v^{1}>_{\pm} \\
+			<v^{2}>_{\pm} \\
+			\frac{1}{2}<v^{3}>_{\pm}+\frac{K}{2 \lambda}<v^{1}>_{\pm}
+		\end{array}\right)
+	\label{eq:32}
+\end{equation}
+
+
+其中 $v^{\pm}=\frac{1}{2}(v \pm|v|)$, $<v^{0}>_{\pm}=\frac{1}{2} \operatorname{erfc}(\mp \sqrt{\lambda} u),\ <v^{1}>_{\pm}=u<v^{0}>_{\pm} \pm \frac{\me^{-\lambda u^{2}}}{2 \sqrt{\pi \lambda}}$, $<v^{m+2}>_{\pm}=u<v^{m+1}>_{\pm}+\frac{m+1}{2 \lambda}<v^{m}>_{\pm},$ 其中$ \operatorname{erfc}(x)=\frac{2}{\sqrt{\pi}} \int_{x}^{\infty} \me^{-t^{2}} \dif t$, 其中$\lambda$是温度的函数，
+\begin{equation}
+	\lambda=\frac{(K+d) \rho}{4\left(E-\frac{1}{2} \rho \bm{u}^{2}\right)}=\frac{\rho}{2 p}.
+\end{equation}
+对于等温方程组和等熵方程组有
+\begin{equation}
+	\begin{pmatrix}
+		\rho \\
+		\rho u
+	\end{pmatrix}_t
+	+\begin{pmatrix}
+		\rho u \\
+		\rho u^2+p
+	\end{pmatrix}_x = 0.
+\end{equation}
+
+\cref{eq:32}变为
+\begin{equation}
+	F^{\pm}=\int v^{\pm} \Psi g d v d \xi=\rho\left(\begin{array}{c}
+			<v^{1}>_{\pm} \\
+			<v^{2}>_{\pm}
+		\end{array}\right),
+\end{equation}
+\begin{equation}
+	<v^{0}>_{\pm}=\frac{1}{2} \operatorname{erfc}(\mp \sqrt{\lambda} u),
+\end{equation}
+\begin{equation}
+	<v^{1}>_{\pm}=u<v^{0}>_{\pm} \pm \frac{\me^{-\lambda u^{2}}}{2 \sqrt{\pi \lambda}},
+\end{equation}
+\begin{equation}
+	<v^{2}>_{\pm}=u<v^{1}>_{\pm}+\frac{1}{2 \lambda}<v^{0}>_{\pm}.
+\end{equation}
+
+对于等温气体
+\begin{equation}
+	\lambda = \frac{\rho}{2p} = \frac{\rho}{2\rho a^2} = \frac{1}{2a^2}.
+\end{equation}
+
+对于等熵气体
+\begin{equation}
+	\lambda = \frac{\rho}{2p} = \frac{\rho}{2\rho^\gamma/\gamma} = \frac{\gamma \rho^{1-\gamma}}{2}.
+\end{equation}
+
+
+
+\section{D}
+
+尝试给出等熵方程组(同上) 的HLL解法器和格式.
+
+类似Godunov格式，计算初始函数的单元平均值:
+\begin{equation}
+	\bar{\bm{u}}_{j}^{0}=\frac{1}{h} \int_{x_{j-\frac{1}{2}}}^{x_{j+\frac{1}{2}}} \bm{u}(x, 0) \dif x.
+\end{equation}
+将方程离散为
+\begin{equation}
+	\left.\frac{\dif \bar{\bm{u}}}{\dif t}\right|_{j}+\frac{1}{h}\left(\bm{f}_{j+\frac{1}{2}}-\bm{f}_{j-\frac{1}{2}}\right)=0,
+\end{equation}
+近似 Godunov 方法的界面通量
+\begin{equation}
+	\bm{f}_{i+\frac{1}{2}}^{\text{hll}}=\left\{\begin{array}{ll}
+		\bm{f}_{L},                                                                                & 0 \leq S_{L},            \\
+		\frac{S_{R} \bm{f}_{L}-S_{L} \bm{f}_{R}+S_{L} S_{R}\left(u_{R}-u_{L}\right)}{S_{R}-S_{L}}, & S_{L} \leq 0 \leq S_{R}, \\
+		\bm{f}_{R},                                                                                & 0 \leq S_{R}.
+	\end{array}\right.
+	\label{eq:41}
+\end{equation}
+其中
+\begin{equation}
+	\bm{f}_R = \bm{f}(\bar{\bm{u}}_r),\quad \bm{f}_L = \bm{f}(\bar{\bm{u}}_l)
+\end{equation}
+对HLL方法需要估计 $S_{L}, S_{R} .$ 基本上有两个方法估 计 $S_{L}$ 和 $S_{R} .$ 最受欢迎的是直接估计速度. 较最近的方法取决于星型区内的 压カ、速度的估计, 然后利用精确波关系得到 $S_{L},\ S_{R} .$
+
+方法一: 直接波速估计,例如
+\begin{equation}
+	S_{L}=u_{L}-a_{L}, \quad S_{R}=u_{R}+a_{R},
+	\label{eq:42}
+\end{equation}
+和
+\begin{equation}
+	\begin{array}{l}
+		S_{L}=\min \left\{u_{L}-a_{L}, \quad u_{R}-a_{R}\right\}, \\
+		S_{R}=\max \left\{u_{L}+a_{L}, \quad u_{R}+a_{R}\right\}.
+	\end{array}
+\end{equation}
+
+假设我们采用\cref{eq:42},则
+\begin{equation}
+	a_L = \sqrt{\bar{\rho}_L^{\gamma-1}},\quad a_R = \sqrt{\bar{\rho}_R^{\gamma-1}},
+\end{equation}
+\begin{equation}
+	S_{L} = \bar{u}_L - a_L = \bar{u}_L - \sqrt{\bar{\rho}_L^{\gamma-1}},\quad S_{R} = \bar{u}_R + a_R = \bar{u}_R + \sqrt{\bar{\rho}_R^{\gamma-1}},
+\end{equation}
+将\cref{eq:42}代入\cref{eq:41}即可。下标$L = i,\ R = i+1$.
+
+
+
+
+% \nocite{*}
+
+% \input{bib.tex}
+
+\end{document}
+

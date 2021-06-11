@@ -1,0 +1,528 @@
+\documentclass[12pt]{article}
+\input{/Users/circle/Documents/博一下/homework/setting.tex}
+\setcounter{secnumdepth}{2}
+\usepackage{autobreak}
+\usepackage{amsmath}
+\setlength{\parindent}{2em}
+\graphicspath{{../}}
+\ziju{0.1pt}
+
+%pdf文件设置
+\hypersetup{
+	pdfauthor={袁磊祺},
+	pdftitle={计算流体力学作业13}
+}
+
+\title{
+		\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
+		\horrule{0.5pt} \\[0.2cm]
+		\huge \bfseries{计算流体力学作业13} \\[-0.2cm]
+		\horrule{2pt} \\[0.2cm]
+}
+\author{
+		\normalfont 								\normalsize
+		College of Engineering \quad 2001111690  \quad 袁磊祺\\	\normalsize
+        \today
+}
+\date{}
+
+\begin{document}
+
+\input{/Users/circle/Documents/博一下/homework/setc.tex}
+
+\maketitle
+
+\section{A}
+
+分别推导出二维可压缩Navier-Stokes（NS）方程(守恒形式) 和二维
+不可压缩NS方程(原始变量形式)在可逆变换 $x=x(\xi, \eta), y=y(\xi, \eta)$ 下 的形式（散度形式和非散度形式）。如果考虑极坐标变换 $(x, y) \rightarrow (r, \theta)$, 则给出在 $(r, \theta)$ 坐标下方程的形式。举例说明，相应的边界条件变换后的形式。
+
+
+
+假设坐标 $(\xi, \eta)$ 是与时间无关的。对于可逆变换有雅可比行列式
+\begin{equation}
+	J=
+	\begin{vmatrix}
+		\xi_{x}  & \xi_{y}  \\
+		\eta_{x} & \eta_{y}
+	\end{vmatrix}\not=0.
+\end{equation}
+根据矩阵关系
+\begin{equation}
+	\left(\begin{array}{ll}
+			\xi_{x}  & \xi_{y}  \\
+			\eta_{x} & \eta_{y}
+		\end{array}\right)=\left(\begin{array}{ll}
+		x_{\xi} & x_{\eta} \\
+		y_{\xi} & y_{\eta}
+	\end{array}\right)^{-1}
+\end{equation}
+可得
+\begin{equation}
+	\begin{aligned}
+		x_{\xi}= & \frac{\eta_{y}}{J},  & x_{\eta}=    -\frac{\xi_{y}}{J}, \\
+		y_{\xi}= & -\frac{\eta_{x}}{J}, & y_{\eta}  =  \frac{\xi_{x}}{J}.
+	\end{aligned}
+	\label{eq:A1}
+\end{equation}
+考虑 $(x, y)$ 坐标下的任意守恒型方程组
+\begin{equation}
+	\frac{\partial U}{\partial t}+\frac{\partial E}{\partial x}+\frac{\partial F}{\partial y}=0，
+	\label{eq:A2}
+\end{equation}
+在坐标变换下有
+\begin{equation}
+	\begin{aligned}
+		\frac{\partial E}{\partial x}=\frac{\partial E}{\partial \xi} \xi_{x}+\frac{\partial E}{\partial \eta} \eta_{x}, \\
+		\frac{\partial F}{\partial y}=\frac{\partial F}{\partial \xi} \xi_{y}+\frac{\partial F}{\partial \eta} \eta_{y}.
+	\end{aligned}
+\end{equation}
+代入\cref{eq:A2}可得
+\begin{equation}
+	\frac{\partial U}{\partial t}+\left(\frac{\partial E}{\partial \xi} \xi_{x}+\frac{\partial F}{\partial \xi} \xi_{y}\right)+\left(\frac{\partial E}{\partial \eta} \eta_{x}+\frac{\partial F}{\partial \eta} \eta_{y}\right)=0
+	\label{eq:A3}
+\end{equation}
+为将上式变为守恒形式，利用\cref{eq:A1}可得
+\begin{equation}
+	\begin{aligned}
+		\frac{\partial}{\partial \xi}\left(\frac{E \xi_{x}+F \xi_{y}}{J}\right)=\frac{1}{J}\left(\frac{\partial E}{\partial \xi} \xi_{x}+\frac{\partial F}{\partial \xi} \xi_{y}\right)+E \frac{\partial}{\partial \xi}\left(\frac{1}{J} \xi_{x}\right)+F \frac{\partial}{\partial \xi}\left(\frac{1}{J} \xi_{y}\right) \\
+		\frac{\partial}{\partial \eta}\left(\frac{E \eta_{x}+F \eta_{y}}{J}\right)=\frac{1}{J}\left(\frac{\partial E}{\partial \eta} \eta_{x}+\frac{\partial F}{\partial \eta} \eta_{y}\right)+E \frac{\partial}{\partial \eta}\left(\frac{1}{J} \eta_{x}\right)+F \frac{\partial}{\partial \eta}\left(\frac{1}{J} \eta_{y}\right)
+	\end{aligned}
+	\label{eq:A4}
+\end{equation}
+由\cref{eq:A1}可得
+\begin{equation}
+	\begin{aligned}
+		\frac{\partial}{\partial \xi}\left(\frac{1}{J} \xi_{x}\right)+\frac{\partial}{\partial \eta}\left(\frac{1}{J} \eta_{x}\right)=0, \\
+		\frac{\partial}{\partial \xi}\left(\frac{1}{J} \xi_{y}\right)+\frac{\partial}{\partial \eta}\left(\frac{1}{J} \eta_{y}\right)=0 .
+	\end{aligned}
+\end{equation}
+将\cref{eq:A4}中的两个式子相加，代入\cref{eq:A3}得到
+\begin{equation}
+	\frac{\partial}{\partial t}\left(\frac{U}{J}\right)+\frac{\partial}{\partial \xi}\left(\frac{E \xi_{x}+F \xi_{y}}{J}\right)+\frac{\partial}{\partial \eta}\left(\frac{E \eta_{x}+F \eta_{y}}{J}\right)=0
+	\label{eq:A5}
+\end{equation}
+即为 $(\xi, \eta)$ 坐标下守恒形式的方程组。\cite[P28]{cfd}
+
+
+\subsection{二维可压缩NS方程(守恒形式)}
+
+下面具体考虑二维可压缩NS 方程组。其中，
+\begin{equation}
+	U=
+	\begin{pmatrix}
+		\rho   \\
+		\rho u \\
+		\rho v \\
+		\rho \varepsilon
+	\end{pmatrix},
+	\quad E=
+	\begin{pmatrix}
+		\rho u                  \\
+		\rho u^{2}+p-\tau_{x x} \\
+		\rho u v-\tau_{x y}     \\
+		(\rho \varepsilon+p) u-u \tau_{x x}-v \tau_{x y}+q_{x}
+	\end{pmatrix},\quad
+	F=\begin{pmatrix}
+		\rho v                  \\
+		\rho u v-\tau_{x y}     \\
+		\rho v^{2}+p-\tau_{y y} \\
+		(\rho \varepsilon+p) v-u \tau_{x y}-v \tau_{y y}+q_{y}
+	\end{pmatrix}.
+\end{equation}
+设
+\begin{equation}
+	u^{*}=u \xi_{x}+v \xi_{y}
+\end{equation}
+\begin{equation}
+	v^{*}=u \eta_{x}+v \eta_{y} .
+\end{equation}
+
+代入\cref{eq:A5}, 可以得到 $(\xi, \eta)$ 坐标下的方程组为
+\begin{equation}
+	\frac{\partial}{\partial t} \hat{U}+\frac{\partial}{\partial \xi} \hat{E}+\frac{\partial}{\partial \eta} \hat{F}=0,
+	\label{eq:A6}
+\end{equation}
+其中，
+\begin{equation}
+	\hat{U}=\frac{1}{J}
+	\begin{pmatrix}
+		\rho   \\
+		\rho u \\
+		\rho v \\
+		\rho \varepsilon
+	\end{pmatrix},\quad
+	\hat{E}=\frac{1}{J}\begin{pmatrix}
+		\rho u^{*}                                                   \\
+		\rho u u^{*}+p \xi_{x}-\tau_{x x} \xi_{x}-\tau_{x y} \xi_{y} \\
+		\rho v u^{*}+p \xi_{y}-\tau_{x y} \xi_{x}-\tau_{y y} \xi_{y} \\
+		(\rho \varepsilon+p) u^{*}-\left(u \tau_{x x}+v \tau_{x y}\right) \xi_{x}-\left(u \tau_{x y}+v \tau_{y y}\right) \xi_{y}+q_{x} \xi_{x}+q_{y} \xi_{y}
+	\end{pmatrix},
+\end{equation}
+\begin{equation}
+	\hat{F}=\frac{1}{J}\begin{pmatrix}
+		\rho v^{*}                                                      \\
+		\rho u v^{*}+p \eta_{x}-\tau_{x x} \eta_{x}-\tau_{x y} \eta_{y} \\
+		\rho v v^{*}+p \eta_{y}-\tau_{x y} \eta_{x}-\tau_{y y} \eta_{y} \\
+		(\rho \varepsilon+p) v^{*}-\left(u \tau_{x x}+v \tau_{x y}\right) \eta_{x}-\left(u \tau_{x y}+v \tau_{y y}\right) \eta_{y}+q_{x} \eta_{x}+q_{y} \eta_{y}
+	\end{pmatrix}.
+\end{equation}
+\begin{equation}
+	\begin{aligned}
+		\tau_{x x} & =\frac{2}{3} \mu\left(2 \frac{\partial u}{\partial x}-\frac{\partial v}{\partial y}\right)=\frac{2}{3} \mu\left[2\left(u_{\xi} \xi_{x}+u_{\eta} \eta_{x}\right)-\left(v_{\xi} \xi_{y}+v_{\eta} \eta_{y}\right)\right], \\
+		\tau_{x y} & =\tau_{y x}=\mu\left(\frac{\partial u}{\partial y}+\frac{\partial v}{\partial x}\right)=\mu\left(u_{\xi} \xi_{y}+u_{\eta} \eta_{y}+v_{\xi} \xi_{x}+v_{\eta} \eta_{x}\right),                                           \\
+		\tau_{y y} & =\frac{2}{3} \mu\left(2 \frac{\partial v}{\partial y}-\frac{\partial u}{\partial x}\right)=\frac{2}{3} \mu\left[2\left(v_{\xi} \xi_{y}+v_{\eta} \eta_{y}\right)-\left(u_{\xi} \xi_{x}+u_{\eta} \eta_{x}\right)\right], \\
+		q_{x}      & =-k \frac{\partial T}{\partial x}=-k\left(\frac{\partial T}{\partial \xi} \xi_{x}+\frac{\partial T}{\partial \eta} \eta_{x}\right),                                                                                    \\
+		q_{y}      & =-k \frac{\partial T}{\partial y}=-k\left(\frac{\partial T}{\partial \xi} \xi_{y}+\frac{\partial T}{\partial \eta} \eta_{y}\right) .
+	\end{aligned}
+\end{equation}
+
+\subsection{二维不可压缩NS方程(原始变量形式)}
+
+如果考虑二维不可压缩NS 方程，假设 $\rho$ 为常数，暂时不考虑体力项，当体力有势时，体 力项可以与压力项合并在一起，定义变量
+\begin{equation}
+	\tilde{p}=\frac{p}{\rho}
+\end{equation}
+
+不考虑热传导，\cref{eq:A2}中的各变量为
+\begin{equation}
+	U=\begin{pmatrix}
+		0 \\
+		u \\
+		v
+	\end{pmatrix}, \quad E=\begin{pmatrix}
+		u                                   \\
+		u^{2}+\tilde{p}-\tau_{x x}^{\prime} \\
+		u v-\tau_{x y}^{\prime}
+	\end{pmatrix},\quad
+	F=\begin{pmatrix}
+		v                       \\
+		u v-\tau_{x y}^{\prime} \\
+		v^{2}+\tilde{p}-\tau_{y y}^{\prime}
+	\end{pmatrix}.
+\end{equation}
+根据\cref{eq:A5}可以得到，坐标 $(\xi, \eta)$ 下的守恒型方程组仍为\cref{eq:A6}的形式，其中
+\begin{equation}
+	\hat{U}=\frac{1}{J}\begin{pmatrix}
+		0 \\
+		u \\
+		v
+	\end{pmatrix},\quad
+	\hat{E}=\frac{1}{J}\begin{pmatrix}
+		u^{*}                                                                             \\
+		u u^{*}+\tilde{p} \xi_{x}-\tau_{x x}^{\prime} \xi_{x}-\tau_{x y}^{\prime} \xi_{y} \\
+		v u^{*}+\tilde{p} \xi_{y}-\tau_{x y}^{\prime} \xi_{x}-\tau_{y y}^{\prime} \xi_{y}
+	\end{pmatrix}
+\end{equation}
+\begin{equation}
+	\hat{F}=\frac{1}{J}\begin{pmatrix}
+		v^{*}                                                                                     \\
+		\rho u v^{*}+\tilde{p} \eta_{x}-\tau_{x x}^{\prime} \eta_{x}-\tau_{x y}^{\prime} \eta_{y} \\
+		\rho v v^{*}+\tilde{p} \eta_{y}-\tau_{x y}^{\prime} \eta_{x}-\tau_{y y}^{\prime} \eta_{y}
+	\end{pmatrix}.
+\end{equation}
+对于不可压缩流体，
+\begin{equation}
+	\begin{aligned}
+		\tau_{x x}^{\prime} & =2 \nu \frac{\partial u}{\partial x}=2 \nu\left(u_{\xi} \xi_{x}+u_{\eta} \eta_{x}\right),                                                                         \\
+		\tau_{x y}^{\prime} & =\nu\left(\frac{\partial u}{\partial y}+\frac{\partial v}{\partial x}\right)=\nu\left(u_{\xi} \xi_{y}+u_{\eta} \eta_{y}+v_{\xi} \xi_{x}+v_{\eta} \eta_{x}\right), \\
+		\tau_{y y}^{\prime} & =2 \nu \frac{\partial v}{\partial y}=2 \nu\left(v_{\xi} \xi_{y}+v_{\eta} \eta_{y}\right).
+	\end{aligned}
+\end{equation}
+
+若考虑非守恒形式的二维可压缩NS 方程组，暂时不考虑能量方程，则有
+\begin{equation}
+	\left\{\begin{aligned}
+		 & \frac{\partial \rho}{\partial t}+u \frac{\partial \rho}{\partial x}+v \frac{\partial \rho}{\partial y}+\rho\left(\frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}\right)=0,                                                    \\
+		 & \rho \frac{\partial u}{\partial t}+\rho u \frac{\partial u}{\partial x}+\rho v \frac{\partial u}{\partial y}=-\frac{1}{\rho} \frac{\partial p}{\partial x}+\frac{\partial \tau_{x x}}{\partial x}+\frac{\partial \tau_{x y}}{\partial y}, \\
+		 & \rho \frac{\partial v}{\partial t}+\rho u \frac{\partial v}{\partial x}+\rho v \frac{\partial v}{\partial y}=-\frac{1}{\rho} \frac{\partial p}{\partial y}+\frac{\partial \tau_{x y}}{\partial x}+\frac{\partial \tau_{y y}}{\partial y}.
+	\end{aligned}\right.
+\end{equation}
+将坐标变换关系代入可得
+\begin{equation}
+	\left\{
+	\begin{aligned}
+		 & \frac{\partial \rho}{\partial t}+u\left(\frac{\partial \rho}{\partial \xi} \xi_{x}+\frac{\partial \rho}{\partial \eta} \eta_{x}\right)+v\left(\frac{\partial \rho}{\partial \xi} \xi_{y}+\frac{\partial \rho}{\partial \eta} \eta_{y}\right)+\rho\left(\frac{\partial u}{\partial \xi} \xi_{x}+\frac{\partial u}{\partial \eta} \eta_{x}+\frac{\partial v}{\partial \xi} \xi_{y}+\frac{\partial v}{\partial \eta} \eta_{y}\right)=0      \\
+		 & \rho \frac{\partial u}{\partial t}+\rho u\left(\frac{\partial u}{\partial \xi} \xi_{x}+\frac{\partial u}{\partial \eta} \eta_{x}\right)+\rho v\left(\frac{\partial u}{\partial \xi} \xi_{y}+\frac{\partial u}{\partial \eta} \eta_{y}\right)=-\frac{1}{\rho}\left(\frac{\partial p}{\partial \xi} \xi_{x}+\frac{\partial p}{\partial \eta} \eta_{x}\right)+\frac{\partial \tau_{x x}}{\partial x}+\frac{\partial \tau_{x y}}{\partial y} \\
+		 & \rho \frac{\partial v}{\partial t}+\rho u\left(\frac{\partial v}{\partial \xi} \xi_{x}+\frac{\partial v}{\partial \eta} \eta_{x}\right)+\rho v\left(\frac{\partial v}{\partial \xi} \xi_{y}+\frac{\partial v}{\partial \eta} \eta_{y}\right)=-\frac{1}{\rho}\left(\frac{\partial p}{\partial \xi} \xi_{y}+\frac{\partial p}{\partial \eta} \eta_{y}\right)+\frac{\partial \tau_{x y}}{\partial x}+\frac{\partial \tau_{y y}}{\partial y}
+	\end{aligned}\right.
+\end{equation}
+若考虑非守恒形式的二维不可压NS 方程组，并假设 $\nu$ 为常数，则有
+\begin{equation}
+	\left\{\begin{aligned}
+		 & \frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}=0                                                                                                                                                                          \\
+		 & \frac{\partial u}{\partial t}+u \frac{\partial u}{\partial x}+v \frac{\partial u}{\partial y}+\frac{1}{\rho} \frac{\partial p}{\partial x}=\nu\left(\frac{\partial^{2} u}{\partial x^{2}}+\frac{\partial^{2} u}{\partial y^{2}}\right) \\
+		 & \frac{\partial v}{\partial t}+u \frac{\partial v}{\partial x}+v \frac{\partial v}{\partial y}+\frac{1}{\rho} \frac{\partial p}{\partial y}=\nu\left(\frac{\partial^{2} v}{\partial x^{2}}+\frac{\partial^{2} v}{\partial y^{2}}\right)
+	\end{aligned}\right.
+\end{equation}
+
+将坐标变换关系代入可以得到
+\begin{equation}
+	\left\{\begin{aligned}
+		 & \frac{\partial u}{\partial \xi} \xi_{x}+\frac{\partial u}{\partial \eta} \eta_{x}+\frac{\partial v}{\partial \xi} \xi_{y}+\frac{\partial v}{\partial \eta} \eta_{y}=0                                                                                                                                                                                                                                                                                                                                                                                    \\
+		 & \frac{\partial u}{\partial t}+u\left(\frac{\partial u}{\partial \xi} \xi_{x}+\frac{\partial u}{\partial \eta} \eta_{x}\right)+v\left(\frac{\partial u}{\partial \xi} \xi_{y}+\frac{\partial u}{\partial \eta} \eta_{y}\right)+\frac{1}{\rho}\left(\frac{\partial p}{\partial \xi} \xi_{x}+\frac{\partial p}{\partial \eta} \eta_{x}\right)=                                                                                                                                                                                                              \\
+		 & \nu\left[\left(\frac{\partial^{2} u}{\partial \xi^{2}} \xi_{x}^{2}+2 \frac{\partial^{2} u}{\partial \xi \partial \eta} \xi_{x} \eta_{x}+\frac{\partial^{2} u}{\partial \eta^{2}} \eta_{x}^{2}\right)+\left(\frac{\partial u}{\partial \xi} \frac{\partial \xi_{x}}{\partial \xi}+\frac{\partial u}{\partial \eta} \frac{\partial \eta_{x}}{\partial \xi}\right) \xi_{x}+\left(\frac{\partial u}{\partial \xi} \frac{\partial \xi_{\eta}}{\partial \xi}+\frac{\partial u}{\partial \eta} \frac{\partial \eta_{\eta}}{\partial \xi}\right) \eta_{x}\right. \\
+		 & \left.+\left(\frac{\partial^{2} u}{\partial \xi^{2}} \xi_{y}^{2}+2 \frac{\partial^{2} u}{\partial \xi \partial \eta} \xi_{y} \eta_{y}+\frac{\partial^{2} u}{\partial \eta^{2}} \eta_{y}^{2}\right)+\left(\frac{\partial u}{\partial \xi} \frac{\partial \xi_{y}}{\partial \xi}+\frac{\partial u}{\partial \eta} \frac{\partial \eta_{y}}{\partial \xi}\right) \xi_{y}+\left(\frac{\partial u}{\partial \xi} \frac{\partial \xi_{\eta}}{\partial \xi}+\frac{\partial u}{\partial \eta} \frac{\partial \eta_{\eta}}{\partial \xi}\right) \eta_{y}\right]   \\
+		 & \frac{\partial v}{\partial t}+u\left(\frac{\partial v}{\partial \xi} \xi_{x}+\frac{\partial v}{\partial \eta} \eta_{x}\right)+v\left(\frac{\partial v}{\partial \xi} \xi_{y}+\frac{\partial v}{\partial \eta} \eta_{y}\right)+\frac{1}{\rho}\left(\frac{\partial p}{\partial \xi} \xi_{y}+\frac{\partial p}{\partial \eta} \eta_{y}\right)=                                                                                                                                                                                                              \\
+		 & \nu\left[\left(\frac{\partial^{2} u}{\partial \xi^{2}} \xi_{x}^{2}+2 \frac{\partial^{2} u}{\partial \xi \partial \eta} \xi_{x} \eta_{x}+\frac{\partial^{2} u}{\partial \eta^{2}} \eta_{x}^{2}\right)+\left(\frac{\partial u}{\partial \xi} \frac{\partial \xi_{x}}{\partial \xi}+\frac{\partial u}{\partial \eta} \frac{\partial \eta_{x}}{\partial \xi}\right) \xi_{x}+\left(\frac{\partial u}{\partial \xi} \frac{\partial \xi_{\eta}}{\partial \xi}+\frac{\partial u}{\partial \eta} \frac{\partial \eta_{\eta}}{\partial \xi}\right) \eta_{x}\right. \\
+		 & \left.+\left(\frac{\partial^{2} v}{\partial \xi^{2}} \xi_{y}^{2}+2 \frac{\partial^{2} v}{\partial \xi \partial \eta} \xi_{y} \eta_{y}+\frac{\partial^{2} v}{\partial \eta^{2}} \eta_{y}^{2}\right)+\left(\frac{\partial v}{\partial \xi} \frac{\partial \xi_{y}}{\partial \xi}+\frac{\partial v}{\partial \eta} \frac{\partial \eta_{y}}{\partial \xi}\right) \xi_{y}+\left(\frac{\partial v}{\partial \xi} \frac{\partial \xi_{\eta}}{\partial \xi}+\frac{\partial v}{\partial \eta} \frac{\partial \eta_{\eta}}{\partial \xi}\right) \eta_{y}\right]
+	\end{aligned}\right.
+\end{equation}
+
+
+\subsection{极坐标变换}
+
+考虑极坐标 $(r, \theta)$, 极坐标变换下有如下关系
+\begin{gather}
+	r_{x}=\frac{x}{\sqrt{x^{2}+y^{2}}}=\cos \theta, \quad r_{y}=\frac{y}{\sqrt{x^{2}+y^{2}}}=\sin \theta,                   \\
+	\theta_{x}=-\frac{y}{x^{2}+y^{2}}=-\frac{\sin \theta}{r}, \quad \theta_{y}=\frac{x}{x^{2}+y^{2}}=\frac{\cos \theta}{r}, \\
+	J=\frac{1}{r} .
+\end{gather}
+
+将上述关系代入\cref{eq:A5}可得到极坐标下二维可压缩NS 方程的守恒形式
+\begin{equation}
+	\hat{U}=r\left(\begin{aligned}
+			\rho   \\
+			\rho u \\
+			\rho v \\
+			\rho \varepsilon
+		\end{aligned}\right),
+\end{equation}
+
+\begin{gather}
+	\hat{E}=r \begin{pmatrix}
+		\rho u^{*}                                                               \\
+		\rho u u^{*}+p \cos \theta-\tau_{x x} \cos \theta-\tau_{x y} \sin \theta \\
+		\rho v u^{*}+p \sin \theta-\tau_{x y} \cos \theta-\tau_{y y} \sin \theta \\
+		(\rho \varepsilon+p) u^{*}-\left(u \tau_{x x}+v \tau_{x y}\right) \cos \theta-\left(u \tau_{x y}+v \tau_{y y}\right) \sin \theta-k T_{\xi}
+	\end{pmatrix},\\
+	\hat{F}=r\begin{pmatrix}
+		\rho v^{*}                                                               \\
+		\rho u v^{*}-p \sin \theta+\tau_{x x} \sin \theta-\tau_{x y} \cos \theta \\
+		\rho v v^{*}+p \cos \theta+\tau_{x y} \sin \theta-\tau_{y y} \cos \theta \\
+		(\rho \varepsilon+p) v^{*}-\left(u \tau_{x x}-v \tau_{x y}\right) \sin \theta-\left(u \tau_{x y}+v \tau_{y y}\right) \cos \theta-k T_{\eta}
+	\end{pmatrix}.
+\end{gather}
+其中，
+\begin{gather}
+	u^{*}=u \cos \theta+v \sin \theta,                                                                                                                                                                                                                                       \\
+	v^{*}=-u \sin \theta+v \cos \theta,                                                                                                                                                                                                                                      \\
+	\tau_{x x}=\frac{2}{3} \mu\left[2\left(\frac{\partial u}{\partial r} \cos \theta-\frac{\partial u}{\partial \theta} \frac{\sin \theta}{r}\right)-\left(\frac{\partial v}{\partial r} \sin \theta+\frac{\partial v}{\partial \theta} \frac{\cos \theta}{r}\right)\right], \\
+	\tau_{x y}=\mu\left[\frac{\partial u}{\partial r} \sin \theta+\frac{\partial u}{\partial \theta} \frac{\cos \theta}{r}+\frac{\partial v}{\partial r} \cos \theta-\frac{\partial v}{\partial \theta} \frac{\sin \theta}{r}\right],                                        \\
+	\tau_{y y}=\frac{2}{3} \mu\left[2\left(\frac{\partial v}{\partial r} \sin \theta+\frac{\partial v}{\partial \theta} \frac{\cos \theta}{r}\right)-\left(\frac{\partial u}{\partial r} \cos \theta-\frac{\partial u}{\partial \theta} \frac{\sin \theta}{r}\right)\right].
+\end{gather}
+对于二维不可压NS 方程，可得到其守恒形式为
+\begin{gather}
+	\hat{U}=r \begin{pmatrix}
+		0 \\
+		u \\
+		v
+	\end{pmatrix}, \\
+	\hat{E}=r \begin{pmatrix}
+		u^{*}                                                                                         \\
+		u u^{*}+\tilde{p} \cos \theta-\tau_{x x}^{\prime} \cos \theta-\tau_{x y}^{\prime} \sin \theta \\
+		v u^{*}+\tilde{p} \sin \theta-\tau_{x y}^{\prime} \cos \theta-\tau_{y y}^{\prime} \sin \theta
+	\end{pmatrix},\\
+	\hat{F}= r \begin{pmatrix}
+		v^{*}                                                                                         \\
+		u v^{*}-\tilde{p} \sin \theta+\tau_{x x}^{\prime} \sin \theta-\tau_{x y}^{\prime} \cos \theta \\
+		v v^{*}+\tilde{p} \cos \theta+\tau_{x y}^{\prime} \sin \theta-\tau_{y y}^{\prime} \cos \theta
+	\end{pmatrix}.
+\end{gather}
+其中，
+\begin{equation}
+	u^{*}=u \cos \theta+v \sin \theta,
+\end{equation}
+\begin{gather}
+	v^{*}=-u \sin \theta+v \cos \theta,                                                                                                                                                                                                        \\
+	\tau_{x x}^{\prime}=2 \nu\left(\frac{\partial u}{\partial r} \cos \theta-\frac{\partial u}{\partial \theta} \frac{\sin \theta}{r}\right),                                                                                                \\
+	\tau_{x y}^{\prime}=\nu\left(\frac{\partial u}{\partial r} \sin \theta+\frac{\partial u}{\partial \theta} \frac{\cos \theta}{r}+\frac{\partial v}{\partial r} \cos \theta-\frac{\partial v}{\partial \theta} \frac{\sin \theta}{r}\right), \\
+	\tau_{y y}^{\prime}=2 \nu\left(\frac{\partial v}{\partial r} \sin \theta+\frac{\partial v}{\partial \theta} \frac{\cos \theta}{r}\right).
+\end{gather}
+% 上述讨论得到的结果是在 $(x, y)$ 坐标下的分量 $(u, v)$ 得到的，如果要以 $(\xi, \eta)$ 坐标下的分 量 $\left(u_{r}, u_{\theta}\right) \quad($ 此处下标不表示求导） 表示坐标变换后的结果，可借助速度分量之间的关系获 得
+为了得到极坐标下的速度分量$\left(u_{r}, u_{\theta}\right)$的方程，做替换
+\begin{gather}
+	u=u_{r} \cos \theta-u_{\theta} \sin \theta, \\
+	v=u_{r} \sin \theta+u_{\theta} \cos \theta .
+\end{gather}
+% 为得到 $r, \theta$ 方向的动量方程，需做如下计算:
+% \begin{gather}
+% 	x \text { 分量 } \times \cos \theta+y \text { 分量 } \times \sin \theta=r \text { 分量, } \\
+% 	-x \text { 分量 } \times \sin \theta+y \text { 分量 } \times \cos \theta=\theta \text { 分量. }
+% \end{gather}
+% 此时得到的结果是非守恒形式的。
+最终可以得到
+\begin{equation}
+	\left\{\begin{aligned}
+		 & \frac{\partial\left(r u_{r}\right)}{\partial r}+\frac{\partial u_{\theta}}{\partial \theta}=0, \\ &\frac{\partial u_{r}}{\partial t}+u_{r} \frac{\partial u_{r}}{\partial r}+\frac{u_{\theta}}{r} \frac{\partial u_{r}}{\partial \theta}-\frac{u_{\theta}^{2}}{r}=-\frac{1}{\rho} \frac{\partial p}{\partial r}+\nu\left[\frac{1}{r} \frac{\partial}{\partial r}\left(r \frac{\partial u_{r}}{\partial r}\right)-\frac{u_{r}}{r^{2}}+\frac{1}{r^{2}} \frac{\partial^{2} u_{r}}{\partial \theta^{2}}-\frac{2}{r^{2}} \frac{\partial u_{\theta}}{\partial \theta}\right],
+		\\ &\frac{\partial u_{\theta}}{\partial t}+u_{r} \frac{\partial u_{\theta}}{\partial r}+\frac{u_{\theta}}{r} \frac{\partial u_{\theta}}{\partial \theta}+\frac{u_{r} u_{\theta}}{r}=-\frac{1}{\rho r} \frac{\partial p}{\partial \theta}+\nu\left[\frac{1}{r} \frac{\partial}{\partial r}\left(r \frac{\partial u_{\theta}}{\partial r}\right)-\frac{u_{\theta}}{r^{2}}+\frac{1}{r^{2}} \frac{\partial^{2} u_{\theta}}{\partial \theta^{2}}+\frac{2}{r^{2}} \frac{\partial u_{r}}{\partial \theta}\right].\end{aligned}\right.
+\end{equation}
+
+对于可压缩NS方程，利用拉梅系数，通过分析各算子在曲线坐标下的形式可得\cite[P190]{wuwangyi}
+\begin{equation}
+	\left\{\begin{aligned}
+		 & \frac{\partial \rho}{\partial t}+\frac{1}{r} \frac{\partial\left(\rho r u_{r}\right)}{\partial r}+\frac{1}{r} \frac{\partial\left(\rho u_{\theta}\right)}{\partial \theta}=0,                                     \\
+		 & \rho\left(\frac{\Dif u_{r}}{\Dif t}-\frac{u_{\theta}^{2}}{r}\right)=\frac{1}{r}\left[\frac{\partial\left(r P_{r r}\right)}{\partial r}+\frac{P_{r \theta}}{\partial \theta}-P_{\theta \theta}\right],             \\
+		 & \rho\left(\frac{\Dif u_{\theta}}{\Dif t}+\frac{u_{r} u_{\theta}}{r}\right)=\frac{1}{r}\left[\frac{\partial\left(r P_{r \theta}\right)}{\partial r}+\frac{P_{\theta \theta}}{\partial \theta}+P_{r \theta}\right].
+	\end{aligned}\right.
+\end{equation}
+其中
+\begin{equation}
+	\begin{aligned}
+		P_{r r}             & =-p+2 \mu\left(\frac{\partial u_{r}}{\partial r}-\frac{1}{3} \nabla \cdot \bm{u}\right)                                         \\
+		P_{\theta \theta}   & =-p+2 \mu\left(\frac{1}{r} \frac{\partial u_{\theta}}{\partial \theta}+\frac{u_{r}}{r}-\frac{1}{3} \nabla \cdot \bm{u}\right)   \\
+		P_{r \theta}        & =\mu\left(\frac{\partial u_{\theta}}{\partial r}+\frac{1}{r} \frac{\partial u_{r}}{\partial \theta}-\frac{u_{\theta}}{r}\right) \\
+		\frac{\Dif}{\Dif t} & =\frac{\partial}{\partial t}+u_{r} \frac{\partial}{\partial r}+\frac{u_{\theta}}{r} \frac{\partial}{\partial \theta}            \\
+		\nabla \cdot \bm{u} & =\frac{1}{r}\left[\frac{\partial\left(r u_{r}\right)}{\partial r}+\frac{\partial u_{\theta}}{\partial \theta}\right]
+	\end{aligned}
+\end{equation}
+
+\subsection{边界条件}
+对于无穷远边界条件
+\begin{equation}
+	r \rightarrow \infty, \quad \bm{u}=\bm{u}_{\infty}, \quad \rho=\rho_{\infty}, \quad p=p_{\infty}
+\end{equation}
+对于一般的边界条件，例如对于某一个面，法向为$\bm{n}$,切向为$\bm{\tau}$则把速度投影到法向和切向
+\begin{equation}
+	\bm{u}_{n} = \bm{n}\cdot \bm{u},\quad \bm{u}_{\tau} = \bm{\tau}\cdot \bm{u}.
+\end{equation}
+然后按照无滑移或无穿透边界条件给定边界条件。
+
+
+\section{B}
+
+给定三维不可 压Navier-Stokes（INS）方程 的原始变量形 式的定
+解问题（讲义“CFDLect08-incom_cn.pdf"中第7页），引入向量势
+函数 $\bm{A}$ 和涡向量函数 $\bm{\omega}$, 推导三维INS方程的涡向量势公式（讲义“CFDLect09-incom_cn.pdf"中第35页）。
+
+三维INS 方程的原始变量形式定解问题为
+\begin{equation}
+	\left\{\begin{aligned}
+		 & \frac{\partial \bm{u}}{\partial t}+(\bm{u} \cdot \nabla) \bm{u}=-\nabla \frac{p}{\rho}+\nu \nabla^{2} \bm{u}+\frac{\bm{f}_{B}}{\rho}, \\
+		 & \nabla \cdot \bm{u}=0,                                                                                                                \\
+		 & \left.\bm{u}\right|_{\partial \Omega}=\bm{u}_{b}, \quad \bm{u}(\bm{x}, 0)=\bm{u}_{0} .
+	\end{aligned}\right.
+\end{equation}
+上式中已经考虑 $\rho$ 为常数。引入向量势函数 $\bm{A}$ 和涡向量函数 $\bm{\omega}$
+\begin{equation}
+	\bm{u}=\nabla \times \bm{A}, \quad \bm{\omega}=\nabla \times \bm{u}.
+\end{equation}
+利用关系式
+\begin{equation}
+	(\bm{u} \cdot \nabla) \bm{u}=\nabla \frac{|\bm{u}|^{2}}{2}+\bm{\omega} \times \bm{u},
+\end{equation}
+三维INS 方程组的动量方程可以化为兰姆-葛罗米柯形式
+\begin{equation}
+	\frac{\partial \bm{u}}{\partial t}+\nabla \frac{|\bm{u}|^{2}}{2}+\bm{\omega} \times \bm{u}=-\nabla \frac{p}{\rho}+\nu \nabla^{2} \bm{u}+\frac{\bm{f}_{B}}{\rho}
+\end{equation}
+对上式取旋度，假设体力 $\bm{f}_{B}$ 有势,并利用
+\begin{equation}
+	\nabla \times \nabla^{2} \bm{u}=\nabla^{2} \bm{\omega},
+\end{equation}
+则
+% 下面利用张量形式进行证明:
+% (i)
+% \begin{equation}
+% 	\begin{aligned}
+% 		\nabla \frac{|\bm{u}|^{2}}{2}+\bm{\omega} \times \bm{u} & =\frac{1}{2} \frac{\partial u_{i} u_{i}}{\partial x_{j}}+\varepsilon_{j k l}\left(\varepsilon_{k m n} \frac{\partial u_{n}}{\partial x_{m}}\right) u_{l}  \\
+% 		                                                        & =u_{i} \frac{\partial u_{i}}{\partial x_{j}}+\left(\delta_{l m} \delta_{j n}-\delta_{l n} \delta_{j m}\right) u_{l} \frac{\partial u_{n}}{\partial x_{m}} \\
+% 		                                                        & =u_{i} \frac{\partial u_{i}}{\partial x_{j}}+u_{l} \frac{\partial u_{j}}{\partial x_{l}}-u_{l} \frac{\partial u_{l}}{\partial x_{j}}                      \\
+% 		                                                        & =u_{l} \frac{\partial u_{j}}{\partial x_{l}}=(\bm{u} \cdot \nabla) \bm{u}
+% 	\end{aligned}
+% \end{equation}
+
+% (ii)
+% \begin{equation}
+% 	\begin{aligned}
+% 		\nabla \times \nabla^{2} \bm{u} & =\varepsilon_{i j k} \frac{\partial}{\partial x_{j}}\left(\frac{\partial^{2} u_{k}}{\partial x_{l} \partial x_{l}}\right)                        \\
+% 		                                & =\frac{\partial^{2}}{\partial x_{l} \partial x_{l}}\left(\varepsilon_{i j k} \frac{\partial u_{k}}{\partial x_{j}}\right)=\nabla^{2} \bm{\omega}
+% 	\end{aligned}
+% \end{equation}
+% 对式(21) 两边取旋度，并考虑体力 $\bm{f}_{B}$ 有势，得到
+\begin{equation}
+	\frac{\partial \bm{\omega}}{\partial t}+\nabla \times(\bm{\omega} \times \bm{u})=\nu \nabla^{2} \bm{\omega} .
+\end{equation}
+
+三维INS方程的涡向量势公式
+\begin{equation}
+	\left\{\begin{aligned}
+		 & \frac{\partial \bm{\omega}}{\partial t}+\nabla \times(\bm{\omega} \times \bm{u})=\nu \nabla^{2} \bm{\omega}, \\
+		 & \bm{\omega}=\nabla \times \bm{u}, \quad \nabla \cdot \bm{u}=0,                                               \\
+		 & \left.\bm{u}\right|_{\partial \Omega}=\bm{u}_{b}, \quad \bm{u}(\bm{x}, 0)=\bm{u}_{0}.
+	\end{aligned}\right.
+\end{equation}
+
+
+\section{C}
+
+考虑一维网格生成问题. 设逻辑区域(也称为参考区域) $\Omega_{c}=\{\xi: 0 \leq \xi \leq 1\}$ 到物理区域 $\Omega_{p}=\{x: a \leq x \leq b\}$ 的坐标变换 $\xi=\xi(x)$ 满足:
+\begin{equation}
+	\xi_{x x}=P,
+	\label{eq:C1}
+\end{equation}
+$  P$ 为常数.
+分析: 右端项 $P$ 对生成物理区域 $\Omega_{p}$ 的网格的影响.
+
+若$P=0$，则网格是均匀的。对\cref{eq:C1}积分一次可得
+\begin{equation}
+	\xi_{x}=C,
+\end{equation}
+其中$C$是常数，且不等于0，否则无法划分网格。再积分一次得
+\begin{equation}
+	\xi = Cx+D,
+\end{equation}
+其中$D$也为常数。根据边界条件，端点处重合，所以
+\begin{equation}
+	\begin{cases}
+		C\times a+D=0, \\
+		C\times b+D=1.
+	\end{cases}\text{or} \quad
+	\begin{cases}
+		C\times b+D=0, \\
+		C\times a+D=1.
+	\end{cases}
+\end{equation}
+解得
+\begin{equation}
+	\begin{cases}
+		D=-\frac{a}{b-a}, \\
+		C=\frac{1}{b-a}.
+	\end{cases}\text{or} \quad
+	\begin{cases}
+		D=\frac{b}{b-a}, \\
+		C=\frac{1}{a-b}.
+	\end{cases}
+\end{equation}
+若$P$不为0，则两次积分后是二次函数
+\begin{equation}
+	\xi = \frac{1}{2} Px^2 + Cx + D.
+	\label{eq:C2}
+\end{equation}
+必须要求此二次函数是单调的，否则会出现一个$x$点对应不同的$\xi$.极值点为$x_0=-\frac{C}{P}$,
+\begin{equation}
+	x_0<a,\quad \text{or}\quad  x_0>b.
+\end{equation}
+然后要满足在端点处重合
+\begin{equation}
+	\begin{cases}
+		\frac{1}{2}Pa^2 + C\times a+D=0, \\
+		\frac{1}{2}Pb^2 + C\times b+D=1.
+	\end{cases}\text{or} \quad
+	\begin{cases}
+		\frac{1}{2}Pb^2 + C\times b+D=0, \\
+		\frac{1}{2}Pa^2 + C\times a+D=1.
+	\end{cases}
+\end{equation}
+
+$P$越大，\cref{eq:C2}的非线性性越强，网格越不均匀，反之， $P$越小，则越接近$P=0$的线性情况。另外，$P$的正负将影响到网格是在哪边更密，哪边更稀疏。
+
+
+
+\nocite{*}
+
+\input{bib.tex}
+
+\end{document}
+

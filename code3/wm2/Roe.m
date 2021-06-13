@@ -90,12 +90,12 @@ function [flux, dt] = Roe(U)
     end
 
 	for i = 2:d
-		parfor j = 2:Ny-1
+		for j = 2:Ny-1
         	flux(i, j, :) = (Fhat(i, j, :) - Fhat(i-1, j, :))/dx + (Ghat(i, j, :) - Ghat(i, j-1, :))/dy;
     	end
     end
 	for i = d+1:Nx-1
-		parfor j =  h+1:Ny-1
+		for j =  h+1:Ny-1
         flux(i, j, :) = (Fhat(i, j, :) - Fhat(i-1, j, :))/dx + (Ghat(i, j, :) - Ghat(i, j-1, :))/dy;
     	end
     end

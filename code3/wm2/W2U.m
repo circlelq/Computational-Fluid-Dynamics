@@ -3,7 +3,6 @@ function [ U ] = W2U( W )
 
 global gamma;
 
-U    = W;
 
 rho  = W(:, :, 1);
 u    = W(:, :, 2);

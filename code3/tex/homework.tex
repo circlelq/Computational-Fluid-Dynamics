@@ -37,9 +37,9 @@
 
 写程序计算2D Euler方程组的双马赫反射问题或前台阶问题（见讲义【CFDLect06-com03_cn.pdf】的第106-108页）。数值格式：“Roe或HLLC或HLL解法器或KFVS”+“线性重构”+“显示的Runge-Kutta时间离散”。
 
-计算动图可点击 \href{https://www.bilibili.com/video/BV1cp4y1t7Bc}{https://www.bilibili.com/video/BV1cp4y1t7Bc} 查看。
+计算动图可点击 \href{https://www.bilibili.com/video/BV1HU4y157wc}{https://www.bilibili.com/video/BV1HU4y157wc} 查看。
 
-代码可点击 \href{https://github.com/circlelq/Computational-Fluid-Dynamics/tree/main/code2}{https://github.com/circlelq/Computational-Fluid-Dynamics/tree/main/code2} 查看。
+代码可点击 \href{https://github.com/circlelq/Computational-Fluid-Dynamics/tree/main/code3}{https://github.com/circlelq/Computational-Fluid-Dynamics/tree/main/code3} 查看。
 
 \section{问题描述}
 
@@ -263,7 +263,21 @@ $b_{1}=b_{2} \frac{\left(u^{2}+v^{2}\right)}{2}, b_{2}=\frac{\gamma-1}{a^{2}}$, 
 
 \subsection{边界条件}
 
-上下边界为反射边界; 左边界为入流边界(即左边界处流动为初始均匀流); 右 边界为出流。对于刚性壁面，满足华裔反射边界条件：即在隔壁面法向方向上各物理量取一阶导数为0，这可以在壁面发现方向上采用镜面反射原则取值。由此克制，在水平壁面上$v_w=0$,竖直壁面上$u_w=0$。在各壁面切向方向上直接取流场中相邻点物理量的值。\cite[P339]{cfd}
+上下边界为反射边界; 左边界为入流边界(即左边界处流动为初始均匀流); 右 边界为出流。对于刚性壁面，满足华裔反射边界条件：即在隔壁面法向方向上各物理量取一阶导数为0，这可以在壁面发现方向上采用镜面反射原则取值。由此可知，在水平壁面上$v_w=0$,竖直壁面上$u_w=0$。在各壁面切向方向上直接取流场中相邻点物理量的值。\cite[P339]{cfd}
+
+
+\subsection{计算步骤}
+
+\begin{enumerate}
+	\item 计算区域内划分网格。以初始来流参数$(\rho,u,v,p)^n_{i,j} = (1.4,3,0,1)$作为$\bm{u}^n_{i,j}$.
+	\item 由$t_n$时刻$(\rho,u,v,p)^n_{i,j}$值，设置问题边界条件和处理在角点上的值。
+	\item 利用Roe平均计算式，计算$\bm{u}^{n+1}_{i,j}$.
+	\item 重复2 -- 3，直到给定停止条件。($t=4$)
+\end{enumerate}
+
+\section{计算结果}
+
+如\cref{fig:density} 所示，为$t=4$时刻的密度等线图，可以发现在最前面有一个绕体激波，然后经过上壁面和下壁面的反射，最终形成\cref{fig:density} 。（图片是矢量图，可以放大查看）
 
 
 
@@ -271,6 +285,12 @@ $b_{1}=b_{2} \frac{\left(u^{2}+v^{2}\right)}{2}, b_{2}=\frac{\gamma-1}{a^{2}}$, 
 
 
 
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=14cm]{density.eps}
+	\caption{密度等线图，网格数是$90\times 30$.}
+	\label{fig:density}
+\end{figure}
 
 
 

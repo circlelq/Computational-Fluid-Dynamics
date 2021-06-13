@@ -29,9 +29,9 @@ global Fhat Ghat
 global CFL
 gamma      = 1.4;
 
-Nx         = 120; % x grid number
-Ny         = 40; % y grid number
-CFL        = 0.5; % CFL number
+Nx         = 600; % x grid number
+Ny         = 200; % y grid number
+CFL        = 0.8; % CFL number
 x          = linspace(0, 3, Nx)'; % x grid
 dx         = (x(end)-x(1))/(Nx-1);% x grid spacing
 y          = linspace(0, 1, Ny)'; % y grid
@@ -47,7 +47,7 @@ for i = 1:Nx
 end
 
 dt           = 0;
-dT           = 0; % every 0.1 time to record
+dT           = 0.2; % every 0.1 time to record
 U            = W2U(W);
 F            = zeros(Nx, Ny, 4); % x flux vector
 G            = zeros(Nx, Ny, 4); % y flux vector
@@ -61,16 +61,16 @@ t_max        = 4;
 h = (Ny*0.2);
 d = (Nx*0.2);
 
-aviobj=VideoWriter('Roe','MPEG-4');
-open(aviobj);
-fig = figure;
-set(gcf,'unit','centimeters','position',[20 20 90 30])
+% aviobj=VideoWriter('Roe','MPEG-4');
+% open(aviobj);
+% fig = figure;
+% set(gcf,'unit','centimeters','position',[20 20 90 30])
 
 while (flag)
     steps   = steps+1;
 
     % timestep
-    % disp(current_time);
+    disp(current_time);
     W = U2W(U);
     
     % boundary conditon
@@ -104,34 +104,12 @@ while (flag)
     U = 1/3 * U + 2/3 * tempU2 - 2/3 * dt * tempflux;
     
 
-    % visualization
+    % save data
 
-    for i = 1:d
-        for j = 2:Ny
-            W1(i,j,:) = W(i,j,:);
-        end
+    if abs(current_time - dT) < 1e-2
+        save(strcat(num2str(current_time),'W.mat')','W')
+        dT = dT + 0.2;
     end
+end       
 
-    for i = d+1:Nx
-        for j = h+1:Ny
-            W1(i,j,:) = W(i,j,:);
-        end
-    end
-    contourf(W1(:, :, 1))
-    xlabel('$y$','interpreter','latex');
-    ylabel('$x$','interpreter','latex');
-    title(sprintf('Roe scheme, time = %.3f',current_time),'interpreter','latex')
-
-    view(90,-90)
-    drawnow
-    currFrame = getframe(fig);
-    % if abs(current_time - dT) < 1e-2
-        writeVideo(aviobj,currFrame);
-        % save(strcat(num2str(current_time),'W.mat')','W')
-        % dT = dT + 0.1;
-    % end
-end
-close(aviobj); %关闭
-       
-
-% save W.mat W
+save W.mat W

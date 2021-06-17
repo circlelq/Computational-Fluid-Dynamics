@@ -6,20 +6,6 @@
 %
 
 clear;clc;close all;
-set(0,'defaultlinelinewidth',3)
-set(0,'defaultaxeslinewidth',2);
-set(0,'defaultaxesfontsize',28);
-set(0,'defaulttextfontsize',28);
-set(0,'DefaultLineMarkerSize',2);
-set(0,'Defaultaxesfontname','Times New Roman');
-% addpath('./circleData');
-% set(gcf,'unit','centimeters','position',[20 20 20 20])
-% figure(); box on;
-% plot(x/D,W0_axi,'-');
-% xlabel('$x/D$','interpreter','latex');
-% ylabel('$U_0$','interpreter','latex');
-
-% saveas(gcf,'Re_80_U0_axi','epsc')
 
 global gamma
 global dx dy
@@ -29,25 +15,25 @@ global Fhat Ghat
 global CFL
 gamma      = 1.4;
 
-Nx         = 600; % x grid number
-Ny         = 200; % y grid number
+Ny         = 250; % y grid number
+Nx         = Ny*3; % x grid number
 CFL        = 0.8; % CFL number
 x          = linspace(0, 3, Nx)'; % x grid
 dx         = (x(end)-x(1))/(Nx-1);% x grid spacing
 y          = linspace(0, 1, Ny)'; % y grid
 dy         = (y(end)-y(1))/(Ny-1);% y grid spacing
+load('W/3.7988W.mat')
+% W0         = [1.4, 3, 0, 1];
+% W          = zeros(Nx, Ny, 4);
 
-W0         = [1.4, 3, 0, 1];
-W          = zeros(Nx, Ny, 4);
-
-for i = 1:Nx
-    for j = 1:Ny
-        W(i,j,:) = W0;
-    end
-end
+% for i = 1:Nx
+%     for j = 1:Ny
+%         W(i,j,:) = W0;
+%     end
+% end
 
 dt           = 0;
-dT           = 0.2; % every 0.1 time to record
+dT           = 4; % every * time to record
 U            = W2U(W);
 F            = zeros(Nx, Ny, 4); % x flux vector
 G            = zeros(Nx, Ny, 4); % y flux vector
@@ -55,16 +41,11 @@ Fhat         = W2F(W);
 Ghat         = W2G(W);
 steps        = 0;
 flag         = 1;
-current_time = 0;
-t_max        = 4;
-% maxSteps     = 3e4;
+current_time = 3.7988;
+t_max        = 8;
 h = (Ny*0.2);
 d = (Nx*0.2);
 
-% aviobj=VideoWriter('Roe','MPEG-4');
-% open(aviobj);
-% fig = figure;
-% set(gcf,'unit','centimeters','position',[20 20 90 30])
 
 while (flag)
     steps   = steps+1;
@@ -77,11 +58,6 @@ while (flag)
     W = bc(W);
 
     U = W2U(W);
-
-    % if steps > maxSteps % stoping criteria
-    %     disp('WARNING: maxSteps reached!');
-    %     break;
-    % end
     
     if current_time+dt >= t_max % stoping criteria
         dt = t_max-current_time;
@@ -106,8 +82,8 @@ while (flag)
 
     % save data
 
-    if abs(current_time - dT) < 1e-2
-        save(strcat(num2str(current_time),'W.mat')','W')
+    if abs(current_time - dT) < 2e-3
+        save(strcat('W/',num2str(current_time),'W.mat'),'W')
         dT = dT + 0.2;
     end
 end       

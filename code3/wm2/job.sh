@@ -4,7 +4,7 @@
 #SBATCH --qos=normal
 #SBATCH -J lqy
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=36
+#SBATCH --ntasks-per-node=32
 #SBATCH --mail-type=end
 #SBATCH --mail-user=circle20101561@163.com
 

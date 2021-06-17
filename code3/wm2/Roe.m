@@ -14,30 +14,32 @@ function [flux, dt] = Roe(U)
 	global gamma
 
 	W = U2W(U);
-	A = zeros(4,4);
-	B = zeros(4,4);
 	flux = zeros(Nx, Ny, 4);
-	Lambda_x = zeros(4,4);
-	Lambda_y = zeros(4,4);
-	R_x = zeros(4,4);
-	R_x(1,1) = 1;
-	R_x(1,3) = 1;
-	R_x(1,4) = 1;
-	R_x(3,2) = 1;
 
-	R_y = zeros(4,4);
-	R_y(1,2) = 1;
-	R_y(1,3) = 1;
-	R_y(1,4) = 1;
-	R_y(2,1) = 1;
-
-	h = (Ny*0.2);
-	d = (Nx*0.2);
+	h = floor(Ny*0.2);
+	d = floor(Nx*0.2);
 
     dt = CFL*dx/max(max(max(abs(W(:, :, 2)), abs(W(:, :, 3)))+sqrt(gamma*W(:, :, 4)./W(:, :, 1))));
 
     for i = 1:Nx-1
-    	for j = 1:Ny-1
+    	parfor j = 1:Ny-1
+
+    		A = zeros(4,4);
+			B = zeros(4,4);
+			Lambda_x = zeros(4,4);
+			Lambda_y = zeros(4,4);
+			R_x = zeros(4,4);
+			R_x(1,1) = 1;
+			R_x(1,3) = 1;
+			R_x(1,4) = 1;
+			R_x(3,2) = 1;
+
+			R_y = zeros(4,4);
+			R_y(1,2) = 1;
+			R_y(1,3) = 1;
+			R_y(1,4) = 1;
+			R_y(2,1) = 1;
+
 	    	% rhobar = (0.5*sqrtRho_x)^2;
 	    	sqrtRho_x = sqrt(W(i, j, 1))+sqrt(W(i+1, j, 1));
 	    	ubar_x = (sqrt(W(i, j, 1))*W(i, j, 2)+sqrt(W(i+1, j, 1))*W(i+1, j, 2))/sqrtRho_x;

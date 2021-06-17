@@ -1,0 +1,190 @@
+\documentclass[12pt]{article}
+\input{/Users/circle/Documents/博一下/homework/setting.tex}
+\setcounter{secnumdepth}{2}
+\usepackage{autobreak}
+\usepackage{amsmath}
+\setlength{\parindent}{2em}
+\graphicspath{{../}}
+\ziju{0.1pt}
+
+%pdf文件设置
+\hypersetup{
+	pdfauthor={袁磊祺},
+	pdftitle={计算流体力学作业14}
+}
+
+\title{
+		\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{\LARGE Peking University}\\[0.2cm] % Name of your university/college \\ [25pt]
+		\horrule{0.5pt} \\[0.2cm]
+		\huge \bfseries{计算流体力学作业14} \\[-0.2cm]
+		\horrule{2pt} \\[0.2cm]
+}
+\author{
+		\normalfont 								\normalsize
+		College of Engineering \quad 2001111690  \quad 袁磊祺\\	\normalsize
+        \today
+}
+\date{}
+
+\begin{document}
+
+\input{/Users/circle/Documents/博一下/homework/setc.tex}
+
+\maketitle
+
+\section{A}
+
+考虑圆环区域 $\Omega_{p}=\left\{(x, y): 0<R_{0}<r=\sqrt{x^{2}+y^{2}}<R_{2}\right\}$ 上求解二维不可压缩Navier--Stokes方程的涡流函数公式. 在圆环的边界上流体速度为0. 给出其显式(截断误差意义下二阶精度)有限差分或有限体积离散，并给定局部涡边界条件.
+
+
+二维不可压Navier-Stokes方程的涡流函数公式
+\begin{equation}
+	\left\{
+	\begin{array}{l}
+		\partial_{t} \omega+(\boldsymbol{u} \cdot \nabla) \omega=\nu \Delta \omega,                                                                          \\
+		-\Delta \psi=\omega,                                                                                                                                 \\
+		u=\partial_{y} \psi, \quad v=-\partial_{x} \psi, \quad \Longleftarrow \boldsymbol{u}=\nabla \times \boldsymbol{\psi} \Longleftarrow \nabla \cdot u=0 \\
+		\omega=\partial_{x} v-\partial_{y} u \Longleftarrow \boldsymbol{\omega}=\nabla \times \boldsymbol{u}
+	\end{array}\right.
+	\label{eq:A1}
+\end{equation}
+这里假设齐次Dirichlet边界条件 $\left.u\right|_{\partial \Omega}=0 .$ 对一般情况 $\left.u\right|_{\partial \Omega}=\boldsymbol{u}_{b}$, 可类似 地处理. 设左边界位于 $x=x_{0}$ 处, 其单位外法向量 $\boldsymbol{n}=(-1,0)$, 则由无穿 透边界 $0=\boldsymbol{u} \cdot \boldsymbol{n}$ 得 $\partial_{y} \psi=0 .$ 进而知, 在边界 $x=x_{0}$ 上, $\psi$ 为常数 $($ 不妨设 为0); 由无滑移边界: $0=\boldsymbol{u} \cdot \boldsymbol{\tau}$ 得 $\frac{\partial \psi}{\partial n}=\frac{\partial \psi}{\partial x}=0.$
+流函数边界条件
+\begin{equation}
+	\psi=0, \quad \frac{\partial \psi}{\partial n}=0.
+\end{equation}
+
+将\cref{eq:A1}第一个式子左边写成守恒型得
+\begin{equation}
+	\frac{\partial \omega}{\partial t} + \frac{\partial (u\omega)}{\partial x} + \frac{\partial (v\omega)}{\partial y} = \mu \nabla^2 \omega.
+	\label{eq:A2}
+\end{equation}
+或者
+\begin{equation}
+	\frac{\partial \omega}{\partial t} + \nabla \cdot (\bm{u}\omega) = \mu \nabla^2 \omega.
+	\label{eq:A3}
+\end{equation}
+对于坐标变换 $(x,y)\to(r, \theta)$
+\begin{equation}
+	\begin{cases}
+		x = r \cos \theta, \\
+		y = r \sin \theta.
+	\end{cases}
+\end{equation}
+有雅可比行列式
+\begin{equation}
+	J=
+	\begin{vmatrix}
+		r_{x}      & r_{y}      \\
+		\theta_{x} & \theta_{y}
+	\end{vmatrix}=\frac{1}{r}.
+\end{equation}
+可得\cref{eq:A3}在极坐标下的表达式\cite{cfd}
+\begin{equation}
+	\frac{\partial \omega}{\partial t}+J\frac{\partial}{\partial r}\left(\frac{u\omega r_{x}+v\omega r_{y}}{J}\right)+J\frac{\partial}{\partial \theta}\left(\frac{u\omega \theta_{x}+v\omega \theta_{y}}{J}\right)=\mu \nabla^2 \omega.
+	\label{eq:A4}
+\end{equation}
+然后将拉普拉斯算符在极坐标中展开得
+\begin{equation}
+	\frac{\partial \omega}{\partial t}+J\frac{\partial}{\partial r}\left(\frac{u\omega r_{x}+v\omega r_{y}}{J}\right)+J\frac{\partial}{\partial \theta}\left(\frac{u\omega \theta_{x}+v\omega \theta_{y}}{J}\right)=\mu \left(\frac{\partial^2}{\partial r^2} + \frac{1}{r}\frac{\partial}{\partial r} + \frac{1}{r^2}\frac{\partial^2}{\partial \theta^2} \right) \omega.
+	\label{eq:A5}
+\end{equation}
+即为 $(r, \theta)$ 坐标下的方程组。为了达到二阶精度，这里采用中心差商进行离散。在极坐标下构建结构网格，对某一个量$a^n_{i,j}$,其中$i$下标对应的是变量$r$，$j$下标对应的是变量$\theta$，
+\begin{equation}
+	\frac{\partial a^n_{i,j}}{\partial r} = \frac{a^n_{i+1,j}-a^n_{i-1,j}}{2\Delta r},\quad \frac{\partial^2 a^n_{i,j}}{\partial r^2} = \frac{a^n_{i+1,j}-2a^n_{i,j}+a^n_{i-1,j}}{\Delta r^2}.
+	\label{eq:A6}
+\end{equation}
+
+由于要给定局部涡边界条件，这里采用独立求解涡流方程的方法,\cref{eq:A1}的第二个式子在极坐标下写为
+\begin{equation}
+	\left(\frac{\partial^2}{\partial r^2} + \frac{1}{r}\frac{\partial}{\partial r} + \frac{1}{r^2}\frac{\partial^2}{\partial \theta^2} \right)\psi = - \omega,
+\end{equation}
+为了二阶精度，使用中心差分离散，因为格式写出来过于繁琐，这里就不详细写了，总之，就是用\cref{eq:A6}的方法离散。
+
+时间采用显示Euler离散
+\begin{equation}
+	\frac{\partial \omega}{\partial t} = \frac{\omega^{n+1}_{i,j}-\omega^{n}_{i,j}}{\Delta t}.
+\end{equation}
+
+边界条件为
+\begin{equation}
+	\psi \big|_{r=R_0} = 0,\quad \psi \big|_{r=R_2} = \mathrm{const}.
+\end{equation}
+由于$\psi$有两个边界，所以这里令$r=R_0$的地方为0.以$r=R_0$为例，无滑移边界在 $r=R_0$ 处可近似为
+\begin{equation}
+	\frac{\psi_{1, j}-\psi_{-1,j}}{2 \Delta r}=0 \quad \text { 或 } \quad \psi_{-1,j}=\psi_{1, j}.
+\end{equation}
+得到
+\begin{equation}
+	\omega_{0,j} = -\frac{2\psi_{1,j}}{\Delta r^2}.
+\end{equation}
+
+
+\section{B}
+
+考虑
+\begin{equation}
+	u_{t}+a u_{x}=\nu u_{x x}, \quad u(x, 0)=u_{0}(x),
+\end{equation}
+其中 $a$ 和 $\nu>0$ 是常数. 利用紧致(Compact)有限差分在空间方向离散,显式或隐式Euler时间离散, 给出空间高阶(至少四阶)紧致有限差分格式. 是否可以分析其线性稳定性?
+
+采用显式Euler时间离散和四阶精度紧致有限差分格式
+\begin{equation}
+	\frac{u^{n+1}_{j}-u^{n}_{j}}{\tau} = -au'_j + \nu u''_j.
+	\label{eq:B1}
+\end{equation}
+其中\cite{CHU1998370}
+\begin{equation}
+	\begin{aligned}
+		u'+\frac{1}{4}\left(u'_{j+1}+u'_{j-1}\right)       & =\frac{3}{4h} \left(u^n_{j+1}-u^n_{j-1}\right),         \\
+		u''_j+\frac{1}{10}\left(u''_{j+1}+u''_{j-1}\right) & =\frac{6}{5h^2}\left(u^n_{j+1}-2u^n_j+u^n_{j-1}\right).
+	\end{aligned}
+\end{equation}
+通过求解两个三对角方程得到$u_j',u_j''$，其中没有上标的点都是指$n$时刻的点。
+
+对$u(x)$进行傅立叶分解得
+\begin{gather}
+	u(x)=\sum_k \hat{u}_k \me^{\mi \omega {x}/{h}},\\
+	u^{\prime}(x)=\sum_{k} \hat{u}_{k}^{\prime} \me^{\mi \omega x / h}, \\
+	u^{\prime \prime}(x)=\sum_{k} \hat{u}_{k}^{\prime \prime} \me^{ \mi \omega x / h}.
+\end{gather}
+有关系式
+\begin{equation}
+	\hat{u}_{k}^{\prime}=\frac{\mi \omega}{h} \hat{u}_{k}, \quad \hat{u}_{k}^{\prime \prime}=-\left(\frac{\omega}{h}\right)^{2} \hat{u}_{k}
+\end{equation}
+可以求得
+\begin{align}
+	\omega^{\prime}(\omega)        & =\frac{a \sin \omega+\frac{b}{2} \sin 2 \omega+\frac{c}{3} \sin 3 \omega}{1+2 \alpha \cos \omega+2 \beta \cos 2 \omega},                     \\
+	\omega^{\prime \prime}(\omega) & =\sqrt{\frac{2 a(1-\cos \omega)+\frac{b}{2}(1-\cos 2 \omega)+\frac{2 c}{9}(1-\cos 3 \omega)}{1+2 \alpha \cos \omega+2 \beta \cos 2 \omega}}.
+\end{align}
+代入系数可得
+\begin{align}
+	\omega^{\prime}      & =\frac{3 \sin \omega}{2+ \cos \omega}, \quad \omega^{\prime \prime}=\sqrt{\frac{12(1-\cos \omega)}{5+\cos \omega}},                        \\
+	\hat{u}_{k}^{\prime} & =\frac{3 \mi \sin \omega}{h(2+ \cos \omega)} \hat{u}_{k}, \quad \hat{u}''_{k}=\frac{12(\cos \omega-1)}{ h^{2}(\cos \omega+5)} \hat{u}_{k}.
+\end{align}
+代入\cref{eq:B1}可得
+\begin{equation}
+	\frac{V^{n+1}-V^{n}}{\tau} = -a \frac{3 \mi \sin \omega}{h(2+ \cos \omega)} V^{n} + \nu \frac{12(\cos \omega-1)}{ h^{2}(\cos \omega+5)}  V^{n}.
+\end{equation}
+放大因子
+\begin{equation}
+	G = \frac{V^{n+1}}{V^n} = 1 - \frac{a\tau}{h}\frac{3 \mi \sin \omega}{2+ \cos \omega} + \frac{\nu\tau}{h^2}\frac{12(\cos \omega-1)}{ \cos \omega+5},
+\end{equation}
+\begin{equation}
+	\abs{G} = \left[ 1+\frac{\nu\tau}{h^2}\frac{12(\cos \omega-1)}{ \cos \omega+5} \right]^2+\left[ \frac{a\tau}{h}\frac{3 \sin \omega}{2+ \cos \omega} \right]^2.
+\end{equation}
+经分析可知放大因子$G$是可能小于1的，即在某些情况下格式是稳定的。
+
+
+
+
+
+
+% \nocite{*}
+
+\input{bib.tex}
+
+\end{document}
+

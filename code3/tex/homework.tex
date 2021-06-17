@@ -277,9 +277,9 @@ $b_{1}=b_{2} \frac{\left(u^{2}+v^{2}\right)}{2}, b_{2}=\frac{\gamma-1}{a^{2}}$, 
 
 \section{计算结果}
 
-如\cref{fig:density} 所示，为$t=4$时刻的密度等线图，可以发现在最前面有一个绕体激波，然后经过上壁面和下壁面的反射，最终形成\cref{fig:density} 。（图片是矢量图，可以放大查看）
+如\cref{fig:density30} 所示，为$t=4$时刻的密度等线图，网格数是$90\times 30$.可以发现在最前面有一个绕体激波，然后经过上壁面和下壁面的反射，最终形成\cref{fig:density30} 。（图片是矢量图，可以放大查看）
 
-
+而当加密网格到$120\times 40$.如\cref{fig:density40} 所示，台阶前的激波向前移动了，当放大流场矢量图\cref{fig:eddy}  可以发现，在前台阶处形成了一个回流涡。
 
 
 
@@ -287,11 +287,24 @@ $b_{1}=b_{2} \frac{\left(u^{2}+v^{2}\right)}{2}, b_{2}=\frac{\gamma-1}{a^{2}}$, 
 
 \begin{figure}[htp]
 	\centering
-	\includegraphics[width=14cm]{density.eps}
+	\includegraphics[width=14cm]{density30.eps}
 	\caption{密度等线图，网格数是$90\times 30$.}
-	\label{fig:density}
+	\label{fig:density30}
 \end{figure}
 
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=14cm]{density40.eps}
+	\caption{密度等线图，网格数是$120\times 40$.}
+	\label{fig:density40}
+\end{figure}
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=14cm]{eddy.eps}
+	\caption{网格数是$120\times 40$时在台阶前形成的流场矢量图。}
+	\label{fig:eddy}
+\end{figure}
 
 
 

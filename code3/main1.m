@@ -29,8 +29,8 @@ global Fhat Ghat
 global CFL
 gamma      = 1.4;
 
-Nx         = 120; % x grid number
-Ny         = 40; % y grid number
+Ny         = 50; % y grid number
+Nx         = Ny*3; % x grid number
 CFL        = 0.5; % CFL number
 x          = linspace(0, 3, Nx)'; % x grid
 dx         = (x(end)-x(1))/(Nx-1);% x grid spacing

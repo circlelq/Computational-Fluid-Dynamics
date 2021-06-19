@@ -244,11 +244,15 @@ $b_{1}=b_{2} \frac{\left(u^{2}+v^{2}\right)}{2}, b_{2}=\frac{\gamma-1}{a^{2}}$, 
 \end{equation}
 \begin{equation}
 	\hat{\bm{g}}\left(\bm{u}_{j}, \bm{u}_{j+1}\right)=\frac{\bm{g}\left(\bm{u}_{j}\right)+\bm{g}\left(\bm{u}_{j+1}\right)}{2}-\frac{1}{2}\left|\hat{\bm{B}}_{j+1 / 2}\right|\left(\bm{u}_{j+1}-\bm{u}_{j}\right).
+	\label{eq:10}
 \end{equation}
 其中 $|\hat{\bm{A}}|$ 定义为: $|\hat{\bm{A}}|=\bm{R}|\hat{\bm{\Lambda}}| \bm{R}^{-1}|,\ |\hat{\bm{\Lambda}} \mid=\operatorname{diag}\left\{\left|\hat{\lambda}_{1}\right|, \cdots,\left|\hat{\lambda}_{m}\right|\right\}$,可以得到半离散格式\cite[P294]{cfd}
 \begin{equation}
 	\frac{\dif}{\dif t}\bm{u}_{i,j} + \frac{1}{h}\left(\hat{\bm{f}}_{i+\frac{1}{2},j}-\hat{\bm{f}}_{i-\frac{1}{2},j}\right)+ \frac{1}{h}\left(\hat{\bm{g}}_{i,j+\frac{1}{2}}-\hat{\bm{g}}_{i,j-\frac{1}{2}}\right)=0.
 \end{equation}
+
+另外，\cref{eq:10}中的$\bm{u}_{j+1},\bm{u}_{j}$用左右的$\bm{u}$线性重构来获得。
+
 然后再用三阶TVD性质的RK时间差分格式
 \begin{equation}
 	\begin{aligned}
@@ -263,7 +267,7 @@ $b_{1}=b_{2} \frac{\left(u^{2}+v^{2}\right)}{2}, b_{2}=\frac{\gamma-1}{a^{2}}$, 
 
 \subsection{边界条件}
 
-上下边界为反射边界; 左边界为入流边界(即左边界处流动为初始均匀流); 右 边界为出流。对于刚性壁面，满足华裔反射边界条件：即在隔壁面法向方向上各物理量取一阶导数为0，这可以在壁面发现方向上采用镜面反射原则取值。由此可知，在水平壁面上$v_w=0$,竖直壁面上$u_w=0$。在各壁面切向方向上直接取流场中相邻点物理量的值。\cite[P339]{cfd}
+上下边界为反射边界; 左边界为入流边界(即左边界处流动为初始均匀流); 右 边界为出流。对于刚性壁面，满足滑移反射边界条件：即在隔壁面法向方向上各物理量取一阶导数为0，这可以在壁面法向方向上采用镜面反射原则取值。由此可知，在水平壁面上$v_{\mathrm{w}}=0$,竖直壁面上$u_{\mathrm{w}}=0$。在各壁面切向方向上直接取流场中相邻点物理量的值。\cite[P339]{cfd}
 
 
 \subsection{计算步骤}
@@ -282,28 +286,36 @@ $b_{1}=b_{2} \frac{\left(u^{2}+v^{2}\right)}{2}, b_{2}=\frac{\gamma-1}{a^{2}}$, 
 而当加密网格到$120\times 40$.如\cref{fig:density40} 所示，台阶前的激波向前移动了，当放大流场矢量图\cref{fig:eddy}  可以发现，在前台阶处形成了一个回流涡。
 
 
-
-
-
 \begin{figure}[htp]
 	\centering
-	\includegraphics[width=14cm]{density30.eps}
+	\includegraphics[width=15cm]{density30.eps}
 	\caption{密度等线图，网格数是$90\times 30$.}
 	\label{fig:density30}
 \end{figure}
 
 \begin{figure}[htp]
 	\centering
-	\includegraphics[width=14cm]{density40.eps}
+	\includegraphics[width=15cm]{density40.eps}
 	\caption{密度等线图，网格数是$120\times 40$.}
 	\label{fig:density40}
 \end{figure}
 
 \begin{figure}[htp]
 	\centering
-	\includegraphics[width=14cm]{eddy.eps}
+	\includegraphics[width=15cm]{eddy.eps}
 	\caption{网格数是$120\times 40$时在台阶前形成的流场矢量图。}
 	\label{fig:eddy}
+\end{figure}
+
+通过调整边界条件使得流场符合真实物理情况。如\cref{fig:density250} 所示，把网格加密到$250\times 750$，可以发现基本符合标准计算结果。但是在上下边界激波右侧有一些抖动，以及上壁面的激波位置没有和下方台阶对其，可能是因为格式精度不高的原因。
+
+
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=15cm]{density250.eps}
+	\caption{密度等线图，网格数是$250\times 750$.}
+	\label{fig:density250}
 \end{figure}
 
 

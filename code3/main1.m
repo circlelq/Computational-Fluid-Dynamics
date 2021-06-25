@@ -127,7 +127,7 @@ while (flag)
     currFrame = getframe(fig);
     % if abs(current_time - dT) < 1e-2
         writeVideo(aviobj,currFrame);
-        % save(strcat(num2str(current_time),'W.mat')','W')
+        % save(strcat(num2str(current_time),'W.mat'),'W')
         % dT = dT + 0.1;
     % end
 end
